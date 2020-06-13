@@ -15,18 +15,12 @@ var loginCmd = &cobra.Command{
 	Use:   "login",
 	Short: "Login to get a bearer token ",
 	Run: func(cmd *cobra.Command, args []string) {
-		type response openapi.LoginResponse
 		fmt.Printf("Email: ")
 		var email string
 		fmt.Scanln(&email)
 		fmt.Printf("Password: ")
-		maskedPasswd, err := gopass.GetPasswdMasked()
-		if err != nil {
-			fmt.Println(err)
-		}
+		maskedPasswd, _ := gopass.GetPasswdMasked()
 		l := openapi.Login{Email: email, Password: string(maskedPasswd)}
-		cfg := openapi.NewConfiguration()
-		client := openapi.NewAPIClient(cfg)
 		res, _, _ := client.AuthApi.Login(context.Background(), l)
 		fmt.Println("Token: ", res.Token, "\n", "Expires at: ", res.Expire)
 
@@ -50,9 +44,22 @@ var registerCmd = &cobra.Command{
 			fmt.Println(err)
 		}
 		r := openapi.User{Username: username, Email: email, Password: string(maskedPasswd)}
-		cfg := openapi.NewConfiguration()
-		client := openapi.NewAPIClient(cfg)
 		res, _, _ := client.AuthApi.Register(context.Background(), r)
 		fmt.Println(res.Message)
+	},
+}
+
+var userCmd = &cobra.Command{
+	Use:   "user",
+	Short: "View user details",
+	Run: func(cmd *cobra.Command, args []string) {
+		token := args[0]
+		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+		res, _, err := client.UserApi.FetchUser(auth)
+		if err != nil {
+			cmd.Print(err)
+			os.Exit(1)
+		}
+		cmd.Print("Username: " + res.Username + "\n" + "Email: " + res.Email + "\n")
 	},
 }
