@@ -85,7 +85,7 @@ var appmakerCmd = &cobra.Command{
 }
 
 var fetchAppCmd = &cobra.Command{
-	Use:   "app",
+	Use:   "app [BEARER_TOKEN]",
 	Short: "fetch apps",
 	Run: func(cmd *cobra.Command, args []string) {
 		appName, _ := cmd.Flags().GetString("name")
@@ -95,7 +95,6 @@ var fetchAppCmd = &cobra.Command{
 			fmt.Println(client.AppsApi.FetchAppByUser(auth, appName))
 		} else {
 			fmt.Println(client.AppsApi.FetchAppsByUser(auth))
-
 		}
 	},
 }
