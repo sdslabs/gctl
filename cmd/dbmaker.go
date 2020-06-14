@@ -14,6 +14,9 @@ import (
 var dbName string
 
 func init() {
+	createCmd.AddCommand(dbmakerCmd)
+	fetchCmd.AddCommand(fetchDbCmd)
+	deleteCmd.AddCommand(deleteDbCmd)
 	fetchDbCmd.Flags().StringVarP(&dbName, "name", "n", "", "Fetch specific database")
 }
 

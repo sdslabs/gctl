@@ -11,6 +11,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(loginCmd)
+	rootCmd.AddCommand(registerCmd)
+	rootCmd.AddCommand(refreshCmd)
+}
+
 var loginCmd = &cobra.Command{
 	Use:   "login",
 	Short: "Login to get a bearer token ",
@@ -46,21 +52,6 @@ var registerCmd = &cobra.Command{
 		r := openapi.User{Username: username, Email: email, Password: string(maskedPasswd)}
 		res, _, _ := client.AuthApi.Register(context.Background(), r)
 		fmt.Println(res.Message)
-	},
-}
-
-var fetchUserCmd = &cobra.Command{
-	Use:   "user",
-	Short: "View user details",
-	Run: func(cmd *cobra.Command, args []string) {
-		token := args[0]
-		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
-		res, _, err := client.UserApi.FetchUser(auth)
-		if err != nil {
-			cmd.Print(err)
-			os.Exit(1)
-		}
-		cmd.Print("Username: " + res.Username + "\n" + "Email: " + res.Email + "\n")
 	},
 }
 

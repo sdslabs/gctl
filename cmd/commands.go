@@ -10,17 +10,10 @@ var client = openapi.NewAPIClient(cfg)
 
 func init() {
 	rootCmd.AddCommand(versionCmd)
-	rootCmd.AddCommand(loginCmd)
-	rootCmd.AddCommand(registerCmd)
 	rootCmd.AddCommand(createCmd)
 	rootCmd.AddCommand(deleteCmd)
 	rootCmd.AddCommand(fetchCmd)
-	rootCmd.AddCommand(refreshCmd)
-	fetchCmd.AddCommand(fetchUserCmd)
-	createCmd.AddCommand(appmakerCmd)
-	createCmd.AddCommand(dbmakerCmd)
-	deleteCmd.AddCommand(deleteAppCmd)
-	fetchCmd.AddCommand(fetchAppCmd)
+	rootCmd.AddCommand(updateCmd)
 }
 
 var createCmd = &cobra.Command{
@@ -36,6 +29,11 @@ var deleteCmd = &cobra.Command{
 var fetchCmd = &cobra.Command{
 	Use:   "fetch",
 	Short: "Fetch user details, databases and apps",
+}
+
+var updateCmd = &cobra.Command{
+	Use:   "update",
+	Short: "Update an app or user password",
 }
 
 var versionCmd = &cobra.Command{

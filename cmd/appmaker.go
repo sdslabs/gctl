@@ -15,6 +15,9 @@ import (
 var appName string
 
 func init() {
+	createCmd.AddCommand(appmakerCmd)
+	fetchCmd.AddCommand(fetchAppCmd)
+	deleteCmd.AddCommand(deleteAppCmd)
 	fetchAppCmd.Flags().StringVarP(&appName, "name", "n", "", "show specific app")
 }
 
