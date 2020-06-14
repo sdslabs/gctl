@@ -12,6 +12,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var appName string
+
+func init() {
+	fetchAppCmd.Flags().StringVarP(&appName, "name", "n", "", "show specific app")
+}
+
 var appmakerCmd = &cobra.Command{
 	Use:   "app",
 	Short: "Create an application",
@@ -75,5 +81,31 @@ var appmakerCmd = &cobra.Command{
 		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
 		client.AppsApi.CreateApp(auth, language, application)
 		fmt.Println(client.AppsApi.FetchAppByUser(auth, application.Name))
+	},
+}
+
+var fetchAppCmd = &cobra.Command{
+	Use:   "app",
+	Short: "fetch apps",
+	Run: func(cmd *cobra.Command, args []string) {
+		appName, _ := cmd.Flags().GetString("name")
+		token := args[0]
+		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+		if appName != "" {
+			fmt.Println(client.AppsApi.FetchAppByUser(auth, appName))
+		} else {
+			fmt.Println(client.AppsApi.FetchAppsByUser(auth))
+
+		}
+	},
+}
+var deleteAppCmd = &cobra.Command{
+	Use:   "app [APP_NAME] [BEARER TOKEN]",
+	Short: "delete an app",
+	Run: func(cmd *cobra.Command, args []string) {
+		token := args[1]
+		appName := args[0]
+		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+		fmt.Println(client.AppsApi.DeleteAppByUser(auth, appName))
 	},
 }

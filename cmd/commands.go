@@ -13,14 +13,31 @@ func init() {
 	rootCmd.AddCommand(loginCmd)
 	rootCmd.AddCommand(registerCmd)
 	rootCmd.AddCommand(createCmd)
-	rootCmd.AddCommand(userCmd)
+	rootCmd.AddCommand(deleteCmd)
+	rootCmd.AddCommand(fetchCmd)
+	rootCmd.AddCommand(refreshCmd)
+	fetchCmd.AddCommand(fetchUserCmd)
 	createCmd.AddCommand(appmakerCmd)
+	createCmd.AddCommand(dbmakerCmd)
+	deleteCmd.AddCommand(deleteAppCmd)
+	fetchCmd.AddCommand(fetchAppCmd)
 }
 
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create database or app",
 }
+
+var deleteCmd = &cobra.Command{
+	Use:   "delete",
+	Short: "Delete database or app",
+}
+
+var fetchCmd = &cobra.Command{
+	Use:   "fetch",
+	Short: "Fetch user details, databases and apps",
+}
+
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version number of Gasper",

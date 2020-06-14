@@ -49,7 +49,7 @@ var registerCmd = &cobra.Command{
 	},
 }
 
-var userCmd = &cobra.Command{
+var fetchUserCmd = &cobra.Command{
 	Use:   "user",
 	Short: "View user details",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -61,5 +61,15 @@ var userCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		cmd.Print("Username: " + res.Username + "\n" + "Email: " + res.Email + "\n")
+	},
+}
+
+var refreshCmd = &cobra.Command{
+	Use:   "refresh",
+	Short: "Refresh JWT token using existing token",
+	Run: func(cmd *cobra.Command, args []string) {
+		token := args[0]
+		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+		fmt.Print(client.AuthApi.Refresh(auth, token))
 	},
 }
