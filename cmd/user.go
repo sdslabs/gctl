@@ -38,14 +38,21 @@ var deleteUserCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		token := args[0]
 		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
-		fmt.Println(client.UserApi.DeleteUser(auth))
+		res, _, err := client.UserApi.DeleteUser(auth)
+		if res.Success {
+			cmd.Print(res.Message)
+		} else {
+			if err != nil {
+				cmd.Print(err)
+			}
+		}
 	},
 }
 
 var updateUserPasswd = &cobra.Command{
 	Use:   "user [BEARER_TOKEN]",
 	Short: "Update the password of the logged in user",
-	Args:  cobra.NoArgs,
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		token := args[0]
 		var object openapi.InlineObject
@@ -56,6 +63,14 @@ var updateUserPasswd = &cobra.Command{
 		object.OldPassword = string(maskedOldPasswd)
 		object.NewPassword = string(maskedNewPasswd)
 		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
-		fmt.Println(client.UserApi.UpdatePassword(auth, object))
+		client.UserApi.UpdatePassword(auth, object)
+		res, _, err := client.UserApi.UpdatePassword(auth, object)
+		if res.Success {
+			cmd.Print(res.Message)
+		} else {
+			if err != nil {
+				cmd.Print(err)
+			}
+		}
 	},
 }
