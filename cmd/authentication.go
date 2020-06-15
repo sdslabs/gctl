@@ -3,7 +3,6 @@ package cmd
 import (
 	"bufio"
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/howeyc/gopass"
@@ -21,14 +20,19 @@ var loginCmd = &cobra.Command{
 	Use:   "login",
 	Short: "Login to get a bearer token ",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Email: ")
-		var email string
-		fmt.Scanln(&email)
-		fmt.Printf("Password: ")
+		scanner := bufio.NewScanner(os.Stdin)
+		cmd.Printf("Email: ")
+		scanner.Scan()
+		email := scanner.Text()
+		cmd.Printf("Password: ")
 		maskedPasswd, _ := gopass.GetPasswdMasked()
 		l := openapi.Login{Email: email, Password: string(maskedPasswd)}
-		res, _, _ := client.AuthApi.Login(context.Background(), l)
-		fmt.Println("Token: ", res.Token, "\n", "Expires at: ", res.Expire)
+		res, _, err := client.AuthApi.Login(context.Background(), l)
+		if res.Token != "" {
+			cmd.Println("Token: ", res.Token, "\n", "Expires at: ", res.Expire)
+		} else {
+			cmd.Println(err)
+		}
 
 	},
 }
@@ -38,20 +42,21 @@ var registerCmd = &cobra.Command{
 	Short: "Register a user",
 	Run: func(cmd *cobra.Command, args []string) {
 		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Printf("Username: ")
+		cmd.Printf("Username: ")
 		scanner.Scan()
 		username := scanner.Text()
-		fmt.Printf("Email: ")
+		cmd.Printf("Email: ")
 		scanner.Scan()
 		email := scanner.Text()
-		fmt.Printf("Password: ")
-		maskedPasswd, err := gopass.GetPasswdMasked()
-		if err != nil {
-			fmt.Println(err)
-		}
+		cmd.Printf("Password: ")
+		maskedPasswd, _ := gopass.GetPasswdMasked()
 		r := openapi.User{Username: username, Email: email, Password: string(maskedPasswd)}
-		res, _, _ := client.AuthApi.Register(context.Background(), r)
-		fmt.Println(res.Message)
+		res, _, err := client.AuthApi.Register(context.Background(), r)
+		if res.Success {
+			cmd.Println(res.Message)
+		} else {
+			cmd.Println(err)
+		}
 	},
 }
 
@@ -61,6 +66,6 @@ var refreshCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		token := args[0]
 		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
-		fmt.Print(client.AuthApi.Refresh(auth, token))
+		cmd.Print(client.AuthApi.Refresh(auth, token))
 	},
 }
