@@ -3,7 +3,6 @@ package cmd
 import (
 	"bufio"
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/antihax/optional"
@@ -43,8 +42,12 @@ var dbmakerCmd = &cobra.Command{
 			Database: optional.NewInterface(database),
 		}
 		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
-		fmt.Print(localVarOptional.Database.Value())
-		fmt.Print(client.DbsApi.CreateDB(auth, dbtype, localVarOptional))
+		res, _, err := client.DbsApi.CreateDB(auth, dbtype, localVarOptional)
+		if res.Success {
+			cmd.Print("Database created")
+		} else {
+			cmd.Print(err)
+		}
 	},
 }
 
@@ -57,9 +60,33 @@ var fetchDbCmd = &cobra.Command{
 		token := args[0]
 		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
 		if dbName != "" {
-			fmt.Println(client.DbsApi.FetchDbByUser(auth, dbName))
+			res, _, err := client.DbsApi.FetchDbByUser(auth, dbName)
+			if res.Success {
+				if len(res.Data) != 0 {
+					for i := 0; i < len(res.Data); i++ {
+						cmd.Println("User: "+res.Data[i].User, "Owner: "+res.Data[i].Owner, "DbUrl: "+res.Data[i].DbUrl, "Port: "+res.Data[i].Port,
+							"Host: "+res.Data[i].HostIp, "Language: "+res.Data[i].Language, "Instance Type: "+res.Data[i].InstanceType)
+					}
+				} else {
+					cmd.Println("No such database")
+				}
+			} else {
+				cmd.Println(err)
+			}
 		} else {
-			fmt.Println(client.DbsApi.FetchDbsByUser(auth))
+			res, _, err := client.DbsApi.FetchDbsByUser(auth)
+			if res.Success {
+				if len(res.Data) != 0 {
+					for i := 0; i < len(res.Data); i++ {
+						cmd.Println("User: "+res.Data[i].User, "Owner: "+res.Data[i].Owner, "DbUrl: "+res.Data[i].DbUrl, "Port: "+res.Data[i].Port,
+							"Host: "+res.Data[i].HostIp, "Language: "+res.Data[i].Language, "Instance Type: "+res.Data[i].InstanceType)
+					}
+				} else {
+					cmd.Println("No database for the user")
+				}
+			} else {
+				cmd.Println(err)
+			}
 		}
 	},
 }
@@ -72,6 +99,11 @@ var deleteDbCmd = &cobra.Command{
 		dbName := args[0]
 		token := args[1]
 		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
-		fmt.Println(client.DbsApi.DeleteDbByUser(auth, dbName))
+		res, _, err := client.DbsApi.DeleteDbByUser(auth, dbName)
+		if res.Success {
+			cmd.Println("Database deleted successfully")
+		} else {
+			cmd.Println(err)
+		}
 	},
 }
