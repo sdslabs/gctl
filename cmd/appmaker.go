@@ -82,8 +82,22 @@ var appmakerCmd = &cobra.Command{
 			application.Env = m
 		}
 		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
-		client.AppsApi.CreateApp(auth, language, application)
-		fmt.Println(client.AppsApi.FetchAppByUser(auth, application.Name))
+		res, _, err := client.AppsApi.CreateApp(auth, language, application)
+		if res.Success {
+			res, _, err := client.AppsApi.FetchAppByUser(auth, application.Name)
+			if res.Success {
+				for i := 0; i < len(res.Data); i++ {
+					cmd.Println("App created successfully"+"\n"+"Container Id: "+res.Data[i].ContainerId, "Container Port: "+string(res.Data[i].ContainerPort),
+						"Docker Image: "+res.Data[i].DockerImage, "App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
+						"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType, "Language: "+res.Data[i].Language,
+						"Owner: "+res.Data[i].Owner, "Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
+				}
+			} else {
+				cmd.Println(err)
+			}
+		} else {
+			cmd.Println(err)
+		}
 	},
 }
 
@@ -95,9 +109,37 @@ var fetchAppCmd = &cobra.Command{
 		token := args[0]
 		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
 		if appName != "" {
-			fmt.Println(client.AppsApi.FetchAppByUser(auth, appName))
+			res, _, err := client.AppsApi.FetchAppByUser(auth, appName)
+			if res.Success {
+				if len(res.Data) != 0 {
+					for i := 0; i < len(res.Data); i++ {
+						cmd.Println("Container Id: "+res.Data[i].ContainerId, "Container Port: "+string(res.Data[i].ContainerPort),
+							"Docker Image: "+res.Data[i].DockerImage, "App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
+							"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType, "Language: "+res.Data[i].Language,
+							"Owner: "+res.Data[i].Owner, "Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
+					}
+				} else {
+					cmd.Println("No such app found")
+				}
+			} else {
+				cmd.Println(err)
+			}
 		} else {
-			fmt.Println(client.AppsApi.FetchAppsByUser(auth))
+			res, _, err := client.AppsApi.FetchAppsByUser(auth)
+			if res.Success {
+				if len(res.Data) != 0 {
+					for i := 0; i < len(res.Data); i++ {
+						cmd.Println("Container Id: "+res.Data[i].ContainerId, "Container Port: "+string(res.Data[i].ContainerPort),
+							"Docker Image: "+res.Data[i].DockerImage, "App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
+							"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType, "Language: "+res.Data[i].Language,
+							"Owner: "+res.Data[i].Owner, "Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
+					}
+				} else {
+					cmd.Println("No app found")
+				}
+			} else {
+				cmd.Println(err)
+			}
 		}
 	},
 }
@@ -108,6 +150,11 @@ var deleteAppCmd = &cobra.Command{
 		token := args[1]
 		appName := args[0]
 		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
-		fmt.Println(client.AppsApi.DeleteAppByUser(auth, appName))
+		res, _, err := client.AppsApi.DeleteAppByUser(auth, appName)
+		if res.Success {
+			cmd.Println("App deleted successfully")
+		} else {
+			cmd.Println(err)
+		}
 	},
 }
