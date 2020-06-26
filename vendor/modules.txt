@@ -1,3 +1,5 @@
+# github.com/SermoDigital/jose v0.9.1
+## explicit
 # github.com/antihax/optional v1.0.0
 ## explicit
 github.com/antihax/optional
