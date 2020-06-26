@@ -19,6 +19,7 @@ func init() {
 var fetchUserCmd = &cobra.Command{
 	Use:   "user [BEARER_TOKEN]",
 	Short: "View user details",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		token := args[0]
 		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)

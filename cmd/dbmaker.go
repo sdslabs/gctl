@@ -1,12 +1,11 @@
 package cmd
 
 import (
-	"bufio"
 	"context"
-	"os"
 
 	"github.com/antihax/optional"
 	openapi "github.com/sdslabs/gctl/client"
+	"github.com/sdslabs/gctl/cmd/middlewares"
 	"github.com/spf13/cobra"
 )
 
@@ -24,20 +23,7 @@ var dbmakerCmd = &cobra.Command{
 	Short: "Create a database",
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		var database openapi.Database
-		scanner := bufio.NewScanner(os.Stdin)
-		cmd.Printf("Token: ")
-		scanner.Scan()
-		token := scanner.Text()
-		cmd.Printf("Database Name: ")
-		scanner.Scan()
-		database.Name = scanner.Text()
-		cmd.Printf("Database Password: ")
-		scanner.Scan()
-		database.Password = scanner.Text()
-		cmd.Printf("Database Type: ")
-		scanner.Scan()
-		dbtype := scanner.Text()
+		token, dbtype, database := middlewares.DbForm()
 		localVarOptional := &openapi.CreateDBOpts{
 			Database: optional.NewInterface(database),
 		}

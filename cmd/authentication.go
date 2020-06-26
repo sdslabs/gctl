@@ -1,12 +1,10 @@
 package cmd
 
 import (
-	"bufio"
 	"context"
-	"os"
 
-	"github.com/howeyc/gopass"
 	openapi "github.com/sdslabs/gctl/client"
+	"github.com/sdslabs/gctl/cmd/middlewares"
 	"github.com/spf13/cobra"
 )
 
@@ -20,20 +18,13 @@ var loginCmd = &cobra.Command{
 	Use:   "login",
 	Short: "Login to get a bearer token ",
 	Run: func(cmd *cobra.Command, args []string) {
-		scanner := bufio.NewScanner(os.Stdin)
-		cmd.Printf("Email: ")
-		scanner.Scan()
-		email := scanner.Text()
-		cmd.Printf("Password: ")
-		maskedPasswd, _ := gopass.GetPasswdMasked()
-		l := openapi.Login{Email: email, Password: string(maskedPasswd)}
-		res, _, err := client.AuthApi.Login(context.Background(), l)
+		loginCreds := middlewares.LoginForm()
+		res, _, err := client.AuthApi.Login(context.Background(), loginCreds)
 		if res.Token != "" {
 			cmd.Println("Token: ", res.Token, "\n", "Expires at: ", res.Expire)
 		} else {
 			cmd.Println(err)
 		}
-
 	},
 }
 
@@ -41,17 +32,8 @@ var registerCmd = &cobra.Command{
 	Use:   "register",
 	Short: "Register a user",
 	Run: func(cmd *cobra.Command, args []string) {
-		scanner := bufio.NewScanner(os.Stdin)
-		cmd.Printf("Username: ")
-		scanner.Scan()
-		username := scanner.Text()
-		cmd.Printf("Email: ")
-		scanner.Scan()
-		email := scanner.Text()
-		cmd.Printf("Password: ")
-		maskedPasswd, _ := gopass.GetPasswdMasked()
-		r := openapi.User{Username: username, Email: email, Password: string(maskedPasswd)}
-		res, _, err := client.AuthApi.Register(context.Background(), r)
+		registerCreds := middlewares.RegisterForm()
+		res, _, err := client.AuthApi.Register(context.Background(), registerCreds)
 		if res.Success {
 			cmd.Println(res.Message)
 		} else {
@@ -61,8 +43,9 @@ var registerCmd = &cobra.Command{
 }
 
 var refreshCmd = &cobra.Command{
-	Use:   "refresh",
+	Use:   "refresh [BEARER_TOKEN]",
 	Short: "Refresh JWT token using existing token",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		token := args[0]
 		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
