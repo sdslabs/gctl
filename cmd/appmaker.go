@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"strings"
 
 	openapi "github.com/sdslabs/gctl/client"
 	"github.com/sdslabs/gctl/cmd/middlewares"
@@ -19,17 +20,26 @@ func init() {
 //CreateAppCmd is command to create an app
 func CreateAppCmd(client openapi.APIClient) *cobra.Command {
 	var appmakerCmd = &cobra.Command{
-		Use:   "app",
+		Use:   "app [TOKEN] [FILENAME] [LANGUAGE]",
 		Short: "Create an application",
 		Run: func(cmd *cobra.Command, args []string) {
-			token, language, application := middlewares.AppForm()
+			var token, language string
+			var application openapi.Application
+			if len(args) == 3 {
+				token = args[0]
+				filename := strings.Split(args[1], ".")[0]
+				language = args[2]
+				application = middlewares.ReadAppJSON(filename)
+			} else {
+				token, language, application = middlewares.AppForm()
+			}
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
 			res, _, err := client.AppsApi.CreateApp(auth, language, application)
 			if res.Success {
 				res, _, err := client.AppsApi.FetchAppByUser(auth, application.Name)
 				if res.Success {
 					for i := 0; i < len(res.Data); i++ {
-						cmd.Println("App created successfully"+"\n"+"Container Id: "+res.Data[i].ContainerId, "Container Port: "+string(res.Data[i].ContainerPort),
+						cmd.Println("App created successfully"+"\n"+"Container Id: "+res.Data[i].ContainerId, "Container Port: ", res.Data[i].ContainerPort,
 							"Docker Image: "+res.Data[i].DockerImage, "App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
 							"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType, "Language: "+res.Data[i].Language,
 							"Owner: "+res.Data[i].Owner, "Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)

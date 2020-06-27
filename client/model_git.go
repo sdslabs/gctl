@@ -9,12 +9,13 @@
  */
 
 package openapi
+
 // Git struct for Git
 type Git struct {
 	// Git Repository URL of the application
-	RepoUrl string `json:"repo_url"`
+	RepoUrl string `mapstructure:"repo_url"`
 	// Access token for cloning the application's git repository
-	AccessToken string `json:"access_token,omitempty"`
+	AccessToken string `mapstructure:"access_token,omitempty"`
 	// Specific branch to clone
 	Branch string `json:"branch,omitempty"`
 }
