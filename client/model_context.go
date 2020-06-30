@@ -9,6 +9,7 @@
  */
 
 package openapi
+
 // Context struct for Context
 type Context struct {
 	// Entrypoint for an application

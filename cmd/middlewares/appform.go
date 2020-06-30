@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/howeyc/gopass"
@@ -72,12 +73,11 @@ func AppForm() (string, string, openapi.Application) {
 			fmt.Println("Index cannot be empty.")
 		}
 	}
-	for ValidatePort(application.Context.Port) {
+	for !ValidatePort(application.Context.Port) {
 		fmt.Printf("Port: ")
-		fmt.Scanln(&application.Context.Port)
-		if application.Context.Port == 0 {
-			break
-		} else if ValidatePort(application.Context.Port) {
+		scanner.Scan()
+		application.Context.Port, _ = strconv.ParseInt(scanner.Text(), 10, 64)
+		if !ValidatePort(application.Context.Port) {
 			fmt.Println("Please enter valid port number.")
 		}
 	}
@@ -93,11 +93,16 @@ func AppForm() (string, string, openapi.Application) {
 	} else if scanner.Text() == "yes" {
 		application.Context.RcFile = true
 	}
+EnvVar:
 	fmt.Printf("Environment Variables(key:value): ")
 	scanner.Scan()
 	if scanner.Text() != "" {
 		m := make(map[string]string)
 		vars := strings.Split(scanner.Text(), ",")
+		if !ValidateEnvVars(vars) {
+			fmt.Println("Please enter valid environment variables.")
+			goto EnvVar
+		}
 		for v := 0; v < len(vars); v++ {
 			key := strings.Split(vars[v], ":")[0]
 			value := strings.Split(vars[v], ":")[1]

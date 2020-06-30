@@ -50,7 +50,7 @@ var fetchDbCmd = &cobra.Command{
 			if res.Success {
 				if len(res.Data) != 0 {
 					for i := 0; i < len(res.Data); i++ {
-						cmd.Println("User: "+res.Data[i].User, "Owner: "+res.Data[i].Owner, "DbUrl: "+res.Data[i].DbUrl, "Port: "+res.Data[i].Port,
+						cmd.Println("User: "+res.Data[i].User, "Owner: "+res.Data[i].Owner, "DbUrl: "+res.Data[i].DbUrl, "Port: ", res.Data[i].Port,
 							"Host: "+res.Data[i].HostIp, "Language: "+res.Data[i].Language, "Instance Type: "+res.Data[i].InstanceType)
 					}
 				} else {
@@ -64,7 +64,7 @@ var fetchDbCmd = &cobra.Command{
 			if res.Success {
 				if len(res.Data) != 0 {
 					for i := 0; i < len(res.Data); i++ {
-						cmd.Println("User: "+res.Data[i].User, "Owner: "+res.Data[i].Owner, "DbUrl: "+res.Data[i].DbUrl, "Port: "+res.Data[i].Port,
+						cmd.Println("User: "+res.Data[i].User, "Owner: "+res.Data[i].Owner, "DbUrl: "+res.Data[i].DbUrl, "Port: ", res.Data[i].Port,
 							"Host: "+res.Data[i].HostIp, "Language: "+res.Data[i].Language, "Instance Type: "+res.Data[i].InstanceType)
 					}
 				} else {

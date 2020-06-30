@@ -70,7 +70,7 @@ func FetchAppCmd(client openapi.APIClient) *cobra.Command {
 				if res.Success {
 					if len(res.Data) != 0 {
 						for i := 0; i < len(res.Data); i++ {
-							cmd.Println("Container Id: "+res.Data[i].ContainerId, "Container Port: "+string(res.Data[i].ContainerPort),
+							cmd.Println("Container Id: "+res.Data[i].ContainerId, "Container Port: ", res.Data[i].ContainerPort,
 								"Docker Image: "+res.Data[i].DockerImage, "App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
 								"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType, "Language: "+res.Data[i].Language,
 								"Owner: "+res.Data[i].Owner, "Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
@@ -86,7 +86,7 @@ func FetchAppCmd(client openapi.APIClient) *cobra.Command {
 				if res.Success {
 					if len(res.Data) != 0 {
 						for i := 0; i < len(res.Data); i++ {
-							cmd.Println("Container Id: "+res.Data[i].ContainerId, "Container Port: "+string(res.Data[i].ContainerPort),
+							cmd.Println("Container Id: "+res.Data[i].ContainerId, "Container Port: ", res.Data[i].ContainerPort,
 								"Docker Image: "+res.Data[i].DockerImage, "App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
 								"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType, "Language: "+res.Data[i].Language,
 								"Owner: "+res.Data[i].Owner, "Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)

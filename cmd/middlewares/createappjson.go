@@ -23,5 +23,16 @@ func ReadAppJSON(filename string) openapi.Application {
 	if err != nil {
 		panic("unable to decode json file into struct")
 	}
+	if viper.IsSet("git.repo_url") {
+		application.Git.RepoUrl = viper.GetString("git.repo_url")
+	}
+	if viper.IsSet("git.access_token") {
+		application.Git.AccessToken = viper.GetString("git.access_token")
+	}
+	if viper.IsSet("context.rc_file") {
+		application.Context.RcFile = viper.GetBool("context.rc_file")
+	} else {
+		application.Context.RcFile = false
+	}
 	return application
 }

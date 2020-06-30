@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 
-	openapi "github.com/sdslabs/gctl/client"
 	"github.com/sdslabs/gctl/cmd/middlewares"
 	"github.com/spf13/cobra"
 )
@@ -47,8 +46,6 @@ var refreshCmd = &cobra.Command{
 	Short: "Refresh JWT token using existing token",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		token := args[0]
-		auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
-		cmd.Print(client.AuthApi.Refresh(auth, token))
+		//TODO
 	},
 }

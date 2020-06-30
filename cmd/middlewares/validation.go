@@ -3,6 +3,7 @@ package middlewares
 import (
 	"net/url"
 	"regexp"
+	"strings"
 )
 
 //ValidateEmail validates the email
@@ -38,8 +39,10 @@ func ValidateURL(u string) bool {
 
 //ValidatePort validates port number
 func ValidatePort(port int64) bool {
-	re := regexp.MustCompile("^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$")
-	return re.MatchString(string(port))
+	if port > 0 && port <= 65535 {
+		return true
+	}
+	return false
 }
 
 //ValidateLanguageApp validates language for a new app
@@ -62,4 +65,14 @@ func ValidateDbType(dbtype string) bool {
 		}
 	}
 	return false
+}
+
+func ValidateEnvVars(vars []string) bool {
+	for v := 0; v < len(vars); v++ {
+		a := strings.Split(vars[v], ":")
+		if len(a) != 2 {
+			return false
+		}
+	}
+	return true
 }
