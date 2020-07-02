@@ -3,10 +3,21 @@ package cmd
 import (
 	"bytes"
 	"io/ioutil"
+	"strings"
 	"testing"
 )
 
-var tokenTest = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImVtYWlsIjoiZ21haGFrMUBnbWFpbC5jb20iLCJleHAiOjE1OTM3MjI4NDUsIm9yaWdfaWF0IjoxNTkzNzE5MjQ1LCJ1c2VybmFtZSI6Im1haGFrIn0.Rb5TxokNX73WGgXErhyHlKEfdREwnp1snxkMXMmMn24"
+var tokenTest string
+
+func Test_GenerateToken(t *testing.T) {
+	loginCmd := LoginCmd(client)
+	b := bytes.NewBufferString("")
+	loginCmd.SetOut(b)
+	loginCmd.SetArgs([]string{"-e", "anish.mukherjee1996@gmail.com", "-p", "alphadose"})
+	loginCmd.Execute()
+	out, _ := ioutil.ReadAll(b)
+	tokenTest = strings.Split(string(out), " ")[2]
+}
 
 func Test_CreateAppCmd(t *testing.T) {
 	newAppCmd := CreateAppCmd(*client)
