@@ -3,8 +3,11 @@ package cmd
 import (
 	"bytes"
 	"io/ioutil"
+	"strings"
 	"testing"
 )
+
+var generatedToken string
 
 func Test_RegisterCmd(t *testing.T) {
 	newRegisterCmd := RegisterCmd(client)
@@ -32,6 +35,8 @@ func Test_LoginCmd(t *testing.T) {
 		t.Fatal("Error in reading output")
 	}
 	if bytes.Contains(out, []byte("Error")) {
-		t.Fatalf(string(out), "User cannot be logged in.")
+		t.Fatalf("User cannot be logged in.")
+	} else {
+		generatedToken = strings.Split(string(out), " ")[2]
 	}
 }
