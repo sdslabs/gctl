@@ -79,7 +79,7 @@ func FetchAppCmd(client openapi.APIClient) *cobra.Command {
 						cmd.Println("No such app found")
 					}
 				} else {
-					cmd.Println(err)
+					cmd.Println("Error in fetching the app.", err)
 				}
 			} else {
 				res, _, err := client.AppsApi.FetchAppsByUser(auth)
@@ -95,7 +95,7 @@ func FetchAppCmd(client openapi.APIClient) *cobra.Command {
 						cmd.Println("No app found")
 					}
 				} else {
-					cmd.Println(err)
+					cmd.Println("Error in fetching the apps.", err)
 				}
 			}
 		},
