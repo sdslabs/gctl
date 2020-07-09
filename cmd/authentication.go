@@ -74,7 +74,15 @@ func RefreshCmd(client *openapi.APIClient) *cobra.Command {
 		Short: "Refresh JWT token using existing token",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			//TODO
+			token := args[0]
+			res, _, err := client.AuthApi.Refresh(context.Background(), "Bearer "+token)
+			if res.Code == 200 {
+				cmd.Println("Token: ", res.Token, "\n", "Expires at: ", res.Expire)
+			} else {
+				if err != nil {
+					cmd.Println("Error:", err)
+				}
+			}
 		},
 	}
 	return refreshCmd

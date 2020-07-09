@@ -49,3 +49,18 @@ func Test_LoginCmd(t *testing.T) {
 		generatedToken = strings.Split(string(out), " ")[2]
 	}
 }
+
+func Test_RefreshCmd(t *testing.T) {
+	refreshCmd := RefreshCmd(client)
+	b := bytes.NewBufferString("")
+	refreshCmd.SetOut(b)
+	refreshCmd.SetArgs([]string{generatedToken})
+	refreshCmd.Execute()
+	out, err := ioutil.ReadAll(b)
+	if err != nil {
+		t.Fatal("Error in reading output")
+	}
+	if bytes.Contains(out, []byte("Error")) {
+		t.Fatal("Token cannot be refreshed.")
+	}
+}
