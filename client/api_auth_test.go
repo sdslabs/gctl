@@ -8,6 +8,8 @@ import (
 	"testing"
 )
 
+var testToken string
+
 func TestAuthApi(t *testing.T) {
 	var userdata User
 	var loginCreds Login
@@ -26,5 +28,7 @@ func TestAuthApi(t *testing.T) {
 	refreshRes, _, err := client.AuthApi.Refresh(context.Background(), "Bearer "+loginres.Token)
 	if refreshRes.Code != 200 {
 		t.Fatal("Error in refreshing the token", err)
+	} else {
+		testToken = refreshRes.Token
 	}
 }
