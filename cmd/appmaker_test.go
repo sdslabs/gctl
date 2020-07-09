@@ -2,28 +2,42 @@ package cmd
 
 import (
 	"bytes"
+	"encoding/json"
 	"io/ioutil"
+	"path/filepath"
 	"strings"
 	"testing"
+
+	openapi "github.com/sdslabs/gctl/client"
 )
 
 var tokenTest string
+var appdata openapi.Application
 
 func Test_GenerateToken(t *testing.T) {
+	var loginCreds openapi.Login
+	g, _ := ioutil.ReadFile(filepath.Join("testdata", "logincreds.json"))
+	if err := json.Unmarshal(g, &loginCreds); err != nil {
+		t.Fatal("Error in reading login creds from json file", err)
+	}
 	loginCmd := LoginCmd(client)
 	b := bytes.NewBufferString("")
 	loginCmd.SetOut(b)
-	loginCmd.SetArgs([]string{"-e", "anish.mukherjee1996@gmail.com", "-p", "alphadose"})
+	loginCmd.SetArgs([]string{"-e", loginCreds.Email, "-p", loginCreds.Password})
 	loginCmd.Execute()
 	out, _ := ioutil.ReadAll(b)
 	tokenTest = strings.Split(string(out), " ")[2]
 }
 
 func Test_CreateAppCmd(t *testing.T) {
+	g, _ := ioutil.ReadFile(filepath.Join("testdata", "apptest.json"))
+	if err := json.Unmarshal(g, &appdata); err != nil {
+		t.Fatal("Error in reading app data from json file", err)
+	}
 	newAppCmd := CreateAppCmd(*client)
 	b := bytes.NewBufferString("")
 	newAppCmd.SetOut(b)
-	newAppCmd.SetArgs([]string{tokenTest, "apptest.json", "nodejs"})
+	newAppCmd.SetArgs([]string{tokenTest, "/testdata/apptest.json", "nodejs"})
 	newAppCmd.Execute()
 	out, err := ioutil.ReadAll(b)
 	if err != nil {
@@ -38,7 +52,7 @@ func Test_FetchAppCmd(t *testing.T) {
 	fetchSingleApp := FetchAppCmd(*client)
 	b := bytes.NewBufferString("")
 	fetchSingleApp.SetOut(b)
-	fetchSingleApp.SetArgs([]string{tokenTest, "-n", "gctltestapp"})
+	fetchSingleApp.SetArgs([]string{tokenTest, "-n", appdata.Name})
 	fetchSingleApp.Execute()
 	out, err := ioutil.ReadAll(b)
 	if err != nil {
@@ -65,7 +79,7 @@ func Test_DeleteAppCmd(t *testing.T) {
 	newDeleteApp := DeleteAppCmd(*client)
 	b := bytes.NewBufferString("")
 	newDeleteApp.SetOut(b)
-	newDeleteApp.SetArgs([]string{"gctltestapp", tokenTest})
+	newDeleteApp.SetArgs([]string{appdata.Name, tokenTest})
 	newDeleteApp.Execute()
 	out, err := ioutil.ReadAll(b)
 	if err != nil {

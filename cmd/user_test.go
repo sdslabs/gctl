@@ -2,8 +2,12 @@ package cmd
 
 import (
 	"bytes"
+	"encoding/json"
 	"io/ioutil"
+	"path/filepath"
 	"testing"
+
+	openapi "github.com/sdslabs/gctl/client"
 )
 
 func Test_FetchUserCmd(t *testing.T) {
@@ -22,10 +26,15 @@ func Test_FetchUserCmd(t *testing.T) {
 }
 
 func Test_UpdateUserCmd(t *testing.T) {
+	var updatePassDetails openapi.InlineObject
+	g, _ := ioutil.ReadFile(filepath.Join("testdata", "updatepassdata.json"))
+	if err := json.Unmarshal(g, &updatePassDetails); err != nil {
+		t.Fatal("Error in reading update password details from json", err)
+	}
 	newUpdateCmd := UpdateUserPasswdCmd(client)
 	b := bytes.NewBufferString("")
 	newUpdateCmd.SetOut(b)
-	newUpdateCmd.SetArgs([]string{generatedToken, "-o", "gctltest", "-n", "gctltest"})
+	newUpdateCmd.SetArgs([]string{generatedToken, "-o", updatePassDetails.OldPassword, "-n", updatePassDetails.NewPassword})
 	newUpdateCmd.Execute()
 	out, err := ioutil.ReadAll(b)
 	if err != nil {
