@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -14,12 +15,10 @@ import (
 var tokenTest string
 var appdata openapi.Application
 
-func Test_GenerateToken(t *testing.T) {
+func TestMain(m *testing.M) {
 	var loginCreds openapi.Login
 	g, _ := ioutil.ReadFile(filepath.Join("testdata", "logincreds.json"))
-	if err := json.Unmarshal(g, &loginCreds); err != nil {
-		t.Fatal("Error in reading login creds from json file", err)
-	}
+	json.Unmarshal(g, &loginCreds)
 	loginCmd := LoginCmd(client)
 	b := bytes.NewBufferString("")
 	loginCmd.SetOut(b)
@@ -27,6 +26,7 @@ func Test_GenerateToken(t *testing.T) {
 	loginCmd.Execute()
 	out, _ := ioutil.ReadAll(b)
 	tokenTest = strings.Split(string(out), " ")[2]
+	os.Exit(m.Run())
 }
 
 func Test_CreateAppCmd(t *testing.T) {
