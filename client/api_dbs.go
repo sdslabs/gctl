@@ -25,6 +25,14 @@ var (
 	_ _context.Context
 )
 
+//go:generate mockgen -package testmocks -destination testmocks/mock_api_dbs.go github.com/sdslabs/gctl/client DbsAPI
+type DbsAPI interface {
+	CreateDB(ctx _context.Context, databaseType string, localVarOptionals *CreateDBOpts) (InlineResponse2002, *_nethttp.Response, error)
+	DeleteDbByUser(ctx _context.Context, db string) (InlineResponse2002, *_nethttp.Response, error)
+	FetchDbByUser(ctx _context.Context, db string) (InlineResponse2007, *_nethttp.Response, error)
+	FetchDbsByUser(ctx _context.Context) (InlineResponse2007, *_nethttp.Response, error)
+}
+
 // DbsApiService DbsApi service
 type DbsApiService service
 

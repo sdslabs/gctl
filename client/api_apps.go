@@ -25,6 +25,14 @@ var (
 	_ _context.Context
 )
 
+//go:generate mockgen -package testmocks -destination testmocks/mock_api_apps.go . AppsAPI
+type AppsAPI interface {
+	CreateApp(ctx _context.Context, language string, application Application) (InlineResponse2002, *_nethttp.Response, error)
+	DeleteAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error)
+	FetchAppByUser(ctx _context.Context, app string) (InlineResponse2003, *_nethttp.Response, error)
+	FetchAppsByUser(ctx _context.Context) (InlineResponse2003, *_nethttp.Response, error)
+}
+
 // AppsApiService AppsApi service
 type AppsApiService service
 
