@@ -22,6 +22,13 @@ var (
 	_ _context.Context
 )
 
+//go:generate mockgen -package testmocks -destination testmocks/mock_api_user.go github.com/sdslabs/gctl/client UserAPI
+type UserAPI interface {
+	DeleteUser(ctx _context.Context) (InlineResponse2009, *_nethttp.Response, error)
+	FetchUser(ctx _context.Context) (InlineResponse2008, *_nethttp.Response, error)
+	UpdatePassword(ctx _context.Context, inlineObject InlineObject) (InlineResponse20010, *_nethttp.Response, error)
+}
+
 // UserApiService UserApi service
 type UserApiService service
 
