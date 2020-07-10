@@ -22,6 +22,11 @@ var (
 	_ _context.Context
 )
 
+//go:generate mockgen -package testmocks -destination testmocks/mock_api_instances.go github.com/sdslabs/gctl/client InstancesAPI
+type InstancesAPI interface {
+	FetchIntancesByUser(ctx _context.Context) (InlineResponse2001, *_nethttp.Response, error)
+}
+
 // InstancesApiService InstancesApi service
 type InstancesApiService service
 
