@@ -2,23 +2,32 @@ package cmd
 
 import (
 	"context"
+	_context "context"
+	_nethttp "net/http"
 
 	openapi "github.com/sdslabs/gctl/client"
 	"github.com/sdslabs/gctl/cmd/middlewares"
 	"github.com/spf13/cobra"
 )
 
+type AuthAPIService interface {
+	Login(ctx _context.Context, login openapi.Login) (openapi.LoginResponse, *_nethttp.Response, error)
+	Refresh(ctx _context.Context, authorization string) (openapi.LoginResponse, *_nethttp.Response, error)
+	Register(ctx _context.Context, user openapi.User) (openapi.InlineResponse200, *_nethttp.Response, error)
+}
+
+var authAPISservice openapi.AuthAPI = client.AuthApi
 var loginCreds openapi.Login
 var registerCreds openapi.User
 
 func init() {
-	rootCmd.AddCommand(LoginCmd(client))
-	rootCmd.AddCommand(RegisterCmd(client))
-	rootCmd.AddCommand(RefreshCmd(client))
+	rootCmd.AddCommand(LoginCmd(authAPISservice))
+	rootCmd.AddCommand(RegisterCmd(authAPISservice))
+	rootCmd.AddCommand(RefreshCmd(authAPISservice))
 }
 
 //LoginCmd returns command for login
-func LoginCmd(client *openapi.APIClient) *cobra.Command {
+func LoginCmd(authAPIService openapi.AuthAPI) *cobra.Command {
 	var loginCmd = &cobra.Command{
 		Use:   "login",
 		Short: "Login to get a bearer token ",
@@ -28,7 +37,7 @@ func LoginCmd(client *openapi.APIClient) *cobra.Command {
 			if loginCreds.Email == "" && loginCreds.Password == "" {
 				loginCreds = middlewares.LoginForm()
 			}
-			res, _, err := client.AuthApi.Login(context.Background(), loginCreds)
+			res, _, err := authAPIService.Login(context.Background(), loginCreds)
 			if res.Token != "" {
 				cmd.Println("Token: ", res.Token, "\n", "Expires at: ", res.Expire)
 			} else {
@@ -42,7 +51,7 @@ func LoginCmd(client *openapi.APIClient) *cobra.Command {
 }
 
 //RegisterCmd returns command to register a user to gasper
-func RegisterCmd(client *openapi.APIClient) *cobra.Command {
+func RegisterCmd(authAPIService openapi.AuthAPI) *cobra.Command {
 	var registerCmd = &cobra.Command{
 		Use:   "register",
 		Short: "Register a user",
@@ -53,7 +62,7 @@ func RegisterCmd(client *openapi.APIClient) *cobra.Command {
 			if registerCreds.Email == "" && registerCreds.Password == "" && registerCreds.Username == "" {
 				registerCreds = middlewares.RegisterForm()
 			}
-			res, _, err := client.AuthApi.Register(context.Background(), registerCreds)
+			res, _, err := authAPIService.Register(context.Background(), registerCreds)
 			if res.Success {
 				cmd.Println(res.Message)
 			} else {
@@ -68,7 +77,7 @@ func RegisterCmd(client *openapi.APIClient) *cobra.Command {
 }
 
 //RefreshCmd returns command to refresh existing token
-func RefreshCmd(client *openapi.APIClient) *cobra.Command {
+func RefreshCmd(authAPIService openapi.AuthAPI) *cobra.Command {
 	var refreshCmd = &cobra.Command{
 		Use:   "refresh [BEARER_TOKEN]",
 		Short: "Refresh JWT token using existing token",
