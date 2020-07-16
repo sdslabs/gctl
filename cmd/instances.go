@@ -13,14 +13,14 @@ type InstancesAPIService interface {
 	FetchIntancesByUser(ctx _context.Context) (openapi.InlineResponse2001, *_nethttp.Response, error)
 }
 
-var instancesAPIService openapi.InstancesAPI = client.InstancesApi
+var instancesAPIService InstancesAPIService = client.InstancesApi
 
 func init() {
 	fetchCmd.AddCommand(GetInstancesCmd(instancesAPIService))
 }
 
 //GetInstancesCmd returns a command to fetch all instances of a user
-func GetInstancesCmd(instancesAPIService openapi.InstancesAPI) *cobra.Command {
+func GetInstancesCmd(instancesAPIService InstancesAPIService) *cobra.Command {
 	var getInstancesCmd = &cobra.Command{
 		Use:   "instances [BEARER_TOKEN]",
 		Short: "Fetch all instances owned by a user",

@@ -16,7 +16,7 @@ type AuthAPIService interface {
 	Register(ctx _context.Context, user openapi.User) (openapi.InlineResponse200, *_nethttp.Response, error)
 }
 
-var authAPISservice openapi.AuthAPI = client.AuthApi
+var authAPISservice AuthAPIService = client.AuthApi
 var loginCreds openapi.Login
 var registerCreds openapi.User
 
@@ -27,7 +27,7 @@ func init() {
 }
 
 //LoginCmd returns command for login
-func LoginCmd(authAPIService openapi.AuthAPI) *cobra.Command {
+func LoginCmd(authAPIService AuthAPIService) *cobra.Command {
 	var loginCmd = &cobra.Command{
 		Use:   "login",
 		Short: "Login to get a bearer token ",
@@ -51,7 +51,7 @@ func LoginCmd(authAPIService openapi.AuthAPI) *cobra.Command {
 }
 
 //RegisterCmd returns command to register a user to gasper
-func RegisterCmd(authAPIService openapi.AuthAPI) *cobra.Command {
+func RegisterCmd(authAPIService AuthAPIService) *cobra.Command {
 	var registerCmd = &cobra.Command{
 		Use:   "register",
 		Short: "Register a user",
@@ -77,7 +77,7 @@ func RegisterCmd(authAPIService openapi.AuthAPI) *cobra.Command {
 }
 
 //RefreshCmd returns command to refresh existing token
-func RefreshCmd(authAPIService openapi.AuthAPI) *cobra.Command {
+func RefreshCmd(authAPIService AuthAPIService) *cobra.Command {
 	var refreshCmd = &cobra.Command{
 		Use:   "refresh [BEARER_TOKEN]",
 		Short: "Refresh JWT token using existing token",
