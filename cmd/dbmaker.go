@@ -36,7 +36,10 @@ func CreateDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 		Short: "Create a database",
 		Args:  cobra.MaximumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			token := args[0]
+			var token string
+			if len(args) == 1 {
+				token = args[0]
+			}
 			dbtype, _ = cmd.Flags().GetString("dbtype")
 			db.Name, _ = cmd.Flags().GetString("name")
 			db.Password, _ = cmd.Flags().GetString("password")
