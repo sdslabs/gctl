@@ -18,7 +18,7 @@ type UserAPIService interface {
 }
 
 var object openapi.InlineObject
-var userAPIService openapi.UserAPI = client.UserApi
+var userAPIService UserAPIService = client.UserApi
 
 func init() {
 	fetchCmd.AddCommand(FetchUserCmd(userAPIService))
@@ -27,7 +27,7 @@ func init() {
 }
 
 //FetchUserCmd returns command to fetch details of user
-func FetchUserCmd(userAPIService openapi.UserAPI) *cobra.Command {
+func FetchUserCmd(userAPIService UserAPIService) *cobra.Command {
 	var fetchUserCmd = &cobra.Command{
 		Use:   "user [BEARER_TOKEN]",
 		Short: "View user details",
@@ -47,7 +47,7 @@ func FetchUserCmd(userAPIService openapi.UserAPI) *cobra.Command {
 }
 
 //DeleteUserCmd returns command to delete a user
-func DeleteUserCmd(userAPIService openapi.UserAPI) *cobra.Command {
+func DeleteUserCmd(userAPIService UserAPIService) *cobra.Command {
 	var deleteUserCmd = &cobra.Command{
 		Use:   "user [BEARER_TOKEN]",
 		Short: "Delete user",
@@ -67,7 +67,7 @@ func DeleteUserCmd(userAPIService openapi.UserAPI) *cobra.Command {
 }
 
 //UpdateUserPasswdCmd returns command to update password of an user
-func UpdateUserPasswdCmd(userAPIService openapi.UserAPI) *cobra.Command {
+func UpdateUserPasswdCmd(userAPIService UserAPIService) *cobra.Command {
 	var updateUserPasswd = &cobra.Command{
 		Use:   "user [BEARER_TOKEN]",
 		Short: "Update the password of the logged in user",
