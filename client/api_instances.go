@@ -73,7 +73,7 @@ func (a *InstancesApiService) FetchIntancesByUser(ctx _context.Context) (InlineR
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
