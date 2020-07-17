@@ -74,7 +74,7 @@ func (a *AdminApiService) DeleteAppByAdmin(ctx _context.Context, app string) (In
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -151,7 +151,7 @@ func (a *AdminApiService) DeleteDbByAdmin(ctx _context.Context, db string) (Inli
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -228,7 +228,7 @@ func (a *AdminApiService) DeleteUserByAdmin(ctx _context.Context, userEmail stri
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -305,7 +305,7 @@ func (a *AdminApiService) FetchAppByAdmin(ctx _context.Context, app string) (Inl
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -419,7 +419,7 @@ func (a *AdminApiService) FetchAppsByAdmin(ctx _context.Context, localVarOptiona
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -496,7 +496,7 @@ func (a *AdminApiService) FetchDbByAdmin(ctx _context.Context, db string) (Inlin
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -605,7 +605,7 @@ func (a *AdminApiService) FetchDbsByAdmin(ctx _context.Context, localVarOptional
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -682,7 +682,7 @@ func (a *AdminApiService) FetchNodeByAdmin(ctx _context.Context, type_ string) (
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -756,7 +756,7 @@ func (a *AdminApiService) FetchNodesByAdmin(ctx _context.Context) (InlineRespons
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -833,7 +833,7 @@ func (a *AdminApiService) FetchUserByAdmin(ctx _context.Context, userEmail strin
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -927,7 +927,7 @@ func (a *AdminApiService) FetchUsersByAdmin(ctx _context.Context, localVarOption
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1004,7 +1004,7 @@ func (a *AdminApiService) GrantSuperuserPrivilege(ctx _context.Context, userEmai
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1081,7 +1081,7 @@ func (a *AdminApiService) RevokeSuperuserPrivilege(ctx _context.Context, userEma
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

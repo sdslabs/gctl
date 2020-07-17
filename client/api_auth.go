@@ -79,7 +79,7 @@ func (a *AuthApiService) Login(ctx _context.Context, login Login) (LoginResponse
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -174,7 +174,7 @@ func (a *AuthApiService) Refresh(ctx _context.Context, authorization string) (Lo
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -261,7 +261,7 @@ func (a *AuthApiService) Register(ctx _context.Context, user User) (InlineRespon
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
