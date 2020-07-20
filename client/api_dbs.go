@@ -25,6 +25,14 @@ var (
 	_ _context.Context
 )
 
+//go:generate mockgen -package testmocks -destination testmocks/mock_api_dbs.go github.com/sdslabs/gctl/client DbsAPI
+type DbsAPI interface {
+	CreateDB(ctx _context.Context, databaseType string, localVarOptionals *CreateDBOpts) (InlineResponse2002, *_nethttp.Response, error)
+	DeleteDbByUser(ctx _context.Context, db string) (InlineResponse2002, *_nethttp.Response, error)
+	FetchDbByUser(ctx _context.Context, db string) (InlineResponse2007, *_nethttp.Response, error)
+	FetchDbsByUser(ctx _context.Context) (InlineResponse2007, *_nethttp.Response, error)
+}
+
 // DbsApiService DbsApi service
 type DbsApiService service
 
@@ -90,7 +98,7 @@ func (a *DbsApiService) CreateDB(ctx _context.Context, databaseType string, loca
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -167,7 +175,7 @@ func (a *DbsApiService) DeleteDbByUser(ctx _context.Context, db string) (InlineR
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -244,7 +252,7 @@ func (a *DbsApiService) FetchDbByUser(ctx _context.Context, db string) (InlineRe
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -318,7 +326,7 @@ func (a *DbsApiService) FetchDbsByUser(ctx _context.Context) (InlineResponse2007
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -398,7 +406,7 @@ func (a *DbsApiService) TransferDbByUser(ctx _context.Context, db string, userEm
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

@@ -36,6 +36,24 @@ import (
 	"golang.org/x/oauth2"
 )
 
+type Client interface {
+	NewAPIClient(cfg *Configuration) *APIClient
+	CallApi(request *http.Request) (*http.Response, error)
+	ChangeBasePath(path string)
+	GetConfig() *Configuration
+	prepareRequest(
+		ctx context.Context,
+		path string, method string,
+		postBody interface{},
+		headerParams map[string]string,
+		queryParams url.Values,
+		formParams url.Values,
+		formFileName string,
+		fileName string,
+		fileBytes []byte) (localVarRequest *http.Request, err error)
+	decode(v interface{}, b []byte, contentType string) (err error)
+}
+
 var (
 	jsonCheck = regexp.MustCompile(`(?i:(?:application|text)/(?:vnd\.[^;]+\+)?json)`)
 	xmlCheck  = regexp.MustCompile(`(?i:(?:application|text)/xml)`)
@@ -173,8 +191,8 @@ func parameterToJson(obj interface{}) (string, error) {
 	return string(jsonBuf), err
 }
 
-// callAPI do the request.
-func (c *APIClient) callAPI(request *http.Request) (*http.Response, error) {
+// CallApi do the request.
+func (c *APIClient) CallApi(request *http.Request) (*http.Response, error) {
 	if c.cfg.Debug {
 		dump, err := httputil.DumpRequestOut(request, true)
 		if err != nil {

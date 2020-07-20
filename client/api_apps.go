@@ -25,6 +25,14 @@ var (
 	_ _context.Context
 )
 
+//go:generate mockgen -package testmocks -destination testmocks/mock_api_apps.go . AppsAPI
+type AppsAPI interface {
+	CreateApp(ctx _context.Context, language string, application Application) (InlineResponse2002, *_nethttp.Response, error)
+	DeleteAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error)
+	FetchAppByUser(ctx _context.Context, app string) (InlineResponse2003, *_nethttp.Response, error)
+	FetchAppsByUser(ctx _context.Context) (InlineResponse2003, *_nethttp.Response, error)
+}
+
 // AppsApiService AppsApi service
 type AppsApiService service
 
@@ -77,7 +85,7 @@ func (a *AppsApiService) CreateApp(ctx _context.Context, language string, applic
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -154,7 +162,7 @@ func (a *AppsApiService) DeleteAppByUser(ctx _context.Context, app string) (Inli
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -231,7 +239,7 @@ func (a *AppsApiService) FetchAppByUser(ctx _context.Context, app string) (Inlin
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -305,7 +313,7 @@ func (a *AppsApiService) FetchAppsByUser(ctx _context.Context) (InlineResponse20
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -392,7 +400,7 @@ func (a *AppsApiService) FetchLogsByUser(ctx _context.Context, app string, local
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -514,7 +522,7 @@ func (a *AppsApiService) FetchMetricsByUser(ctx _context.Context, app string, lo
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -591,7 +599,7 @@ func (a *AppsApiService) FetchTerminalByUser(ctx _context.Context, app string) (
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -668,7 +676,7 @@ func (a *AppsApiService) RebuildAppByUser(ctx _context.Context, app string) (Inl
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -748,7 +756,7 @@ func (a *AppsApiService) TransferAppByUser(ctx _context.Context, app string, use
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -828,7 +836,7 @@ func (a *AppsApiService) UpdateAppByUser(ctx _context.Context, app string, appli
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

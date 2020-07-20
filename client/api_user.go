@@ -22,6 +22,13 @@ var (
 	_ _context.Context
 )
 
+//go:generate mockgen -package testmocks -destination testmocks/mock_api_user.go github.com/sdslabs/gctl/client UserAPI
+type UserAPI interface {
+	DeleteUser(ctx _context.Context) (InlineResponse2009, *_nethttp.Response, error)
+	FetchUser(ctx _context.Context) (InlineResponse2008, *_nethttp.Response, error)
+	UpdatePassword(ctx _context.Context, inlineObject InlineObject) (InlineResponse20010, *_nethttp.Response, error)
+}
+
 // UserApiService UserApi service
 type UserApiService service
 
@@ -68,7 +75,7 @@ func (a *UserApiService) DeleteUser(ctx _context.Context) (InlineResponse2009, *
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -142,7 +149,7 @@ func (a *UserApiService) FetchUser(ctx _context.Context) (InlineResponse2008, *_
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -219,7 +226,7 @@ func (a *UserApiService) UpdatePassword(ctx _context.Context, inlineObject Inlin
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

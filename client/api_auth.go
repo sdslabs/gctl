@@ -22,6 +22,13 @@ var (
 	_ _context.Context
 )
 
+//go:generate mockgen -package testmocks -destination testmocks/mock_api_auth.go github.com/sdslabs/gctl/client AuthAPI
+type AuthAPI interface {
+	Login(ctx _context.Context, login Login) (LoginResponse, *_nethttp.Response, error)
+	Refresh(ctx _context.Context, authorization string) (LoginResponse, *_nethttp.Response, error)
+	Register(ctx _context.Context, user User) (InlineResponse200, *_nethttp.Response, error)
+}
+
 // AuthApiService AuthApi service
 type AuthApiService service
 
@@ -72,7 +79,7 @@ func (a *AuthApiService) Login(ctx _context.Context, login Login) (LoginResponse
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -167,7 +174,7 @@ func (a *AuthApiService) Refresh(ctx _context.Context, authorization string) (Lo
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -254,7 +261,7 @@ func (a *AuthApiService) Register(ctx _context.Context, user User) (InlineRespon
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallApi(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

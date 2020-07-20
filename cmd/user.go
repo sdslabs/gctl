@@ -2,23 +2,32 @@ package cmd
 
 import (
 	"context"
+	_context "context"
 	"fmt"
+	_nethttp "net/http"
 
 	"github.com/howeyc/gopass"
 	openapi "github.com/sdslabs/gctl/client"
 	"github.com/spf13/cobra"
 )
 
+type UserAPIService interface {
+	DeleteUser(ctx _context.Context) (openapi.InlineResponse2009, *_nethttp.Response, error)
+	FetchUser(ctx _context.Context) (openapi.InlineResponse2008, *_nethttp.Response, error)
+	UpdatePassword(ctx _context.Context, inlineObject openapi.InlineObject) (openapi.InlineResponse20010, *_nethttp.Response, error)
+}
+
 var object openapi.InlineObject
+var userAPIService UserAPIService = client.UserApi
 
 func init() {
-	fetchCmd.AddCommand(FetchUserCmd(client))
-	deleteCmd.AddCommand(DeleteUserCmd(client))
-	updateCmd.AddCommand(UpdateUserPasswdCmd(client))
+	fetchCmd.AddCommand(FetchUserCmd(userAPIService))
+	deleteCmd.AddCommand(DeleteUserCmd(userAPIService))
+	updateCmd.AddCommand(UpdateUserPasswdCmd(userAPIService))
 }
 
 //FetchUserCmd returns command to fetch details of user
-func FetchUserCmd(client *openapi.APIClient) *cobra.Command {
+func FetchUserCmd(userAPIService UserAPIService) *cobra.Command {
 	var fetchUserCmd = &cobra.Command{
 		Use:   "user [BEARER_TOKEN]",
 		Short: "View user details",
@@ -26,13 +35,11 @@ func FetchUserCmd(client *openapi.APIClient) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			token := args[0]
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
-			res, _, err := client.UserApi.FetchUser(auth)
+			res, _, err := userAPIService.FetchUser(auth)
 			if res.Success {
 				cmd.Print("Username: " + res.Username + "\n" + "Email: " + res.Email + "\n")
 			} else {
-				if err != nil {
-					cmd.Print("Error:", err)
-				}
+				cmd.Print("Error:", err)
 			}
 		},
 	}
@@ -40,7 +47,7 @@ func FetchUserCmd(client *openapi.APIClient) *cobra.Command {
 }
 
 //DeleteUserCmd returns command to delete a user
-func DeleteUserCmd(client *openapi.APIClient) *cobra.Command {
+func DeleteUserCmd(userAPIService UserAPIService) *cobra.Command {
 	var deleteUserCmd = &cobra.Command{
 		Use:   "user [BEARER_TOKEN]",
 		Short: "Delete user",
@@ -48,13 +55,11 @@ func DeleteUserCmd(client *openapi.APIClient) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			token := args[0]
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
-			res, _, err := client.UserApi.DeleteUser(auth)
+			res, _, err := userAPIService.DeleteUser(auth)
 			if res.Success {
 				cmd.Print(res.Message)
 			} else {
-				if err != nil {
-					cmd.Print("Error:", err)
-				}
+				cmd.Print("Error:", err)
 			}
 		},
 	}
@@ -62,7 +67,7 @@ func DeleteUserCmd(client *openapi.APIClient) *cobra.Command {
 }
 
 //UpdateUserPasswdCmd returns command to update password of an user
-func UpdateUserPasswdCmd(client *openapi.APIClient) *cobra.Command {
+func UpdateUserPasswdCmd(userAPIService UserAPIService) *cobra.Command {
 	var updateUserPasswd = &cobra.Command{
 		Use:   "user [BEARER_TOKEN]",
 		Short: "Update the password of the logged in user",
@@ -80,14 +85,11 @@ func UpdateUserPasswdCmd(client *openapi.APIClient) *cobra.Command {
 				object.NewPassword = string(maskedNewPasswd)
 			}
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
-			client.UserApi.UpdatePassword(auth, object)
-			res, _, err := client.UserApi.UpdatePassword(auth, object)
+			res, _, err := userAPIService.UpdatePassword(auth, object)
 			if res.Success {
 				cmd.Print(res.Message)
 			} else {
-				if err != nil {
-					cmd.Print("Error:", err)
-				}
+				cmd.Print("Error:", err)
 			}
 		},
 	}
