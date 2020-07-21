@@ -6,6 +6,15 @@ import (
 	"strings"
 )
 
+//ValidateEmail validates the email
+func ValidateEmail(email string) bool {
+	if email == "" {
+		return false
+	}
+	re := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+	return re.MatchString(email)
+}
+
 //ValidateName validates the username
 func ValidateName(username string) bool {
 	if len(username) < 3 || len(username) > 40 {

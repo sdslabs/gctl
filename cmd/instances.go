@@ -22,12 +22,11 @@ func init() {
 //GetInstancesCmd returns a command to fetch all instances of a user
 func GetInstancesCmd(instancesAPIService InstancesAPIService) *cobra.Command {
 	var getInstancesCmd = &cobra.Command{
-		Use:   "instances [BEARER_TOKEN]",
+		Use:   "instances",
 		Short: "Fetch all instances owned by a user",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			token := args[0]
-			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := instancesAPIService.FetchIntancesByUser(auth)
 			if res.Success && len(res.Data) != 0 {
 				for i := 0; i < len(res.Data); i++ {
