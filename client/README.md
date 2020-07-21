@@ -41,9 +41,7 @@ Class | Method | HTTP request | Description
 *AppsApi* | [**FetchAppsByUser**](docs/AppsApi.md#fetchappsbyuser) | **Get** /apps | Fetch all applications owned by a user
 *AppsApi* | [**FetchLogsByUser**](docs/AppsApi.md#fetchlogsbyuser) | **Get** /apps/{app}/logs | Fetch logs of an application
 *AppsApi* | [**FetchMetricsByUser**](docs/AppsApi.md#fetchmetricsbyuser) | **Get** /apps/{app}/metrics | Fetch metrics of an application
-*AppsApi* | [**FetchTerminalByUser**](docs/AppsApi.md#fetchterminalbyuser) | **Get** /apps/{app}/term | Fetch a browser terminal instance for an application owned by a user
 *AppsApi* | [**RebuildAppByUser**](docs/AppsApi.md#rebuildappbyuser) | **Patch** /apps/{app}/rebuild | Rebuild an application
-*AppsApi* | [**TransferAppByUser**](docs/AppsApi.md#transferappbyuser) | **Patch** /apps/{app}/transfer/{userEmail} | Transfer ownership of an application to another user
 *AppsApi* | [**UpdateAppByUser**](docs/AppsApi.md#updateappbyuser) | **Put** /apps/{app} | Update an application owned by a user
 *AuthApi* | [**Login**](docs/AuthApi.md#login) | **Post** /auth/login | Login to get a Bearer token
 *AuthApi* | [**Refresh**](docs/AuthApi.md#refresh) | **Get** /auth/refresh | Refresh JWT token using existing token
@@ -73,12 +71,8 @@ Class | Method | HTTP request | Description
  - [InlineResponse200](docs/InlineResponse200.md)
  - [InlineResponse2001](docs/InlineResponse2001.md)
  - [InlineResponse20010](docs/InlineResponse20010.md)
- - [InlineResponse20011](docs/InlineResponse20011.md)
- - [InlineResponse20012](docs/InlineResponse20012.md)
- - [InlineResponse20013](docs/InlineResponse20013.md)
  - [InlineResponse2002](docs/InlineResponse2002.md)
  - [InlineResponse2003](docs/InlineResponse2003.md)
- - [InlineResponse2004](docs/InlineResponse2004.md)
  - [InlineResponse2005](docs/InlineResponse2005.md)
  - [InlineResponse2006](docs/InlineResponse2006.md)
  - [InlineResponse2007](docs/InlineResponse2007.md)
