@@ -35,22 +35,6 @@ func (m *MockAuthAPI) EXPECT() *MockAuthAPIMockRecorder {
 	return m.recorder
 }
 
-// Login mocks base method
-func (m *MockAuthAPI) Login(ctx context.Context, login openapi.Login) (openapi.LoginResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Login", ctx, login)
-	ret0, _ := ret[0].(openapi.LoginResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// Login indicates an expected call of Login
-func (mr *MockAuthAPIMockRecorder) Login(ctx, login interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockAuthAPI)(nil).Login), ctx, login)
-}
-
 // Refresh mocks base method
 func (m *MockAuthAPI) Refresh(ctx context.Context, authorization string) (openapi.LoginResponse, *http.Response, error) {
 	m.ctrl.T.Helper()
@@ -65,20 +49,4 @@ func (m *MockAuthAPI) Refresh(ctx context.Context, authorization string) (openap
 func (mr *MockAuthAPIMockRecorder) Refresh(ctx, authorization interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Refresh", reflect.TypeOf((*MockAuthAPI)(nil).Refresh), ctx, authorization)
-}
-
-// Register mocks base method
-func (m *MockAuthAPI) Register(ctx context.Context, user openapi.User) (openapi.InlineResponse200, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Register", ctx, user)
-	ret0, _ := ret[0].(openapi.InlineResponse200)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// Register indicates an expected call of Register
-func (mr *MockAuthAPIMockRecorder) Register(ctx, user interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockAuthAPI)(nil).Register), ctx, user)
 }
