@@ -105,10 +105,13 @@ func LogoutCmd() *cobra.Command {
 		Short: "Logout from gctl",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			err := os.Remove("gctltoken.txt")
-			if err != nil {
-				cmd.Print("system error")
-				return
+			_, err := os.Stat("gctltoken.txt")
+			if !os.IsNotExist(err) {
+				err := os.Remove("gctltoken.txt")
+				if err != nil {
+					cmd.Print("system error in logout")
+					return
+				}
 			}
 		},
 	}
