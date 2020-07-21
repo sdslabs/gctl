@@ -74,8 +74,6 @@ type APIClient struct {
 	DbsApi *DbsApiService
 
 	InstancesApi *InstancesApiService
-
-	UserApi *UserApiService
 }
 
 type service struct {
@@ -98,7 +96,6 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.AuthApi = (*AuthApiService)(&c.common)
 	c.DbsApi = (*DbsApiService)(&c.common)
 	c.InstancesApi = (*InstancesApiService)(&c.common)
-	c.UserApi = (*UserApiService)(&c.common)
 
 	return c
 }
