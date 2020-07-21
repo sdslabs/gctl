@@ -20,7 +20,6 @@ func Test_CreateAppCmd(t *testing.T) {
 	var httpres *_nethttp.Response
 	token, _ := ioutil.ReadFile(filepath.Join("testdata", "token.txt"))
 	gctltoken = string(token)
-	defer LogoutCmd().Execute()
 	auth1 := context.WithValue(context.Background(), openapi.ContextAccessToken, string(token))
 	g, _ := ioutil.ReadFile(filepath.Join("testdata", "apptest.json"))
 	if err := json.Unmarshal(g, &appdata); err != nil {
@@ -65,7 +64,6 @@ func Test_FetchAppCmd(t *testing.T) {
 	var httpres *_nethttp.Response
 	token, _ := ioutil.ReadFile(filepath.Join("testdata", "token.txt"))
 	gctltoken = string(token)
-	defer LogoutCmd().Execute()
 	auth1 := context.WithValue(context.Background(), openapi.ContextAccessToken, string(token))
 
 	ctrl := gomock.NewController(t)
@@ -106,7 +104,6 @@ func Test_DeleteAppCmd(t *testing.T) {
 	var httpres *_nethttp.Response
 	token, _ := ioutil.ReadFile(filepath.Join("testdata", "token.txt"))
 	gctltoken = string(token)
-	defer LogoutCmd()
 	auth1 := context.WithValue(context.Background(), openapi.ContextAccessToken, string(token))
 
 	ctrl := gomock.NewController(t)
@@ -145,7 +142,6 @@ func Test_RebuildAppCmd(t *testing.T) {
 	var httpres *_nethttp.Response
 	token, _ := ioutil.ReadFile(filepath.Join("testdata", "token.txt"))
 	gctltoken = string(token)
-	defer LogoutCmd().Execute()
 	auth1 := context.WithValue(context.Background(), openapi.ContextAccessToken, string(token))
 
 	ctrl := gomock.NewController(t)
@@ -184,7 +180,6 @@ func Test_UpdateAppCmd(t *testing.T) {
 	var httpres *_nethttp.Response
 	token, _ := ioutil.ReadFile(filepath.Join("testdata", "token.txt"))
 	gctltoken = string(token)
-	defer LogoutCmd().Execute()
 	auth1 := context.WithValue(context.Background(), openapi.ContextAccessToken, string(token))
 	g, _ := ioutil.ReadFile(filepath.Join("testdata", "apptest.json"))
 	if err := json.Unmarshal(g, &appdata); err != nil {
@@ -230,7 +225,6 @@ func Test_FetchLogsCmd(t *testing.T) {
 	var httpres *_nethttp.Response
 	token, _ := ioutil.ReadFile(filepath.Join("testdata", "token.txt"))
 	gctltoken = string(token)
-	defer LogoutCmd().Execute()
 	auth1 := context.WithValue(context.Background(), openapi.ContextAccessToken, string(token))
 
 	ctrl := gomock.NewController(t)

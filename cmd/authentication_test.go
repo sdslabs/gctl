@@ -60,7 +60,21 @@ func Test_LoginCmd(t *testing.T) {
 	if !bytes.Contains(out, []byte("Token not provided")) {
 		t.Fatal("Can log in without personal access token")
 	}
+}
 
+func Test_LogoutCmd(t *testing.T) {
+	logoutCmd := LogoutCmd()
+	b := bytes.NewBufferString("")
+	logoutCmd.SetOut(b)
+
+	logoutCmd.Execute()
+	out, err := ioutil.ReadAll(b)
+	if err != nil {
+		t.Fatal("Error in reading output")
+	}
+	if bytes.Compare(out, []byte("")) != 0 {
+		t.Fatal("Token cannot be refreshed.")
+	}
 }
 
 func Test_RefreshCmd(t *testing.T) {
@@ -69,7 +83,6 @@ func Test_RefreshCmd(t *testing.T) {
 	ctx := context.Background()
 	token, _ := ioutil.ReadFile(filepath.Join("testdata", "token.txt"))
 	gctltoken = string(token)
-	defer LogoutCmd().Execute()
 	g, _ := ioutil.ReadFile(filepath.Join("testdata", "loginresponse.json"))
 	if err := json.Unmarshal(g, &loginres); err != nil {
 		t.Fatal("Error in reading user details from json", err)
@@ -93,13 +106,4 @@ func Test_RefreshCmd(t *testing.T) {
 		t.Fatal("Token cannot be refreshed.")
 	}
 
-}
-
-func Test_LogoutCmd(t *testing.T) {
-	token, _ := ioutil.ReadFile(filepath.Join("testdata", "token.txt"))
-	gctltoken = string(token)
-	LogoutCmd().Execute()
-	if gctltoken != "" {
-		t.Fatal("Error in logging out")
-	}
 }
