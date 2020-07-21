@@ -35,19 +35,6 @@ All URIs are relative to *http://localhost:3000*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*AdminApi* | [**DeleteAppByAdmin**](docs/AdminApi.md#deleteappbyadmin) | **Delete** /admin/apps/{app} | Delete an application
-*AdminApi* | [**DeleteDbByAdmin**](docs/AdminApi.md#deletedbbyadmin) | **Delete** /admin/dbs/{db} | Delete a single database
-*AdminApi* | [**DeleteUserByAdmin**](docs/AdminApi.md#deleteuserbyadmin) | **Delete** /admin/users/{userEmail} | Delete a single user
-*AdminApi* | [**FetchAppByAdmin**](docs/AdminApi.md#fetchappbyadmin) | **Get** /admin/apps/{app} | Fetch a single application
-*AdminApi* | [**FetchAppsByAdmin**](docs/AdminApi.md#fetchappsbyadmin) | **Get** /admin/apps | Fetch all applications with/without a filter defined by query params
-*AdminApi* | [**FetchDbByAdmin**](docs/AdminApi.md#fetchdbbyadmin) | **Get** /admin/dbs/{db} | Fetch a single database
-*AdminApi* | [**FetchDbsByAdmin**](docs/AdminApi.md#fetchdbsbyadmin) | **Get** /admin/dbs | Fetch all databases with/without a filter defined by query params
-*AdminApi* | [**FetchNodeByAdmin**](docs/AdminApi.md#fetchnodebyadmin) | **Get** /admin/nodes/{type} | Fetch bind addresses(IP:Port) of a single microservice on all nodes
-*AdminApi* | [**FetchNodesByAdmin**](docs/AdminApi.md#fetchnodesbyadmin) | **Get** /admin/nodes | Fetch bind addresses(IP:Port) of all microservices on all nodes
-*AdminApi* | [**FetchUserByAdmin**](docs/AdminApi.md#fetchuserbyadmin) | **Get** /admin/users/{userEmail} | Fetch a single user
-*AdminApi* | [**FetchUsersByAdmin**](docs/AdminApi.md#fetchusersbyadmin) | **Get** /admin/users | Fetch all users with/without a filter defined by query params
-*AdminApi* | [**GrantSuperuserPrivilege**](docs/AdminApi.md#grantsuperuserprivilege) | **Patch** /admin/users/{userEmail}/grant | Grant superuser privileges to a single user
-*AdminApi* | [**RevokeSuperuserPrivilege**](docs/AdminApi.md#revokesuperuserprivilege) | **Patch** /admin/users/{userEmail}/revoke | Revoke superuser privileges from a single user
 *AppsApi* | [**CreateApp**](docs/AppsApi.md#createapp) | **Post** /apps/{language} | Create an application
 *AppsApi* | [**DeleteAppByUser**](docs/AppsApi.md#deleteappbyuser) | **Delete** /apps/{app} | Delete an application owned by a user
 *AppsApi* | [**FetchAppByUser**](docs/AppsApi.md#fetchappbyuser) | **Get** /apps/{app} | Fetch a single application owned by a user
