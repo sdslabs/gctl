@@ -183,3 +183,146 @@ func Test_DeleteAppCmd(t *testing.T) {
 		t.Fatalf("App can be deleted without token.")
 	}
 }
+
+func Test_RebuildAppCmd(t *testing.T) {
+	var httpres *_nethttp.Response
+	token, _ := ioutil.ReadFile(filepath.Join("testdata", "token.txt"))
+	auth1 := context.WithValue(context.Background(), openapi.ContextAccessToken, string(token))
+	auth2 := context.WithValue(context.Background(), openapi.ContextAccessToken, string(""))
+
+	ctrl := gomock.NewController(t)
+	mockApp := testmocks.NewMockAppsAPIService(ctrl)
+	output1 := openapi.InlineResponse2002{Success: true}
+	output2 := openapi.InlineResponse2002{Success: false}
+	mockApp.EXPECT().RebuildAppByUser(auth1, appdata.Name).Return(output1, httpres, nil).AnyTimes()
+	mockApp.EXPECT().RebuildAppByUser(auth1, "").Return(output2, httpres, nil).AnyTimes()
+	mockApp.EXPECT().RebuildAppByUser(auth2, appdata.Name).Return(output2, httpres, nil).AnyTimes()
+
+	newRebuildApp := RebuildAppCmd(mockApp)
+	b := bytes.NewBufferString("")
+	newRebuildApp.SetOut(b)
+
+	newRebuildApp.SetArgs([]string{appdata.Name, string(token)})
+	newRebuildApp.Execute()
+	out, err := ioutil.ReadAll(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Contains(out, []byte("App rebuilt successfully")) {
+		t.Fatalf("App cannot be rebuilt.")
+	}
+
+	newRebuildApp.SetArgs([]string{"", string(token)})
+	newRebuildApp.Execute()
+	out, err = ioutil.ReadAll(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bytes.Contains(out, []byte("App rebuilt successfully")) {
+		t.Fatalf("App can be rebuilt without app name.")
+	}
+
+	newRebuildApp.SetArgs([]string{appdata.Name})
+	newRebuildApp.Execute()
+	out, err = ioutil.ReadAll(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bytes.Contains(out, []byte("App rebuilt successfully")) {
+		t.Fatalf("App can be rebuilt without token.")
+	}
+}
+
+func Test_UpdateAppCmd(t *testing.T) {
+	var httpres *_nethttp.Response
+	token, _ := ioutil.ReadFile(filepath.Join("testdata", "token.txt"))
+	auth1 := context.WithValue(context.Background(), openapi.ContextAccessToken, string(token))
+	auth2 := context.WithValue(context.Background(), openapi.ContextAccessToken, "")
+	g, _ := ioutil.ReadFile(filepath.Join("testdata", "apptest.json"))
+	if err := json.Unmarshal(g, &appdata); err != nil {
+		t.Fatal("Error in reading app data from json file", err)
+	}
+
+	ctrl := gomock.NewController(t)
+	mockApp := testmocks.NewMockAppsAPIService(ctrl)
+	output1 := openapi.InlineResponse2002{Success: true}
+	output2 := openapi.InlineResponse2002{Success: false}
+	output3 := openapi.InlineResponse2003{Success: true, Data: []openapi.CreatedApplication{{Id: "1"}}}
+	mockApp.EXPECT().UpdateAppByUser(auth1, appdata.Name, appdata).Return(output1, httpres, nil).AnyTimes()
+	mockApp.EXPECT().UpdateAppByUser(auth1, "", appdata).Return(output2, httpres, nil).AnyTimes()
+	mockApp.EXPECT().UpdateAppByUser(auth2, appdata.Name, appdata).Return(output2, httpres, nil).AnyTimes()
+	mockApp.EXPECT().FetchAppByUser(auth1, appdata.Name).Return(output3, httpres, nil).AnyTimes()
+
+	newUpdateAppCmd := UpdateAppCmd(mockApp)
+	b := bytes.NewBufferString("")
+	newUpdateAppCmd.SetOut(b)
+
+	newUpdateAppCmd.SetArgs([]string{appdata.Name, "/testdata/apptest.json", string(token)})
+	newUpdateAppCmd.Execute()
+	out, err := ioutil.ReadAll(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Contains(out, []byte("App updated successfully")) {
+		t.Fatal("App cannot be updated.")
+	}
+
+	newUpdateAppCmd.SetArgs([]string{"", "/testdata/apptest.json", string(token)})
+	newUpdateAppCmd.Execute()
+	out, err = ioutil.ReadAll(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bytes.Contains(out, []byte("App updated successfully")) {
+		t.Fatalf("App updated without app language.")
+	}
+
+	newUpdateAppCmd.SetArgs([]string{appdata.Name, "/testdata/apptest.json", ""})
+	newUpdateAppCmd.Execute()
+	out, err = ioutil.ReadAll(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bytes.Contains(out, []byte("App updated successfully")) {
+		t.Fatalf("App updated without token.")
+	}
+}
+
+func Test_FetchLogsCmd(t *testing.T) {
+	var localVarOptional openapi.FetchLogsByUserOpts
+	var httpres *_nethttp.Response
+	token, _ := ioutil.ReadFile(filepath.Join("testdata", "token.txt"))
+	auth1 := context.WithValue(context.Background(), openapi.ContextAccessToken, string(token))
+	auth2 := context.WithValue(context.Background(), openapi.ContextAccessToken, string(""))
+
+	ctrl := gomock.NewController(t)
+	mockApp := testmocks.NewMockAppsAPIService(ctrl)
+	output1 := openapi.InlineResponse2005{Success: true}
+	output2 := openapi.InlineResponse2005{Success: false}
+	mockApp.EXPECT().FetchLogsByUser(auth1, appdata.Name, &localVarOptional).Return(output1, httpres, nil).AnyTimes()
+	mockApp.EXPECT().FetchLogsByUser(auth2, appdata.Name, &localVarOptional).Return(output2, httpres, nil).AnyTimes()
+
+	fetchLogs := FetchLogsCmd(mockApp)
+	b := bytes.NewBufferString("")
+	fetchLogs.SetOut(b)
+
+	fetchLogs.SetArgs([]string{appdata.Name, string(token)})
+	fetchLogs.Execute()
+	out, err := ioutil.ReadAll(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bytes.Contains(out, []byte("Error in fetching the logs.")) {
+		t.Fatalf("Logs cannot be fetched")
+	}
+
+	fetchLogs.SetArgs([]string{appdata.Name, ""})
+	fetchLogs.Execute()
+	out, err = ioutil.ReadAll(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Contains(out, []byte("Error in fetching the logs.")) {
+		t.Fatal("Logs can be fetched without token", string(out))
+	}
+}

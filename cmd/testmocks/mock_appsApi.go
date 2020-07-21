@@ -98,3 +98,51 @@ func (mr *MockAppsAPIServiceMockRecorder) FetchAppsByUser(ctx interface{}) *gomo
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchAppsByUser", reflect.TypeOf((*MockAppsAPIService)(nil).FetchAppsByUser), ctx)
 }
+
+// FetchLogsByUser mocks base method
+func (m *MockAppsAPIService) FetchLogsByUser(ctx context.Context, app string, localVarOptionals *openapi.FetchLogsByUserOpts) (openapi.InlineResponse2005, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FetchLogsByUser", ctx, app, localVarOptionals)
+	ret0, _ := ret[0].(openapi.InlineResponse2005)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// FetchLogsByUser indicates an expected call of FetchLogsByUser
+func (mr *MockAppsAPIServiceMockRecorder) FetchLogsByUser(ctx, app, localVarOptionals interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchLogsByUser", reflect.TypeOf((*MockAppsAPIService)(nil).FetchLogsByUser), ctx, app, localVarOptionals)
+}
+
+// RebuildAppByUser mocks base method
+func (m *MockAppsAPIService) RebuildAppByUser(ctx context.Context, app string) (openapi.InlineResponse2002, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RebuildAppByUser", ctx, app)
+	ret0, _ := ret[0].(openapi.InlineResponse2002)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// RebuildAppByUser indicates an expected call of RebuildAppByUser
+func (mr *MockAppsAPIServiceMockRecorder) RebuildAppByUser(ctx, app interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RebuildAppByUser", reflect.TypeOf((*MockAppsAPIService)(nil).RebuildAppByUser), ctx, app)
+}
+
+// UpdateAppByUser mocks base method
+func (m *MockAppsAPIService) UpdateAppByUser(ctx context.Context, app string, application openapi.Application) (openapi.InlineResponse2002, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAppByUser", ctx, app, application)
+	ret0, _ := ret[0].(openapi.InlineResponse2002)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// UpdateAppByUser indicates an expected call of UpdateAppByUser
+func (mr *MockAppsAPIServiceMockRecorder) UpdateAppByUser(ctx, app, application interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAppByUser", reflect.TypeOf((*MockAppsAPIService)(nil).UpdateAppByUser), ctx, app, application)
+}
