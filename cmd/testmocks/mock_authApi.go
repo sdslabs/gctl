@@ -35,6 +35,22 @@ func (m *MockAuthAPIService) EXPECT() *MockAuthAPIServiceMockRecorder {
 	return m.recorder
 }
 
+// Login mocks base method
+func (m *MockAuthAPIService) Login(ctx context.Context, email openapi.Email) (openapi.InlineResponse2002, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Login", ctx, email)
+	ret0, _ := ret[0].(openapi.InlineResponse2002)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// Login indicates an expected call of Login
+func (mr *MockAuthAPIServiceMockRecorder) Login(ctx, email interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockAuthAPIService)(nil).Login), ctx, email)
+}
+
 // Refresh mocks base method
 func (m *MockAuthAPIService) Refresh(ctx context.Context, authorization string) (openapi.LoginResponse, *http.Response, error) {
 	m.ctrl.T.Helper()

@@ -38,20 +38,20 @@ func init() {
 //CreateAppCmd is command to create an app
 func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var appmakerCmd = &cobra.Command{
-		Use:   "app [TOKEN] [FILENAME] [LANGUAGE]",
+		Use:   "app [FILENAME] [LANGUAGE]",
 		Short: "Create an application",
+		Args:  cobra.MaximumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			var token, language string
+			var language string
 			var application openapi.Application
-			if len(args) == 3 {
-				token = args[0]
-				filename := strings.Split(args[1], ".")[0]
-				language = args[2]
+			if len(args) == 2 {
+				filename := strings.Split(args[0], ".")[0]
+				language = args[1]
 				application = middlewares.ReadAppJSON(filename)
 			} else {
-				token, language, application = middlewares.AppForm()
+				language, application = middlewares.AppForm()
 			}
-			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.CreateApp(auth, language, application)
 			if res.Success {
 				res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)
@@ -76,13 +76,12 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 //FetchAppCmd returns command to fetch apps of a user
 func FetchAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var fetchAppCmd = &cobra.Command{
-		Use:   "app [BEARER_TOKEN]",
+		Use:   "app",
 		Short: "fetch apps",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			appName, _ := cmd.Flags().GetString("name")
-			token := args[0]
-			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			if appName != "" {
 				res, _, err := appsAPIService.FetchAppByUser(auth, appName)
 				if res.Success {
@@ -125,13 +124,12 @@ func FetchAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 //DeleteAppCmd returns command to delete app owned by a user
 func DeleteAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var deleteAppCmd = &cobra.Command{
-		Use:   "app [APP_NAME] [BEARER TOKEN]",
+		Use:   "app [APP_NAME]",
 		Short: "delete an app",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			token := args[1]
 			appName := args[0]
-			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.DeleteAppByUser(auth, appName)
 			if res.Success {
 				cmd.Println("App deleted successfully")
@@ -146,13 +144,12 @@ func DeleteAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 //RebuildAppCmd returns a command to rebuild an app
 func RebuildAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var rebuildAppCmd = &cobra.Command{
-		Use:   "rebuild [APP_NAME] [TOKEN]",
+		Use:   "rebuild [APP_NAME]",
 		Short: "rebuild an app",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			token := args[1]
 			appName := args[0]
-			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.RebuildAppByUser(auth, appName)
 			if res.Success {
 				cmd.Println("App rebuilt successfully")
@@ -167,22 +164,20 @@ func RebuildAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 //UpdateAppCmd returns a command to update an app
 func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var updateAppCmd = &cobra.Command{
-		Use:   "app [APP_NAME] [FILE_NAME] [TOKEN]",
+		Use:   "app [APP_NAME] [FILE_NAME]",
 		Short: "update an app",
-		Args:  cobra.MaximumNArgs(3),
+		Args:  cobra.MaximumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			var token string
 			var application openapi.Application
-			if len(args) == 3 {
-				token = args[2]
+			if len(args) == 2 {
 				filename := strings.Split(args[1], ".")[0]
 				appName = args[0]
 				application = middlewares.ReadAppJSON(filename)
 			} else {
-				token, _, application = middlewares.AppForm()
+				_, application = middlewares.AppForm()
 				appName = application.Name
 			}
-			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.UpdateAppByUser(auth, appName, application)
 			if res.Success {
 				res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)
@@ -207,20 +202,19 @@ func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 //FetchLogsCmd returns a command to fetch logs of an app
 func FetchLogsCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var fetchLogsCmd = &cobra.Command{
-		Use:   "logs [APP_NAME] [TOKEN] [NUMBER_OF_LOGS] ",
+		Use:   "logs [APP_NAME][NUMBER_OF_LOGS] ",
 		Short: "fetch logs of an app",
-		Args:  cobra.MinimumNArgs(2),
+		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			var localVarOptional openapi.FetchLogsByUserOpts
-			token := args[1]
 			appName := args[0]
-			if len(args) == 3 {
-				n, _ := strconv.ParseInt(args[2], 10, 32)
+			if len(args) == 2 {
+				n, _ := strconv.ParseInt(args[1], 10, 32)
 				localVarOptional = openapi.FetchLogsByUserOpts{
 					Tail: optional.NewInt32(int32(n)),
 				}
 			}
-			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.FetchLogsByUser(auth, appName, &localVarOptional)
 			if res.Success {
 				if len(res.Data) != 0 {

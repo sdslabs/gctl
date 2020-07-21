@@ -32,24 +32,20 @@ func init() {
 //CreateDbCmd returns command to create a database
 func CreateDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 	var dbmakerCmd = &cobra.Command{
-		Use:   "db [BEARER_TOKEN]",
+		Use:   "db",
 		Short: "Create a database",
-		Args:  cobra.MaximumNArgs(1),
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			var token string
-			if len(args) == 1 {
-				token = args[0]
-			}
 			dbtype, _ = cmd.Flags().GetString("dbtype")
 			db.Name, _ = cmd.Flags().GetString("name")
 			db.Password, _ = cmd.Flags().GetString("password")
-			if token == "" && dbtype == "" && db.Name == "" && db.Password == "" {
-				token, dbtype, db = middlewares.DbForm()
+			if dbtype == "" && db.Name == "" && db.Password == "" {
+				dbtype, db = middlewares.DbForm()
 			}
 			localVarOptional := &openapi.CreateDBOpts{
 				Database: optional.NewInterface(db),
 			}
-			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := dbsAPIService.CreateDB(auth, dbtype, localVarOptional)
 			if res.Success {
 				cmd.Print("Database created")
@@ -67,13 +63,12 @@ func CreateDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 //FetchDbCmd returns command to fetch databases of a user
 func FetchDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 	var fetchDbCmd = &cobra.Command{
-		Use:   "db [BEARER_TOKEN]",
+		Use:   "db",
 		Short: "Fetch database owned by a user",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			dbName, _ := cmd.Flags().GetString("name")
-			token := args[0]
-			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			if dbName != "" {
 				res, _, err := dbsAPIService.FetchDbByUser(auth, dbName)
 				if res.Success {
@@ -112,13 +107,12 @@ func FetchDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 //DeleteDbCmd returns command to delete database owned by a user
 func DeleteDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 	var deleteDbCmd = &cobra.Command{
-		Use:   "db [DB_NAME] [BEARER_TOKEN]",
+		Use:   "db [DB_NAME]",
 		Short: "Delete a single database owned by a user",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			dbName := args[0]
-			token := args[1]
-			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, token)
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := dbsAPIService.DeleteDbByUser(auth, dbName)
 			if res.Success {
 				cmd.Println("Database deleted successfully")
