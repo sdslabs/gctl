@@ -43,18 +43,12 @@ Class | Method | HTTP request | Description
 *AppsApi* | [**FetchMetricsByUser**](docs/AppsApi.md#fetchmetricsbyuser) | **Get** /apps/{app}/metrics | Fetch metrics of an application
 *AppsApi* | [**RebuildAppByUser**](docs/AppsApi.md#rebuildappbyuser) | **Patch** /apps/{app}/rebuild | Rebuild an application
 *AppsApi* | [**UpdateAppByUser**](docs/AppsApi.md#updateappbyuser) | **Put** /apps/{app} | Update an application owned by a user
-*AuthApi* | [**Login**](docs/AuthApi.md#login) | **Post** /auth/login | Login to get a Bearer token
 *AuthApi* | [**Refresh**](docs/AuthApi.md#refresh) | **Get** /auth/refresh | Refresh JWT token using existing token
-*AuthApi* | [**Register**](docs/AuthApi.md#register) | **Post** /auth/register | Register a user
 *DbsApi* | [**CreateDB**](docs/DbsApi.md#createdb) | **Post** /dbs/{databaseType} | Create a database
 *DbsApi* | [**DeleteDbByUser**](docs/DbsApi.md#deletedbbyuser) | **Delete** /dbs/{db} | Delete a single database owned by a user
 *DbsApi* | [**FetchDbByUser**](docs/DbsApi.md#fetchdbbyuser) | **Get** /dbs/{db} | Fetch a single database owned by a user
 *DbsApi* | [**FetchDbsByUser**](docs/DbsApi.md#fetchdbsbyuser) | **Get** /dbs | Fetch all databases owned by a user
 *InstancesApi* | [**FetchIntancesByUser**](docs/InstancesApi.md#fetchintancesbyuser) | **Get** /instances | Fetch all instances owned by a user
-*UserApi* | [**DeleteUser**](docs/UserApi.md#deleteuser) | **Delete** /user | Delete user
-*UserApi* | [**FetchUser**](docs/UserApi.md#fetchuser) | **Get** /user | Fetch logged in user&#39;s info
-*UserApi* | [**UpdatePassword**](docs/UserApi.md#updatepassword) | **Put** /user/password | Update the password of the logged in user
-
 
 ## Documentation For Models
 
@@ -63,28 +57,21 @@ Class | Method | HTTP request | Description
  - [Context](docs/Context.md)
  - [CreatedApplication](docs/CreatedApplication.md)
  - [CreatedDatabase](docs/CreatedDatabase.md)
- - [CreatedUser](docs/CreatedUser.md)
  - [Database](docs/Database.md)
  - [Git](docs/Git.md)
  - [InlineObject](docs/InlineObject.md)
- - [InlineResponse200](docs/InlineResponse200.md)
  - [InlineResponse2001](docs/InlineResponse2001.md)
- - [InlineResponse20010](docs/InlineResponse20010.md)
  - [InlineResponse2002](docs/InlineResponse2002.md)
  - [InlineResponse2003](docs/InlineResponse2003.md)
  - [InlineResponse2005](docs/InlineResponse2005.md)
  - [InlineResponse2006](docs/InlineResponse2006.md)
  - [InlineResponse2007](docs/InlineResponse2007.md)
- - [InlineResponse2008](docs/InlineResponse2008.md)
- - [InlineResponse2009](docs/InlineResponse2009.md)
  - [InlineResponse400](docs/InlineResponse400.md)
  - [InlineResponse401](docs/InlineResponse401.md)
  - [InlineResponse500](docs/InlineResponse500.md)
  - [Instances](docs/Instances.md)
- - [Login](docs/Login.md)
  - [LoginResponse](docs/LoginResponse.md)
  - [Metrics](docs/Metrics.md)
- - [User](docs/User.md)
 
 
 ## Documentation For Authorization
