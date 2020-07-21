@@ -50,7 +50,6 @@ Class | Method | HTTP request | Description
 *DbsApi* | [**DeleteDbByUser**](docs/DbsApi.md#deletedbbyuser) | **Delete** /dbs/{db} | Delete a single database owned by a user
 *DbsApi* | [**FetchDbByUser**](docs/DbsApi.md#fetchdbbyuser) | **Get** /dbs/{db} | Fetch a single database owned by a user
 *DbsApi* | [**FetchDbsByUser**](docs/DbsApi.md#fetchdbsbyuser) | **Get** /dbs | Fetch all databases owned by a user
-*DbsApi* | [**TransferDbByUser**](docs/DbsApi.md#transferdbbyuser) | **Patch** /dbs/{db}/transfer/{userEmail} | Transfer ownership of a database to another user
 *InstancesApi* | [**FetchIntancesByUser**](docs/InstancesApi.md#fetchintancesbyuser) | **Get** /instances | Fetch all instances owned by a user
 *UserApi* | [**DeleteUser**](docs/UserApi.md#deleteuser) | **Delete** /user | Delete user
 *UserApi* | [**FetchUser**](docs/UserApi.md#fetchuser) | **Get** /user | Fetch logged in user&#39;s info
