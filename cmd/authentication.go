@@ -84,13 +84,11 @@ func RefreshCmd(authAPIService AuthAPIService) *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			token := args[0]
-			res, _, err := client.AuthApi.Refresh(context.Background(), "Bearer "+token)
+			res, _, err := authAPIService.Refresh(context.Background(), "gctlToken "+token)
 			if res.Code == 200 {
 				cmd.Println("Token: ", res.Token, "\n", "Expires at: ", res.Expire)
 			} else {
-				if err != nil {
-					cmd.Println("Error:", err)
-				}
+				cmd.Println("Error:", err)
 			}
 		},
 	}
