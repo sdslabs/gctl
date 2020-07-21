@@ -17,7 +17,6 @@ func Test_GetInstancesCmd(t *testing.T) {
 	var httpres *_nethttp.Response
 	token, _ := ioutil.ReadFile(filepath.Join("testdata", "token.txt"))
 	gctltoken = string(token)
-	defer LogoutCmd().Execute()
 	auth1 := context.WithValue(context.Background(), openapi.ContextAccessToken, string(token))
 
 	ctrl := gomock.NewController(t)
