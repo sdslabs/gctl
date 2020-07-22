@@ -87,7 +87,7 @@ func (a *InstancesApiService) FetchIntancesByUser(ctx _context.Context) (InlineR
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
