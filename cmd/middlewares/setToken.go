@@ -3,7 +3,7 @@ package middlewares
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -12,15 +12,19 @@ import (
 	openapi "github.com/sdslabs/gctl/client"
 )
 
-func SetToken(client *openapi.APIClient) string {
+func SetToken(client *openapi.APIClient) (string, error) {
 	var tokenres openapi.LoginResponse
 	var gctltoken string
+	_, err := os.Stat(filepath.Join("/tmp", "gctltoken.json"))
+	if os.IsNotExist(err) {
+		return "", errors.New("you are not logged in. Log in using command 'gctl login'")
+	}
 	g, err := ioutil.ReadFile(filepath.Join("/tmp", "gctltoken.json"))
 	if err != nil {
-		fmt.Print(err)
+		return "", err
 	}
 	if err := json.Unmarshal(g, &tokenres); err != nil {
-		fmt.Print(err)
+		return "", err
 	}
 	gctltoken = tokenres.Token
 	if tokenres.Expire.Sub(time.Now()) < 0 {
@@ -29,19 +33,19 @@ func SetToken(client *openapi.APIClient) string {
 			jsonBytes, _ := json.Marshal(res)
 			file, err := os.OpenFile(filepath.Join("/tmp", "gctltoken.json"), os.O_RDWR, 0644)
 			if err != nil {
-				fmt.Print("system error2")
+				return "", err
 			}
 			if _, err = file.Write(jsonBytes); err != nil {
-				fmt.Print("system error3")
+				return "", err
 			}
 			err = file.Sync()
 			if err != nil {
-				fmt.Print("system error4")
+				return "", err
 			}
 			gctltoken = res.Token
 		} else {
-			fmt.Print(err)
+			return "", err
 		}
 	}
-	return gctltoken
+	return gctltoken, nil
 }
