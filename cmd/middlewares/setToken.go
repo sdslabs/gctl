@@ -29,7 +29,7 @@ func SetToken(client *openapi.APIClient) (string, error) {
 	}
 	gctltoken = tokenres.Token
 	if tokenres.Expire.Sub(time.Now()) < 0 {
-		res, _, err := client.AuthApi.Refresh(context.Background(), "gctlToken "+tokenres.Token)
+		res, _, err := client.AuthAPI.Refresh(context.Background(), "gctlToken "+tokenres.Token)
 		if res.Code == 200 {
 			jsonBytes, _ := json.Marshal(res)
 			file, err := os.OpenFile(filepath.Join("/tmp", "gctltoken.json"), os.O_RDWR, 0644)

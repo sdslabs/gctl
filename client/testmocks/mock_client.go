@@ -34,17 +34,17 @@ func (m *MockClient) EXPECT() *MockClientMockRecorder {
 	return m.recorder
 }
 
-// CallApi mocks base method
-func (m *MockClient) CallApi(request *http.Request) (*http.Response, error) {
+// CallAPI mocks base method
+func (m *MockClient) CallAPI(request *http.Request) (*http.Response, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CallApi", request)
+	ret := m.ctrl.Call(m, "CallAPI", request)
 	ret0, _ := ret[0].(*http.Response)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CallApi indicates an expected call of CallApi
-func (mr *MockClientMockRecorder) CallApi(request interface{}) *gomock.Call {
+// CallAPI indicates an expected call of CallAPI
+func (mr *MockClientMockRecorder) CallAPI(request interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CallApi", reflect.TypeOf((*MockClient)(nil).CallApi), request)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CallAPI", reflect.TypeOf((*MockClient)(nil).CallAPI), request)
 }

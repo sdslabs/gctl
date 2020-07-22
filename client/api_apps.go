@@ -25,7 +25,7 @@ var (
 	_ _context.Context
 )
 
-//go:generate mockgen -package testmocks -destination testmocks/mock_api_apps.go . AppsAPI
+//AppsAPI is interface for functions of type AppsAPIService
 type AppsAPI interface {
 	CreateApp(ctx _context.Context, language string, application Application) (InlineResponse2002, *_nethttp.Response, error)
 	DeleteAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error)
@@ -33,8 +33,8 @@ type AppsAPI interface {
 	FetchAppsByUser(ctx _context.Context) (InlineResponse2003, *_nethttp.Response, error)
 }
 
-// AppsApiService AppsApi service
-type AppsApiService service
+// AppsAPIService AppsAPI service
+type AppsAPIService service
 
 /*
 CreateApp Create an application
@@ -43,7 +43,7 @@ CreateApp Create an application
  * @param application
 @return InlineResponse2002
 */
-func (a *AppsApiService) CreateApp(ctx _context.Context, language string, application Application) (InlineResponse2002, *_nethttp.Response, error) {
+func (a *AppsAPIService) CreateApp(ctx _context.Context, language string, application Application) (InlineResponse2002, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -85,7 +85,7 @@ func (a *AppsApiService) CreateApp(ctx _context.Context, language string, applic
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -122,7 +122,7 @@ DeleteAppByUser Delete an application owned by a user
  * @param app The name of the application
 @return InlineResponse2002
 */
-func (a *AppsApiService) DeleteAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error) {
+func (a *AppsAPIService) DeleteAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -162,7 +162,7 @@ func (a *AppsApiService) DeleteAppByUser(ctx _context.Context, app string) (Inli
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -199,7 +199,7 @@ FetchAppByUser Fetch a single application owned by a user
  * @param app The name of the application
 @return InlineResponse2003
 */
-func (a *AppsApiService) FetchAppByUser(ctx _context.Context, app string) (InlineResponse2003, *_nethttp.Response, error) {
+func (a *AppsAPIService) FetchAppByUser(ctx _context.Context, app string) (InlineResponse2003, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -239,7 +239,7 @@ func (a *AppsApiService) FetchAppByUser(ctx _context.Context, app string) (Inlin
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -275,7 +275,7 @@ FetchAppsByUser Fetch all applications owned by a user
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 @return InlineResponse2003
 */
-func (a *AppsApiService) FetchAppsByUser(ctx _context.Context) (InlineResponse2003, *_nethttp.Response, error) {
+func (a *AppsAPIService) FetchAppsByUser(ctx _context.Context) (InlineResponse2003, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -313,7 +313,7 @@ func (a *AppsApiService) FetchAppsByUser(ctx _context.Context) (InlineResponse20
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -357,7 +357,7 @@ FetchLogsByUser Fetch logs of an application
  * @param "Tail" (optional.Int32) -  Fetch the last **n** logs (Fetches all logs if not specified)
 @return InlineResponse2005
 */
-func (a *AppsApiService) FetchLogsByUser(ctx _context.Context, app string, localVarOptionals *FetchLogsByUserOpts) (InlineResponse2005, *_nethttp.Response, error) {
+func (a *AppsAPIService) FetchLogsByUser(ctx _context.Context, app string, localVarOptionals *FetchLogsByUserOpts) (InlineResponse2005, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -400,7 +400,7 @@ func (a *AppsApiService) FetchLogsByUser(ctx _context.Context, app string, local
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -458,7 +458,7 @@ FetchMetricsByUser Fetch metrics of an application
  * @param "Decades" (optional.Int32) -  Fetch metrics in the last **n** decades
 @return InlineResponse2006
 */
-func (a *AppsApiService) FetchMetricsByUser(ctx _context.Context, app string, localVarOptionals *FetchMetricsByUserOpts) (InlineResponse2006, *_nethttp.Response, error) {
+func (a *AppsAPIService) FetchMetricsByUser(ctx _context.Context, app string, localVarOptionals *FetchMetricsByUserOpts) (InlineResponse2006, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -522,7 +522,7 @@ func (a *AppsApiService) FetchMetricsByUser(ctx _context.Context, app string, lo
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -559,7 +559,7 @@ RebuildAppByUser Rebuild an application
  * @param app The name of the application
 @return InlineResponse2002
 */
-func (a *AppsApiService) RebuildAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error) {
+func (a *AppsAPIService) RebuildAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -599,7 +599,7 @@ func (a *AppsApiService) RebuildAppByUser(ctx _context.Context, app string) (Inl
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -637,7 +637,7 @@ UpdateAppByUser Update an application owned by a user
  * @param application
 @return InlineResponse2002
 */
-func (a *AppsApiService) UpdateAppByUser(ctx _context.Context, app string, application Application) (InlineResponse2002, *_nethttp.Response, error) {
+func (a *AppsAPIService) UpdateAppByUser(ctx _context.Context, app string, application Application) (InlineResponse2002, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -679,7 +679,7 @@ func (a *AppsApiService) UpdateAppByUser(ctx _context.Context, app string, appli
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

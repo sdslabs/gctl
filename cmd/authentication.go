@@ -18,7 +18,7 @@ type AuthAPIService interface {
 	Login(ctx _context.Context, email openapi.Email) (openapi.InlineResponse2004, *_nethttp.Response, error)
 }
 
-var authAPISservice AuthAPIService = client.AuthApi
+var authAPISservice AuthAPIService = client.AuthAPI
 
 func init() {
 	rootCmd.AddCommand(LoginCmd(authAPISservice))

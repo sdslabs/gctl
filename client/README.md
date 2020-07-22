@@ -35,20 +35,20 @@ All URIs are relative to *http://localhost:3000*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*AppsApi* | [**CreateApp**](docs/AppsApi.md#createapp) | **Post** /apps/{language} | Create an application
-*AppsApi* | [**DeleteAppByUser**](docs/AppsApi.md#deleteappbyuser) | **Delete** /apps/{app} | Delete an application owned by a user
-*AppsApi* | [**FetchAppByUser**](docs/AppsApi.md#fetchappbyuser) | **Get** /apps/{app} | Fetch a single application owned by a user
-*AppsApi* | [**FetchAppsByUser**](docs/AppsApi.md#fetchappsbyuser) | **Get** /apps | Fetch all applications owned by a user
-*AppsApi* | [**FetchLogsByUser**](docs/AppsApi.md#fetchlogsbyuser) | **Get** /apps/{app}/logs | Fetch logs of an application
-*AppsApi* | [**FetchMetricsByUser**](docs/AppsApi.md#fetchmetricsbyuser) | **Get** /apps/{app}/metrics | Fetch metrics of an application
-*AppsApi* | [**RebuildAppByUser**](docs/AppsApi.md#rebuildappbyuser) | **Patch** /apps/{app}/rebuild | Rebuild an application
-*AppsApi* | [**UpdateAppByUser**](docs/AppsApi.md#updateappbyuser) | **Put** /apps/{app} | Update an application owned by a user
-*AuthApi* | [**Refresh**](docs/AuthApi.md#refresh) | **Get** /auth/refresh | Refresh JWT token using existing token
-*DbsApi* | [**CreateDB**](docs/DbsApi.md#createdb) | **Post** /dbs/{databaseType} | Create a database
-*DbsApi* | [**DeleteDbByUser**](docs/DbsApi.md#deletedbbyuser) | **Delete** /dbs/{db} | Delete a single database owned by a user
-*DbsApi* | [**FetchDbByUser**](docs/DbsApi.md#fetchdbbyuser) | **Get** /dbs/{db} | Fetch a single database owned by a user
-*DbsApi* | [**FetchDbsByUser**](docs/DbsApi.md#fetchdbsbyuser) | **Get** /dbs | Fetch all databases owned by a user
-*InstancesApi* | [**FetchIntancesByUser**](docs/InstancesApi.md#fetchintancesbyuser) | **Get** /instances | Fetch all instances owned by a user
+*AppsAPI* | [**CreateApp**](docs/AppsAPI.md#createapp) | **Post** /apps/{language} | Create an application
+*AppsAPI* | [**DeleteAppByUser**](docs/AppsAPI.md#deleteappbyuser) | **Delete** /apps/{app} | Delete an application owned by a user
+*AppsAPI* | [**FetchAppByUser**](docs/AppsAPI.md#fetchappbyuser) | **Get** /apps/{app} | Fetch a single application owned by a user
+*AppsAPI* | [**FetchAppsByUser**](docs/AppsAPI.md#fetchappsbyuser) | **Get** /apps | Fetch all applications owned by a user
+*AppsAPI* | [**FetchLogsByUser**](docs/AppsAPI.md#fetchlogsbyuser) | **Get** /apps/{app}/logs | Fetch logs of an application
+*AppsAPI* | [**FetchMetricsByUser**](docs/AppsAPI.md#fetchmetricsbyuser) | **Get** /apps/{app}/metrics | Fetch metrics of an application
+*AppsAPI* | [**RebuildAppByUser**](docs/AppsAPI.md#rebuildappbyuser) | **Patch** /apps/{app}/rebuild | Rebuild an application
+*AppsAPI* | [**UpdateAppByUser**](docs/AppsAPI.md#updateappbyuser) | **Put** /apps/{app} | Update an application owned by a user
+*AuthAPI* | [**Refresh**](docs/AuthAPI.md#refresh) | **Get** /auth/refresh | Refresh JWT token using existing token
+*DbsAPI* | [**CreateDB**](docs/DbsAPI.md#createdb) | **Post** /dbs/{databaseType} | Create a database
+*DbsAPI* | [**DeleteDbByUser**](docs/DbsAPI.md#deletedbbyuser) | **Delete** /dbs/{db} | Delete a single database owned by a user
+*DbsAPI* | [**FetchDbByUser**](docs/DbsAPI.md#fetchdbbyuser) | **Get** /dbs/{db} | Fetch a single database owned by a user
+*DbsAPI* | [**FetchDbsByUser**](docs/DbsAPI.md#fetchdbsbyuser) | **Get** /dbs | Fetch all databases owned by a user
+*InstancesAPI* | [**FetchIntancesByUser**](docs/InstancesAPI.md#fetchintancesbyuser) | **Get** /instances | Fetch all instances owned by a user
 
 ## Documentation For Models
 

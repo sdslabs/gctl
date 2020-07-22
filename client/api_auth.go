@@ -22,22 +22,21 @@ var (
 	_ _context.Context
 )
 
-//go:generate mockgen -package testmocks -destination testmocks/mock_api_auth.go github.com/sdslabs/gctl/client AuthAPI
+//AuthAPI is interface for functions of type AuthAPIService
 type AuthAPI interface {
 	Refresh(ctx _context.Context, authorization string) (LoginResponse, *_nethttp.Response, error)
 }
 
-// AuthApiService AuthApi service
-type AuthApiService service
+// AuthAPIService AuthAPI service
+type AuthAPIService service
 
 /*
-CreateApp Create an application
+Login Login in gctl
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param language The programming language in which the application is written
- * @param application
-@return InlineResponse2002
+ * @param email
+@return InlineResponse2004
 */
-func (a *AuthApiService) Login(ctx _context.Context, email Email) (InlineResponse2004, *_nethttp.Response, error) {
+func (a *AuthAPIService) Login(ctx _context.Context, email Email) (InlineResponse2004, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -77,7 +76,7 @@ func (a *AuthApiService) Login(ctx _context.Context, email Email) (InlineRespons
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -114,7 +113,7 @@ Refresh Refresh JWT token using existing token
  * @param authorization Bearer Token Authentication
 @return LoginResponse
 */
-func (a *AuthApiService) Refresh(ctx _context.Context, authorization string) (LoginResponse, *_nethttp.Response, error) {
+func (a *AuthAPIService) Refresh(ctx _context.Context, authorization string) (LoginResponse, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -153,7 +152,7 @@ func (a *AuthApiService) Refresh(ctx _context.Context, authorization string) (Lo
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
