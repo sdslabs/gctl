@@ -15,7 +15,7 @@ type InstancesAPIService interface {
 	FetchIntancesByUser(ctx _context.Context) (openapi.InlineResponse2001, *_nethttp.Response, error)
 }
 
-var instancesAPIService InstancesAPIService = client.InstancesApi
+var instancesAPIService InstancesAPIService = client.InstancesAPI
 
 func init() {
 	fetchCmd.AddCommand(GetInstancesCmd(instancesAPIService))

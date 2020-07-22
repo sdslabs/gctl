@@ -25,7 +25,7 @@ type AppsAPIService interface {
 }
 
 var appName string
-var appsAPIService AppsAPIService = client.AppsApi
+var appsAPIService AppsAPIService = client.AppsAPI
 
 func init() {
 	createCmd.AddCommand(CreateAppCmd(appsAPIService))

@@ -25,7 +25,7 @@ var (
 	_ _context.Context
 )
 
-//go:generate mockgen -package testmocks -destination testmocks/mock_api_dbs.go github.com/sdslabs/gctl/client DbsAPI
+//DbsAPI is interface for functions of type DbsAPIService
 type DbsAPI interface {
 	CreateDB(ctx _context.Context, databaseType string, localVarOptionals *CreateDBOpts) (InlineResponse2002, *_nethttp.Response, error)
 	DeleteDbByUser(ctx _context.Context, db string) (InlineResponse2002, *_nethttp.Response, error)
@@ -33,8 +33,8 @@ type DbsAPI interface {
 	FetchDbsByUser(ctx _context.Context) (InlineResponse2007, *_nethttp.Response, error)
 }
 
-// DbsApiService DbsApi service
-type DbsApiService service
+// DbsAPIService DbsAPI service
+type DbsAPIService service
 
 // CreateDBOpts Optional parameters for the method 'CreateDB'
 type CreateDBOpts struct {
@@ -49,7 +49,7 @@ CreateDB Create a database
  * @param "Database" (optional.Interface of Database) -
 @return InlineResponse2002
 */
-func (a *DbsApiService) CreateDB(ctx _context.Context, databaseType string, localVarOptionals *CreateDBOpts) (InlineResponse2002, *_nethttp.Response, error) {
+func (a *DbsAPIService) CreateDB(ctx _context.Context, databaseType string, localVarOptionals *CreateDBOpts) (InlineResponse2002, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -98,7 +98,7 @@ func (a *DbsApiService) CreateDB(ctx _context.Context, databaseType string, loca
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -135,7 +135,7 @@ DeleteDbByUser Delete a single database owned by a user
  * @param db Name of the database
 @return InlineResponse2002
 */
-func (a *DbsApiService) DeleteDbByUser(ctx _context.Context, db string) (InlineResponse2002, *_nethttp.Response, error) {
+func (a *DbsAPIService) DeleteDbByUser(ctx _context.Context, db string) (InlineResponse2002, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -175,7 +175,7 @@ func (a *DbsApiService) DeleteDbByUser(ctx _context.Context, db string) (InlineR
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -212,7 +212,7 @@ FetchDbByUser Fetch a single database owned by a user
  * @param db Name of the database
 @return InlineResponse2007
 */
-func (a *DbsApiService) FetchDbByUser(ctx _context.Context, db string) (InlineResponse2007, *_nethttp.Response, error) {
+func (a *DbsAPIService) FetchDbByUser(ctx _context.Context, db string) (InlineResponse2007, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -252,7 +252,7 @@ func (a *DbsApiService) FetchDbByUser(ctx _context.Context, db string) (InlineRe
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -288,7 +288,7 @@ FetchDbsByUser Fetch all databases owned by a user
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 @return InlineResponse2007
 */
-func (a *DbsApiService) FetchDbsByUser(ctx _context.Context) (InlineResponse2007, *_nethttp.Response, error) {
+func (a *DbsAPIService) FetchDbsByUser(ctx _context.Context) (InlineResponse2007, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -326,7 +326,7 @@ func (a *DbsApiService) FetchDbsByUser(ctx _context.Context) (InlineResponse2007
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.CallApi(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

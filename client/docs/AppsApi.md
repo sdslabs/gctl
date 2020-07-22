@@ -1,17 +1,17 @@
-# \AppsApi
+# \AppsAPI
 
 All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CreateApp**](AppsApi.md#CreateApp) | **Post** /apps/{language} | Create an application
-[**DeleteAppByUser**](AppsApi.md#DeleteAppByUser) | **Delete** /apps/{app} | Delete an application owned by a user
-[**FetchAppByUser**](AppsApi.md#FetchAppByUser) | **Get** /apps/{app} | Fetch a single application owned by a user
-[**FetchAppsByUser**](AppsApi.md#FetchAppsByUser) | **Get** /apps | Fetch all applications owned by a user
-[**FetchLogsByUser**](AppsApi.md#FetchLogsByUser) | **Get** /apps/{app}/logs | Fetch logs of an application
-[**FetchMetricsByUser**](AppsApi.md#FetchMetricsByUser) | **Get** /apps/{app}/metrics | Fetch metrics of an application
-[**RebuildAppByUser**](AppsApi.md#RebuildAppByUser) | **Patch** /apps/{app}/rebuild | Rebuild an application
-[**UpdateAppByUser**](AppsApi.md#UpdateAppByUser) | **Put** /apps/{app} | Update an application owned by a user
+[**CreateApp**](AppsAPI.md#CreateApp) | **Post** /apps/{language} | Create an application
+[**DeleteAppByUser**](AppsAPI.md#DeleteAppByUser) | **Delete** /apps/{app} | Delete an application owned by a user
+[**FetchAppByUser**](AppsAPI.md#FetchAppByUser) | **Get** /apps/{app} | Fetch a single application owned by a user
+[**FetchAppsByUser**](AppsAPI.md#FetchAppsByUser) | **Get** /apps | Fetch all applications owned by a user
+[**FetchLogsByUser**](AppsAPI.md#FetchLogsByUser) | **Get** /apps/{app}/logs | Fetch logs of an application
+[**FetchMetricsByUser**](AppsAPI.md#FetchMetricsByUser) | **Get** /apps/{app}/metrics | Fetch metrics of an application
+[**RebuildAppByUser**](AppsAPI.md#RebuildAppByUser) | **Patch** /apps/{app}/rebuild | Rebuild an application
+[**UpdateAppByUser**](AppsAPI.md#UpdateAppByUser) | **Put** /apps/{app} | Update an application owned by a user
 
 
 

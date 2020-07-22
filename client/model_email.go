@@ -10,7 +10,7 @@
 
 package openapi
 
-// Git struct for Git
+// Email struct for Email
 type Email struct {
 	// Email id of the user
 	Email string `json:"email"`

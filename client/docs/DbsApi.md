@@ -1,13 +1,13 @@
-# \DbsApi
+# \DbsAPI
 
 All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CreateDB**](DbsApi.md#CreateDB) | **Post** /dbs/{databaseType} | Create a database
-[**DeleteDbByUser**](DbsApi.md#DeleteDbByUser) | **Delete** /dbs/{db} | Delete a single database owned by a user
-[**FetchDbByUser**](DbsApi.md#FetchDbByUser) | **Get** /dbs/{db} | Fetch a single database owned by a user
-[**FetchDbsByUser**](DbsApi.md#FetchDbsByUser) | **Get** /dbs | Fetch all databases owned by a user
+[**CreateDB**](DbsAPI.md#CreateDB) | **Post** /dbs/{databaseType} | Create a database
+[**DeleteDbByUser**](DbsAPI.md#DeleteDbByUser) | **Delete** /dbs/{db} | Delete a single database owned by a user
+[**FetchDbByUser**](DbsAPI.md#FetchDbByUser) | **Get** /dbs/{db} | Fetch a single database owned by a user
+[**FetchDbsByUser**](DbsAPI.md#FetchDbsByUser) | **Get** /dbs | Fetch all databases owned by a user
 
 
 ## CreateDB
