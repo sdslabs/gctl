@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"fmt"
 	"os"
 
 	openapi "github.com/sdslabs/gctl/client"
@@ -9,7 +8,7 @@ import (
 )
 
 //ReadAppJSON reads a json file for app details
-func ReadAppJSON(filename string) openapi.Application {
+func ReadAppJSON(filename string) (openapi.Application, error) {
 	var application openapi.Application
 	viper.SetConfigName(filename)
 	viper.SetConfigType("json")
@@ -17,11 +16,11 @@ func ReadAppJSON(filename string) openapi.Application {
 	viper.AddConfigPath(path)
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(fmt.Errorf("fatal error config file: %s", err))
+		return application, err
 	}
 	err = viper.Unmarshal(&application)
 	if err != nil {
-		panic("unable to decode json file into struct")
+		return application, err
 	}
 	if viper.IsSet("git.repo_url") {
 		application.Git.RepoUrl = viper.GetString("git.repo_url")
@@ -34,5 +33,5 @@ func ReadAppJSON(filename string) openapi.Application {
 	} else {
 		application.Context.RcFile = false
 	}
-	return application
+	return application, nil
 }
