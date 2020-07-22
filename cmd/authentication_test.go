@@ -24,7 +24,7 @@ func Test_LoginCmd(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	mockAuthAPI := testmocks.NewMockAuthAPIService(ctrl)
-	output1 := openapi.InlineResponse2002{Success: true}
+	output1 := openapi.InlineResponse2004{Success: true}
 	mockAuthAPI.EXPECT().Login(auth1, input1).Return(output1, httpRes, nil)
 
 	logincmd := LoginCmd(mockAuthAPI)
