@@ -1,10 +1,10 @@
-# \InstancesApi
+# \InstancesAPI
 
 All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**FetchIntancesByUser**](InstancesApi.md#FetchIntancesByUser) | **Get** /instances | Fetch all instances owned by a user
+[**FetchIntancesByUser**](InstancesAPI.md#FetchIntancesByUser) | **Get** /instances | Fetch all instances owned by a user
 
 
 

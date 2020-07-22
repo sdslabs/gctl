@@ -1,10 +1,10 @@
-# \AuthApi
+# \AuthAPI
 
 All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**Refresh**](AuthApi.md#Refresh) | **Get** /auth/refresh | Refresh JWT token using existing token
+[**Refresh**](AuthAPI.md#Refresh) | **Get** /auth/refresh | Refresh JWT token using existing token
 
 
 ## Refresh

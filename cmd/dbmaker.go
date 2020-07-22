@@ -22,7 +22,7 @@ type DbsAPIService interface {
 var dbName string
 var dbtype string
 var db openapi.Database
-var dbsAPIService DbsAPIService = client.DbsApi
+var dbsAPIService DbsAPIService = client.DbsAPI
 
 func init() {
 	createCmd.AddCommand(CreateDbCmd(dbsAPIService))

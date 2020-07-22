@@ -36,9 +36,10 @@ import (
 	"golang.org/x/oauth2"
 )
 
+//Client is interface for functions of type APIClient
 type Client interface {
 	NewAPIClient(cfg *Configuration) *APIClient
-	CallApi(request *http.Request) (*http.Response, error)
+	CallAPI(request *http.Request) (*http.Response, error)
 	ChangeBasePath(path string)
 	GetConfig() *Configuration
 	prepareRequest(
@@ -67,13 +68,13 @@ type APIClient struct {
 
 	// API Services
 
-	AppsApi *AppsApiService
+	AppsAPI *AppsAPIService
 
-	AuthApi *AuthApiService
+	AuthAPI *AuthAPIService
 
-	DbsApi *DbsApiService
+	DbsAPI *DbsAPIService
 
-	InstancesApi *InstancesApiService
+	InstancesAPI *InstancesAPIService
 }
 
 type service struct {
@@ -92,10 +93,10 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.common.client = c
 
 	// API Services
-	c.AppsApi = (*AppsApiService)(&c.common)
-	c.AuthApi = (*AuthApiService)(&c.common)
-	c.DbsApi = (*DbsApiService)(&c.common)
-	c.InstancesApi = (*InstancesApiService)(&c.common)
+	c.AppsAPI = (*AppsAPIService)(&c.common)
+	c.AuthAPI = (*AuthAPIService)(&c.common)
+	c.DbsAPI = (*DbsAPIService)(&c.common)
+	c.InstancesAPI = (*InstancesAPIService)(&c.common)
 
 	return c
 }
@@ -147,7 +148,7 @@ func typeCheckParameter(obj interface{}, expected string, name string) error {
 
 	// Check the type is as expected.
 	if reflect.TypeOf(obj).String() != expected {
-		return fmt.Errorf("Expected %s to be of type %s but received %s.", name, expected, reflect.TypeOf(obj).String())
+		return fmt.Errorf("expected %s to be of type %s but received %s", name, expected, reflect.TypeOf(obj).String())
 	}
 	return nil
 }
@@ -177,7 +178,7 @@ func parameterToString(obj interface{}, collectionFormat string) string {
 }
 
 // helper for converting interface{} parameters to json strings
-func parameterToJson(obj interface{}) (string, error) {
+func parameterToJSON(obj interface{}) (string, error) {
 	jsonBuf, err := json.Marshal(obj)
 	if err != nil {
 		return "", err
@@ -185,8 +186,8 @@ func parameterToJson(obj interface{}) (string, error) {
 	return string(jsonBuf), err
 }
 
-// CallApi do the request.
-func (c *APIClient) CallApi(request *http.Request) (*http.Response, error) {
+// CallAPI do the request.
+func (c *APIClient) CallAPI(request *http.Request) (*http.Response, error) {
 	if c.cfg.Debug {
 		dump, err := httputil.DumpRequestOut(request, true)
 		if err != nil {
@@ -216,7 +217,7 @@ func (c *APIClient) ChangeBasePath(path string) {
 	c.cfg.BasePath = path
 }
 
-// Allow modification of underlying config for alternate implementations and testing
+// GetConfig allow modification of underlying config for alternate implementations and testing
 // Caution: modifying the configuration while live can cause data races and potentially unwanted behavior
 func (c *APIClient) GetConfig() *Configuration {
 	return c.cfg
@@ -253,7 +254,7 @@ func (c *APIClient) prepareRequest(
 	// add form parameters and file if available.
 	if strings.HasPrefix(headerParams["Content-Type"], "multipart/form-data") && len(formParams) > 0 || (len(fileBytes) > 0 && fileName != "") {
 		if body != nil {
-			return nil, errors.New("Cannot specify postBody and multipart form at the same time.")
+			return nil, errors.New("cannot specify postBody and multipart form at the same time")
 		}
 		body = &bytes.Buffer{}
 		w := multipart.NewWriter(body)
@@ -293,7 +294,7 @@ func (c *APIClient) prepareRequest(
 
 	if strings.HasPrefix(headerParams["Content-Type"], "application/x-www-form-urlencoded") && len(formParams) > 0 {
 		if body != nil {
-			return nil, errors.New("Cannot specify postBody and x-www-form-urlencoded form at the same time.")
+			return nil, errors.New("cannot specify postBody and x-www-form-urlencoded form at the same time")
 		}
 		body = &bytes.Buffer{}
 		body.WriteString(formParams.Encode())
@@ -465,7 +466,7 @@ func setBody(body interface{}, contentType string) (bodyBuf *bytes.Buffer, err e
 	}
 
 	if bodyBuf.Len() == 0 {
-		err = fmt.Errorf("Invalid body type %s\n", contentType)
+		err = fmt.Errorf("invalid body type %s", contentType)
 		return nil, err
 	}
 	return bodyBuf, nil
