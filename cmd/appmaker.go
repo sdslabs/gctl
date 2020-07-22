@@ -42,6 +42,9 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 		Short: "Create an application",
 		Args:  cobra.MaximumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
+			if gctltoken == "" {
+				gctltoken = middlewares.SetToken(client)
+			}
 			var language string
 			var application openapi.Application
 			if len(args) == 2 {
@@ -80,6 +83,9 @@ func FetchAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 		Short: "fetch apps",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
+			if gctltoken == "" {
+				gctltoken = middlewares.SetToken(client)
+			}
 			appName, _ := cmd.Flags().GetString("name")
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			if appName != "" {
@@ -128,6 +134,9 @@ func DeleteAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 		Short: "delete an app",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			if gctltoken == "" {
+				gctltoken = middlewares.SetToken(client)
+			}
 			appName := args[0]
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.DeleteAppByUser(auth, appName)
@@ -148,6 +157,9 @@ func RebuildAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 		Short: "rebuild an app",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			if gctltoken == "" {
+				gctltoken = middlewares.SetToken(client)
+			}
 			appName := args[0]
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.RebuildAppByUser(auth, appName)
@@ -168,6 +180,9 @@ func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 		Short: "update an app",
 		Args:  cobra.MaximumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
+			if gctltoken == "" {
+				gctltoken = middlewares.SetToken(client)
+			}
 			var application openapi.Application
 			if len(args) == 2 {
 				filename := strings.Split(args[1], ".")[0]
@@ -206,6 +221,9 @@ func FetchLogsCmd(appsAPIService AppsAPIService) *cobra.Command {
 		Short: "fetch logs of an app",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			if gctltoken == "" {
+				gctltoken = middlewares.SetToken(client)
+			}
 			var localVarOptional openapi.FetchLogsByUserOpts
 			appName := args[0]
 			if len(args) == 2 {

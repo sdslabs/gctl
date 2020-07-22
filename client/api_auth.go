@@ -37,14 +37,14 @@ CreateApp Create an application
  * @param application
 @return InlineResponse2002
 */
-func (a *AuthApiService) Login(ctx _context.Context, email Email) (InlineResponse2002, *_nethttp.Response, error) {
+func (a *AuthApiService) Login(ctx _context.Context, email Email) (InlineResponse2004, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  InlineResponse2002
+		localVarReturnValue  InlineResponse2004
 	)
 
 	// create path and map variables

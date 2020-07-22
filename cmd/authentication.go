@@ -3,8 +3,10 @@ package cmd
 import (
 	"context"
 	_context "context"
+	"encoding/json"
 	_nethttp "net/http"
 	"os"
+	"path/filepath"
 
 	openapi "github.com/sdslabs/gctl/client"
 	"github.com/sdslabs/gctl/cmd/middlewares"
@@ -12,7 +14,7 @@ import (
 )
 
 type AuthAPIService interface {
-	Login(ctx _context.Context, email openapi.Email) (openapi.InlineResponse2002, *_nethttp.Response, error)
+	Login(ctx _context.Context, email openapi.Email) (openapi.InlineResponse2004, *_nethttp.Response, error)
 	Refresh(ctx _context.Context, authorization string) (openapi.LoginResponse, *_nethttp.Response, error)
 }
 
@@ -45,28 +47,30 @@ func LoginCmd(authAPIService AuthAPIService) *cobra.Command {
 			input.Email = email
 			res, _, err := authAPIService.Login(auth, input)
 			if res.Success {
+				data := openapi.LoginResponse{Token: tempToken, Expire: res.Expire}
+				jsonBytes, _ := json.Marshal(data)
 				var file *os.File
-				_, err := os.Stat("gctltoken.txt")
+				_, err := os.Stat(filepath.Join("/tmp", "gctltoken.json"))
 				if os.IsNotExist(err) {
-					file, err = os.Create("gctltoken.txt")
+					file, err = os.Create(filepath.Join("/tmp", "gctltoken.json"))
 					if err != nil {
-						cmd.Print("system error")
+						cmd.Print("system error1")
 						return
 					}
 				} else {
-					file, err = os.OpenFile("gctltoken.txt", os.O_RDWR, 0644)
+					file, err = os.OpenFile(filepath.Join("/tmp", "gctltoken.json"), os.O_RDWR, 0644)
 					if err != nil {
-						cmd.Print("system error")
+						cmd.Print("system error2")
 						return
 					}
 				}
-				if _, err = file.WriteString(tempToken); err != nil {
-					cmd.Print("system error")
+				if _, err = file.Write(jsonBytes); err != nil {
+					cmd.Print("system error3")
 					return
 				}
 				err = file.Sync()
 				if err != nil {
-					cmd.Print("system error")
+					cmd.Print("system error4")
 					return
 				}
 				cmd.Println("Logged in successfully")
@@ -105,9 +109,9 @@ func LogoutCmd() *cobra.Command {
 		Short: "Logout from gctl",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			_, err := os.Stat("gctltoken.txt")
+			_, err := os.Stat(filepath.Join("/tmp", "gctltoken.json"))
 			if !os.IsNotExist(err) {
-				err := os.Remove("gctltoken.txt")
+				err := os.Remove(filepath.Join("/tmp", "gctltoken.json"))
 				if err != nil {
 					cmd.Print("system error in logout")
 					return

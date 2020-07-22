@@ -36,6 +36,9 @@ func CreateDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 		Short: "Create a database",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
+			if gctltoken == "" {
+				gctltoken = middlewares.SetToken(client)
+			}
 			dbtype, _ = cmd.Flags().GetString("dbtype")
 			db.Name, _ = cmd.Flags().GetString("name")
 			db.Password, _ = cmd.Flags().GetString("password")
@@ -67,6 +70,9 @@ func FetchDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 		Short: "Fetch database owned by a user",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
+			if gctltoken == "" {
+				gctltoken = middlewares.SetToken(client)
+			}
 			dbName, _ := cmd.Flags().GetString("name")
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			if dbName != "" {
@@ -111,6 +117,9 @@ func DeleteDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 		Short: "Delete a single database owned by a user",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			if gctltoken == "" {
+				gctltoken = middlewares.SetToken(client)
+			}
 			dbName := args[0]
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := dbsAPIService.DeleteDbByUser(auth, dbName)

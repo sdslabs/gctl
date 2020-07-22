@@ -6,6 +6,7 @@ import (
 	_nethttp "net/http"
 
 	openapi "github.com/sdslabs/gctl/client"
+	"github.com/sdslabs/gctl/cmd/middlewares"
 	"github.com/spf13/cobra"
 )
 
@@ -26,6 +27,9 @@ func GetInstancesCmd(instancesAPIService InstancesAPIService) *cobra.Command {
 		Short: "Fetch all instances owned by a user",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
+			if gctltoken == "" {
+				gctltoken = middlewares.SetToken(client)
+			}
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := instancesAPIService.FetchIntancesByUser(auth)
 			if res.Success && len(res.Data) != 0 {
