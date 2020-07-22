@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -21,16 +22,26 @@ func SetToken(client *openapi.APIClient) string {
 	if err := json.Unmarshal(g, &tokenres); err != nil {
 		fmt.Print(err)
 	}
+	gctltoken = tokenres.Token
 	if tokenres.Expire.Sub(time.Now()) < 0 {
-		fmt.Print(tokenres.Expire, time.Now())
-		res, _, err := client.AuthApi.Refresh(context.Background(), "gctlToken "+gctltoken)
+		res, _, err := client.AuthApi.Refresh(context.Background(), "gctlToken "+tokenres.Token)
 		if res.Code == 200 {
+			jsonBytes, _ := json.Marshal(res)
+			file, err := os.OpenFile(filepath.Join("/tmp", "gctltoken.json"), os.O_RDWR, 0644)
+			if err != nil {
+				fmt.Print("system error2")
+			}
+			if _, err = file.Write(jsonBytes); err != nil {
+				fmt.Print("system error3")
+			}
+			err = file.Sync()
+			if err != nil {
+				fmt.Print("system error4")
+			}
 			gctltoken = res.Token
 		} else {
 			fmt.Print(err)
 		}
-	} else {
-		gctltoken = tokenres.Token
 	}
 	return gctltoken
 }
