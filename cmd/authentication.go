@@ -15,13 +15,11 @@ import (
 
 type AuthAPIService interface {
 	Login(ctx _context.Context, email openapi.Email) (openapi.InlineResponse2004, *_nethttp.Response, error)
-	Refresh(ctx _context.Context, authorization string) (openapi.LoginResponse, *_nethttp.Response, error)
 }
 
 var authAPISservice AuthAPIService = client.AuthApi
 
 func init() {
-	rootCmd.AddCommand(RefreshCmd(authAPISservice))
 	rootCmd.AddCommand(LoginCmd(authAPISservice))
 	rootCmd.AddCommand(LogoutCmd())
 }
@@ -82,24 +80,6 @@ func LoginCmd(authAPIService AuthAPIService) *cobra.Command {
 	loginCmd.Flags().StringVarP(&email, "email", "e", "", "email id")
 	loginCmd.Flags().StringVarP(&tempToken, "token", "t", "", "personal access token")
 	return loginCmd
-}
-
-//RefreshCmd returns command to refresh existing token
-func RefreshCmd(authAPIService AuthAPIService) *cobra.Command {
-	var refreshCmd = &cobra.Command{
-		Use:   "refresh",
-		Short: "Refresh JWT token using existing token",
-		Args:  cobra.NoArgs,
-		Run: func(cmd *cobra.Command, args []string) {
-			res, _, err := authAPIService.Refresh(context.Background(), "gctlToken "+gctltoken)
-			if res.Code == 200 {
-				cmd.Println("Token: ", res.Token, "\n", "Expires at: ", res.Expire)
-			} else {
-				cmd.Println("Error:", err)
-			}
-		},
-	}
-	return refreshCmd
 }
 
 //LogoutCmd returns a comamnd to log out from gctl
