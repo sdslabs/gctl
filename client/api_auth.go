@@ -91,7 +91,7 @@ func (a *AuthApiService) Login(ctx _context.Context, email Email) (InlineRespons
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -167,7 +167,7 @@ func (a *AuthApiService) Refresh(ctx _context.Context, authorization string) (Lo
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v InlineResponse401

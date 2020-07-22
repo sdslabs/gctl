@@ -112,7 +112,7 @@ func (a *DbsApiService) CreateDB(ctx _context.Context, databaseType string, loca
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -189,7 +189,7 @@ func (a *DbsApiService) DeleteDbByUser(ctx _context.Context, db string) (InlineR
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -266,7 +266,7 @@ func (a *DbsApiService) FetchDbByUser(ctx _context.Context, db string) (InlineRe
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -340,7 +340,7 @@ func (a *DbsApiService) FetchDbsByUser(ctx _context.Context) (InlineResponse2007
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
