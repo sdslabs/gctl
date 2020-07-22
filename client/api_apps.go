@@ -99,7 +99,7 @@ func (a *AppsApiService) CreateApp(ctx _context.Context, language string, applic
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -176,7 +176,7 @@ func (a *AppsApiService) DeleteAppByUser(ctx _context.Context, app string) (Inli
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -253,7 +253,7 @@ func (a *AppsApiService) FetchAppByUser(ctx _context.Context, app string) (Inlin
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -327,7 +327,7 @@ func (a *AppsApiService) FetchAppsByUser(ctx _context.Context) (InlineResponse20
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -414,7 +414,7 @@ func (a *AppsApiService) FetchLogsByUser(ctx _context.Context, app string, local
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -536,7 +536,7 @@ func (a *AppsApiService) FetchMetricsByUser(ctx _context.Context, app string, lo
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -613,7 +613,7 @@ func (a *AppsApiService) RebuildAppByUser(ctx _context.Context, app string) (Inl
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -693,7 +693,7 @@ func (a *AppsApiService) UpdateAppByUser(ctx _context.Context, app string, appli
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
