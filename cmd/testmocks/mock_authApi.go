@@ -36,10 +36,10 @@ func (m *MockAuthAPIService) EXPECT() *MockAuthAPIServiceMockRecorder {
 }
 
 // Login mocks base method
-func (m *MockAuthAPIService) Login(ctx context.Context, email openapi.Email) (openapi.InlineResponse2002, *http.Response, error) {
+func (m *MockAuthAPIService) Login(ctx context.Context, email openapi.Email) (openapi.InlineResponse2004, *http.Response, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Login", ctx, email)
-	ret0, _ := ret[0].(openapi.InlineResponse2002)
+	ret0, _ := ret[0].(openapi.InlineResponse2004)
 	ret1, _ := ret[1].(*http.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2

@@ -1,16 +1,13 @@
 package cmd
 
 import (
-	"io/ioutil"
-
 	openapi "github.com/sdslabs/gctl/client"
 	"github.com/spf13/cobra"
 )
 
 var cfg = openapi.NewConfiguration()
 var client = openapi.NewAPIClient(cfg)
-var tokenbin, _ = ioutil.ReadFile("gctltoken.txt")
-var gctltoken = string(tokenbin)
+var gctltoken string
 
 func init() {
 	rootCmd.AddCommand(versionCmd)
