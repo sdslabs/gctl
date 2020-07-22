@@ -42,28 +42,44 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 		Short: "Create an application",
 		Args:  cobra.MaximumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
+			var (
+				err         error
+				language    string
+				application openapi.Application
+			)
+
 			if gctltoken == "" {
-				gctltoken = middlewares.SetToken(client)
+				gctltoken, err = middlewares.SetToken(client)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
 			}
-			var language string
-			var application openapi.Application
+
 			if len(args) == 2 {
 				filename := strings.Split(args[0], ".")[0]
 				language = args[1]
-				application = middlewares.ReadAppJSON(filename)
+				application, err = middlewares.ReadAppJSON(filename)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
 			} else {
 				language, application = middlewares.AppForm()
 			}
+
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.CreateApp(auth, language, application)
 			if res.Success {
 				res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)
 				if res.Success {
 					for i := 0; i < len(res.Data); i++ {
-						cmd.Println("App created successfully"+"\n"+"Container Id: "+res.Data[i].ContainerId, "Container Port: ", res.Data[i].ContainerPort,
-							"Docker Image: "+res.Data[i].DockerImage, "App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
-							"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType, "Language: "+res.Data[i].Language,
-							"Owner: "+res.Data[i].Owner, "Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
+						cmd.Println("App created successfully "+"\n"+"Container Id: "+res.Data[i].ContainerId,
+							"Container Port: ", res.Data[i].ContainerPort, "Docker Image: "+res.Data[i].DockerImage,
+							"App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
+							"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType,
+							"Language: "+res.Data[i].Language, "Owner: "+res.Data[i].Owner,
+							"Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
 					}
 				} else {
 					cmd.Println(err)
@@ -83,20 +99,30 @@ func FetchAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 		Short: "fetch apps",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
+			var err error
+
 			if gctltoken == "" {
-				gctltoken = middlewares.SetToken(client)
+				gctltoken, err = middlewares.SetToken(client)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
 			}
+
 			appName, _ := cmd.Flags().GetString("name")
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
+
 			if appName != "" {
 				res, _, err := appsAPIService.FetchAppByUser(auth, appName)
 				if res.Success {
 					if len(res.Data) != 0 {
 						for i := 0; i < len(res.Data); i++ {
-							cmd.Println("Container Id: "+res.Data[i].ContainerId, "Container Port: ", res.Data[i].ContainerPort,
-								"Docker Image: "+res.Data[i].DockerImage, "App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
-								"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType, "Language: "+res.Data[i].Language,
-								"Owner: "+res.Data[i].Owner, "Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
+							cmd.Println("Container Id: "+res.Data[i].ContainerId, "Container Port: ",
+								res.Data[i].ContainerPort, "Docker Image: "+res.Data[i].DockerImage,
+								"App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
+								"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType,
+								"Language: "+res.Data[i].Language, "Owner: "+res.Data[i].Owner,
+								"Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
 						}
 					} else {
 						cmd.Println("No such app found")
@@ -109,10 +135,12 @@ func FetchAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 				if res.Success {
 					if len(res.Data) != 0 {
 						for i := 0; i < len(res.Data); i++ {
-							cmd.Println("Container Id: "+res.Data[i].ContainerId, "Container Port: ", res.Data[i].ContainerPort,
-								"Docker Image: "+res.Data[i].DockerImage, "App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
-								"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType, "Language: "+res.Data[i].Language,
-								"Owner: "+res.Data[i].Owner, "Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
+							cmd.Println("Container Id: "+res.Data[i].ContainerId, "Container Port: ",
+								res.Data[i].ContainerPort, "Docker Image: "+res.Data[i].DockerImage,
+								"App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
+								"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType,
+								"Language: "+res.Data[i].Language, "Owner: "+res.Data[i].Owner,
+								"Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
 						}
 					} else {
 						cmd.Println("No app found")
@@ -123,6 +151,7 @@ func FetchAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 			}
 		},
 	}
+
 	fetchAppCmd.Flags().StringVarP(&appName, "name", "n", "", "show specific app")
 	return fetchAppCmd
 }
@@ -134,12 +163,20 @@ func DeleteAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 		Short: "delete an app",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			var err error
+
 			if gctltoken == "" {
-				gctltoken = middlewares.SetToken(client)
+				gctltoken, err = middlewares.SetToken(client)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
 			}
+
 			appName := args[0]
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.DeleteAppByUser(auth, appName)
+
 			if res.Success {
 				cmd.Println("App deleted successfully")
 			} else {
@@ -157,12 +194,20 @@ func RebuildAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 		Short: "rebuild an app",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			var err error
+
 			if gctltoken == "" {
-				gctltoken = middlewares.SetToken(client)
+				gctltoken, err = middlewares.SetToken(client)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
 			}
+
 			appName := args[0]
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.RebuildAppByUser(auth, appName)
+
 			if res.Success {
 				cmd.Println("App rebuilt successfully")
 			} else {
@@ -180,27 +225,43 @@ func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 		Short: "update an app",
 		Args:  cobra.MaximumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
+			var (
+				err         error
+				application openapi.Application
+			)
+
 			if gctltoken == "" {
-				gctltoken = middlewares.SetToken(client)
+				gctltoken, err = middlewares.SetToken(client)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
 			}
-			var application openapi.Application
+
 			if len(args) == 2 {
 				filename := strings.Split(args[1], ".")[0]
 				appName = args[0]
-				application = middlewares.ReadAppJSON(filename)
+				application, err = middlewares.ReadAppJSON(filename)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
 			} else {
 				_, application = middlewares.AppForm()
 				appName = application.Name
 			}
+
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.UpdateAppByUser(auth, appName, application)
+
 			if res.Success {
 				res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)
 				if res.Success {
 					for i := 0; i < len(res.Data); i++ {
-						cmd.Println("App updated successfully"+"\n"+"Container Id: "+res.Data[i].ContainerId, "Container Port: ", res.Data[i].ContainerPort,
-							"Docker Image: "+res.Data[i].DockerImage, "App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
-							"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType, "Language: "+res.Data[i].Language,
+						cmd.Println("App updated successfully"+"\n"+"Container Id: "+res.Data[i].ContainerId,
+							"Container Port: ", res.Data[i].ContainerPort, "Docker Image: "+res.Data[i].DockerImage,
+							"App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp, "Name Servers: ", res.Data[i].NameServers,
+							"Instance Type: "+res.Data[i].InstanceType, "Language: "+res.Data[i].Language,
 							"Owner: "+res.Data[i].Owner, "Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
 					}
 				} else {
@@ -221,19 +282,30 @@ func FetchLogsCmd(appsAPIService AppsAPIService) *cobra.Command {
 		Short: "fetch logs of an app",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			var (
+				err              error
+				localVarOptional openapi.FetchLogsByUserOpts
+			)
 			if gctltoken == "" {
-				gctltoken = middlewares.SetToken(client)
+				gctltoken, err = middlewares.SetToken(client)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
 			}
-			var localVarOptional openapi.FetchLogsByUserOpts
+
 			appName := args[0]
+
 			if len(args) == 2 {
 				n, _ := strconv.ParseInt(args[1], 10, 32)
 				localVarOptional = openapi.FetchLogsByUserOpts{
 					Tail: optional.NewInt32(int32(n)),
 				}
 			}
+
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.FetchLogsByUser(auth, appName, &localVarOptional)
+
 			if res.Success {
 				if len(res.Data) != 0 {
 					for i := 0; i < len(res.Data); i++ {

@@ -36,20 +36,31 @@ func CreateDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 		Short: "Create a database",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
+			var err error
+
 			if gctltoken == "" {
-				gctltoken = middlewares.SetToken(client)
+				gctltoken, err = middlewares.SetToken(client)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
 			}
+
 			dbtype, _ = cmd.Flags().GetString("dbtype")
 			db.Name, _ = cmd.Flags().GetString("name")
 			db.Password, _ = cmd.Flags().GetString("password")
+
 			if dbtype == "" && db.Name == "" && db.Password == "" {
 				dbtype, db = middlewares.DbForm()
 			}
+
 			localVarOptional := &openapi.CreateDBOpts{
 				Database: optional.NewInterface(db),
 			}
+
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := dbsAPIService.CreateDB(auth, dbtype, localVarOptional)
+
 			if res.Success {
 				cmd.Print("Database created")
 			} else {
@@ -57,6 +68,7 @@ func CreateDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 			}
 		},
 	}
+
 	dbmakerCmd.Flags().StringVarP(&db.Name, "name", "n", "", "Database name")
 	dbmakerCmd.Flags().StringVarP(&db.Password, "password", "p", "", "Database password")
 	dbmakerCmd.Flags().StringVarP(&dbtype, "dbtype", "t", "", "Database type")
@@ -70,18 +82,28 @@ func FetchDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 		Short: "Fetch database owned by a user",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
+			var err error
+
 			if gctltoken == "" {
-				gctltoken = middlewares.SetToken(client)
+				gctltoken, err = middlewares.SetToken(client)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
 			}
+
 			dbName, _ := cmd.Flags().GetString("name")
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
+
 			if dbName != "" {
 				res, _, err := dbsAPIService.FetchDbByUser(auth, dbName)
 				if res.Success {
 					if len(res.Data) != 0 {
 						for i := 0; i < len(res.Data); i++ {
-							cmd.Println("User: "+res.Data[i].User, "Owner: "+res.Data[i].Owner, "DbUrl: "+res.Data[i].DbUrl, "Port: ", res.Data[i].Port,
-								"Host: "+res.Data[i].HostIp, "Language: "+res.Data[i].Language, "Instance Type: "+res.Data[i].InstanceType)
+							cmd.Println("User: "+res.Data[i].User, "Owner: "+res.Data[i].Owner,
+								"DbUrl: "+res.Data[i].DbUrl, "Port: ", res.Data[i].Port,
+								"Host: "+res.Data[i].HostIp, "Language: "+res.Data[i].Language,
+								"Instance Type: "+res.Data[i].InstanceType)
 						}
 					} else {
 						cmd.Println("No such database")
@@ -106,6 +128,7 @@ func FetchDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 			}
 		},
 	}
+
 	fetchDbCmd.Flags().StringVarP(&dbName, "name", "n", "", "Fetch specific database")
 	return fetchDbCmd
 }
@@ -117,9 +140,16 @@ func DeleteDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 		Short: "Delete a single database owned by a user",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			var err error
+
 			if gctltoken == "" {
-				gctltoken = middlewares.SetToken(client)
+				gctltoken, err = middlewares.SetToken(client)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
 			}
+
 			dbName := args[0]
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := dbsAPIService.DeleteDbByUser(auth, dbName)

@@ -32,51 +32,61 @@ func LoginCmd(authAPIService AuthAPIService) *cobra.Command {
 		Short: "Login using personal access token and email id",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			var input openapi.Email
+			var (
+				input openapi.Email
+				file  *os.File
+			)
+
 			if !middlewares.ValidateEmail(email) {
 				cmd.Print("Invalid email id")
 				return
 			}
+
 			if tempToken == "" {
 				cmd.Print("Token not provided")
 				return
 			}
+
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, tempToken)
 			input.Email = email
 			res, _, err := authAPIService.Login(auth, input)
+
 			if res.Success {
 				data := openapi.LoginResponse{Token: tempToken, Expire: res.Expire}
 				jsonBytes, _ := json.Marshal(data)
-				var file *os.File
 				_, err := os.Stat(filepath.Join("/tmp", "gctltoken.json"))
+
 				if os.IsNotExist(err) {
 					file, err = os.Create(filepath.Join("/tmp", "gctltoken.json"))
 					if err != nil {
-						cmd.Print("system error1")
+						cmd.Print(err)
 						return
 					}
 				} else {
 					file, err = os.OpenFile(filepath.Join("/tmp", "gctltoken.json"), os.O_RDWR, 0644)
 					if err != nil {
-						cmd.Print("system error2")
+						cmd.Print(err)
 						return
 					}
 				}
+
 				if _, err = file.Write(jsonBytes); err != nil {
-					cmd.Print("system error3")
+					cmd.Print(err)
 					return
 				}
-				err = file.Sync()
-				if err != nil {
-					cmd.Print("system error4")
+
+				if err = file.Sync(); err != nil {
+					cmd.Print(err)
 					return
 				}
+
 				cmd.Println("Logged in successfully")
 			} else {
 				cmd.Print(err.Error())
 			}
 		},
 	}
+
 	loginCmd.Flags().StringVarP(&email, "email", "e", "", "email id")
 	loginCmd.Flags().StringVarP(&tempToken, "token", "t", "", "personal access token")
 	return loginCmd
@@ -90,10 +100,11 @@ func LogoutCmd() *cobra.Command {
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			_, err := os.Stat(filepath.Join("/tmp", "gctltoken.json"))
+
 			if !os.IsNotExist(err) {
 				err := os.Remove(filepath.Join("/tmp", "gctltoken.json"))
 				if err != nil {
-					cmd.Print("system error in logout")
+					cmd.Print(err)
 					return
 				}
 			}
