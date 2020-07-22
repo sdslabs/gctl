@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//InstancesAPIService is interface for all client functions of interfaces
 type InstancesAPIService interface {
 	FetchIntancesByUser(ctx _context.Context) (openapi.InlineResponse2001, *_nethttp.Response, error)
 }

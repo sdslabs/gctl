@@ -67,6 +67,7 @@ func ValidateDbType(dbtype string) bool {
 	return false
 }
 
+//ValidateEnvVars validates env variables
 func ValidateEnvVars(vars []string) bool {
 	for v := 0; v < len(vars); v++ {
 		a := strings.Split(vars[v], ":")

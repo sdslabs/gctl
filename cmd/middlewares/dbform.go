@@ -9,6 +9,7 @@ import (
 	openapi "github.com/sdslabs/gctl/client"
 )
 
+//DbForm takes input for openapi.Database
 func DbForm() (string, openapi.Database) {
 	var database openapi.Database
 	var dbtype string

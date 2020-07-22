@@ -11,6 +11,7 @@ import (
 	openapi "github.com/sdslabs/gctl/client"
 )
 
+//AppForm takes input for openapi.Application
 func AppForm() (string, openapi.Application) {
 	var language string
 	var application openapi.Application

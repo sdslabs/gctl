@@ -11,6 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//DbsAPIService is interface for all client functions of dbs
 type DbsAPIService interface {
 	CreateDB(ctx _context.Context, databaseType string, localVarOptionals *openapi.CreateDBOpts) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	DeleteDbByUser(ctx _context.Context, db string) (openapi.InlineResponse2002, *_nethttp.Response, error)

@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//AuthAPIService is interface for all client functions of authencation
 type AuthAPIService interface {
 	Login(ctx _context.Context, email openapi.Email) (openapi.InlineResponse2004, *_nethttp.Response, error)
 }
