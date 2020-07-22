@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//AppsAPIService is interface for all client functions of apps
 type AppsAPIService interface {
 	CreateApp(ctx _context.Context, language string, application openapi.Application) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	DeleteAppByUser(ctx _context.Context, app string) (openapi.InlineResponse2002, *_nethttp.Response, error)

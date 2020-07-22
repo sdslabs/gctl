@@ -12,6 +12,7 @@ import (
 	openapi "github.com/sdslabs/gctl/client"
 )
 
+//SetToken sets gctltoken
 func SetToken(client *openapi.APIClient) (string, error) {
 	var tokenres openapi.LoginResponse
 	var gctltoken string
