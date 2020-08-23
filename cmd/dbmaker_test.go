@@ -34,8 +34,8 @@ func Test_CreateDbCmd(t *testing.T) {
 	mockDb := testmocks.NewMockDbsAPIService(ctrl)
 	createDbRes1 := openapi.InlineResponse2002{Success: true}
 	createDbRes2 := openapi.InlineResponse2002{Success: false}
-	mockDb.EXPECT().CreateDB(auth1, "mysql", input).Return(createDbRes1, httpres, nil).AnyTimes()
-	mockDb.EXPECT().CreateDB(auth1, "", input).Return(createDbRes2, httpres, nil).AnyTimes()
+	mockDb.EXPECT().CreateDb(auth1, "mysql", input).Return(createDbRes1, httpres, nil).AnyTimes()
+	mockDb.EXPECT().CreateDb(auth1, "", input).Return(createDbRes2, httpres, nil).AnyTimes()
 
 	newDbCmd := CreateDbCmd(mockDb)
 	b := bytes.NewBufferString("")
