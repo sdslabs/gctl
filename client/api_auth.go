@@ -22,6 +22,8 @@ var (
 	_ _context.Context
 )
 
+const LOGINPATH = "/gctllogin"
+
 //AuthAPI is interface for functions of type AuthAPIService
 type AuthAPI interface {
 	Refresh(ctx _context.Context, authorization string) (LoginResponse, *_nethttp.Response, error)
@@ -47,7 +49,7 @@ func (a *AuthAPIService) Login(ctx _context.Context, email Email) (InlineRespons
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/gctllogin"
+	localVarPath := a.client.cfg.BasePath + LOGINPATH
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
