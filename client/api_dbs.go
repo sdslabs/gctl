@@ -49,7 +49,7 @@ CreateDB Create a database
  * @param "Database" (optional.Interface of Database) -
 @return InlineResponse2002
 */
-func (a *DbsAPIService) CreateDB(ctx _context.Context, databaseType string, localVarOptionals *CreateDBOpts) (InlineResponse2002, *_nethttp.Response, error) {
+func (a *DbsAPIService) CreateDb(ctx _context.Context, databaseType string, localVarOptionals *CreateDBOpts) (InlineResponse2002, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}

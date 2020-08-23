@@ -35,20 +35,20 @@ func (m *MockDbsAPIService) EXPECT() *MockDbsAPIServiceMockRecorder {
 	return m.recorder
 }
 
-// CreateDB mocks base method
-func (m *MockDbsAPIService) CreateDB(ctx context.Context, databaseType string, localVarOptionals *openapi.CreateDBOpts) (openapi.InlineResponse2002, *http.Response, error) {
+// CreateDb mocks base method
+func (m *MockDbsAPIService) CreateDb(ctx context.Context, databaseType string, localVarOptionals *openapi.CreateDBOpts) (openapi.InlineResponse2002, *http.Response, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDB", ctx, databaseType, localVarOptionals)
+	ret := m.ctrl.Call(m, "CreateDb", ctx, databaseType, localVarOptionals)
 	ret0, _ := ret[0].(openapi.InlineResponse2002)
 	ret1, _ := ret[1].(*http.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// CreateDB indicates an expected call of CreateDB
-func (mr *MockDbsAPIServiceMockRecorder) CreateDB(ctx, databaseType, localVarOptionals interface{}) *gomock.Call {
+// CreateDb indicates an expected call of CreateDB
+func (mr *MockDbsAPIServiceMockRecorder) CreateDb(ctx, databaseType, localVarOptionals interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDB", reflect.TypeOf((*MockDbsAPIService)(nil).CreateDB), ctx, databaseType, localVarOptionals)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDb", reflect.TypeOf((*MockDbsAPIService)(nil).CreateDb), ctx, databaseType, localVarOptionals)
 }
 
 // DeleteDbByUser mocks base method

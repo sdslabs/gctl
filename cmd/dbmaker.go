@@ -13,7 +13,7 @@ import (
 
 //DbsAPIService is interface for all client functions of dbs
 type DbsAPIService interface {
-	CreateDB(ctx _context.Context, databaseType string, localVarOptionals *openapi.CreateDBOpts) (openapi.InlineResponse2002, *_nethttp.Response, error)
+	CreateDb(ctx _context.Context, databaseType string, localVarOptionals *openapi.CreateDBOpts) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	DeleteDbByUser(ctx _context.Context, db string) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	FetchDbByUser(ctx _context.Context, db string) (openapi.InlineResponse2007, *_nethttp.Response, error)
 	FetchDbsByUser(ctx _context.Context) (openapi.InlineResponse2007, *_nethttp.Response, error)
@@ -60,7 +60,7 @@ func CreateDbCmd(dbsAPIService DbsAPIService) *cobra.Command {
 			}
 
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
-			res, _, err := dbsAPIService.CreateDB(auth, dbtype, localVarOptional)
+			res, _, err := dbsAPIService.CreateDb(auth, dbtype, localVarOptional)
 
 			if res.Success {
 				cmd.Print("Database created")
