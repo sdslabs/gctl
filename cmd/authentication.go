@@ -103,8 +103,7 @@ func LogoutCmd() *cobra.Command {
 			_, err := os.Stat(filepath.Join("/tmp", "gctltoken.json"))
 
 			if !os.IsNotExist(err) {
-				err = os.Truncate(filepath.Join("/tmp", "gctltoken.json"), 0)
-				if err != nil {
+				if err = os.Truncate(filepath.Join("/tmp", "gctltoken.json"), 0); err != nil {
 					cmd.Println(err)
 					return
 				}
