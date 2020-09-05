@@ -24,6 +24,9 @@ func SetToken(client *openapi.APIClient) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	if len(g) == 0 {
+		return "", errors.New("you are not logged in. Log in using command 'gctl login'")
+	}
 	if err := json.Unmarshal(g, &tokenres); err != nil {
 		return "", err
 	}
