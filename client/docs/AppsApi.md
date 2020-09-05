@@ -1,7 +1,5 @@
 # \AppsAPI
 
-All URIs are relative to *http://localhost:3000*
-
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CreateApp**](AppsAPI.md#CreateApp) | **Post** /apps/{language} | Create an application
