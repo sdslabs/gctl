@@ -42,8 +42,7 @@ func SetToken(client *openapi.APIClient) (string, error) {
 			if _, err = file.Write(jsonBytes); err != nil {
 				return "", err
 			}
-			err = file.Sync()
-			if err != nil {
+			if err = file.Sync(); err != nil {
 				return "", err
 			}
 			gctltoken = res.Token
