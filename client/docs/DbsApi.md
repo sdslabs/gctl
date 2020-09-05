@@ -1,7 +1,5 @@
 # \DbsAPI
 
-All URIs are relative to *http://localhost:3000*
-
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CreateDB**](DbsAPI.md#CreateDB) | **Post** /dbs/{databaseType} | Create a database
