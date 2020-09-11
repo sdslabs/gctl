@@ -1,0 +1,1869 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: contact@sdslabs.co.in
+    name: SDSLabs
+    url: https://chat.sdslabs.co
+  description: |-
+    Handles authentication, creation/management of applications, databases, users and also provides a superuser API. <br><br> Only a superuser can avail the superuser API. A superuser can **grant/revoke** superuser privileges to other users. A default  superuser is created every time a Gasper instance is launched whose credentials are defined in the `admin` section of `config.toml`, the main configuration file. A sample configuration file is available [here](https://github.com/sdslabs/gasper/blob/develop/config.sample.toml#L37).<br><br>
+    **Note:-** Normally the applications and databases can only be managed by their owners but the superuser can bypass that check.<br><br>
+    **PS:-** If you want to programmatically generate a client for this API, you can find the corresponding OpenAPI specifications [here](https://github.com/sdslabs/gasper/tree/develop/docs/content/api/specs). We recommend using [OpenAPI-Generator](https://openapi-generator.tech/) for generating clients.
+  license:
+    name: MIT
+    url: https://github.com/sdslabs/gasper/blob/develop/LICENSE.md
+  title: Gasper Master API
+  version: "1.0"
+externalDocs:
+  description: Find out more about Gasper
+  url: https://github.com/sdslabs/gasper
+servers:
+- url: http://localhost:3000
+tags:
+- description: Authentication for all endpoints
+  name: auth
+- description: Application management
+  name: apps
+- description: Database management
+  name: dbs
+- description: User specific operations
+  name: user
+- description: Operations with superuser privileges
+  name: admin
+paths:
+  /auth/login:
+    post:
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+          description: Login successful
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500'
+          description: Internal Server Error
+      summary: Login to get a Bearer token
+      tags:
+      - auth
+  /auth/register:
+    post:
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+          description: Registration successful
+      summary: Register a user
+      tags:
+      - auth
+  /auth/refresh:
+    get:
+      operationId: refresh
+      parameters:
+      - description: Bearer Token Authentication
+        explode: false
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+          type: string
+        style: simple
+      responses:
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+          description: Unauthorized
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+          description: Refresh successful
+      security:
+      - bearerAuth: []
+      summary: Refresh JWT token using existing token
+      tags:
+      - auth
+  /instances:
+    get:
+      operationId: fetchIntancesByUser
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch all instances owned by a user
+      tags:
+      - instances
+  /apps/{language}:
+    post:
+      operationId: createApp
+      parameters:
+      - description: The programming language in which the application is written
+        explode: false
+        in: path
+        name: language
+        required: true
+        schema:
+          enum:
+          - static
+          - php
+          - nodejs
+          - python2
+          - python3
+          - golang
+          - ruby
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Create an application
+      tags:
+      - apps
+  /apps:
+    get:
+      operationId: fetchAppsByUser
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch all applications owned by a user
+      tags:
+      - apps
+  /apps/{app}:
+    delete:
+      operationId: deleteAppByUser
+      parameters:
+      - description: The name of the application
+        explode: false
+        in: path
+        name: app
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Delete an application owned by a user
+      tags:
+      - apps
+    get:
+      operationId: fetchAppByUser
+      parameters:
+      - description: The name of the application
+        explode: false
+        in: path
+        name: app
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch a single application owned by a user
+      tags:
+      - apps
+    put:
+      operationId: updateAppByUser
+      parameters:
+      - description: The name of the application
+        explode: false
+        in: path
+        name: app
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Update an application owned by a user
+      tags:
+      - apps
+  /apps/{app}/rebuild:
+    patch:
+      operationId: rebuildAppByUser
+      parameters:
+      - description: The name of the application
+        explode: false
+        in: path
+        name: app
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Rebuild an application
+      tags:
+      - apps
+  /apps/{app}/transfer/{userEmail}:
+    patch:
+      operationId: transferAppByUser
+      parameters:
+      - description: The name of the application
+        explode: false
+        in: path
+        name: app
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Email ID of the user
+        explode: false
+        in: path
+        name: userEmail
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Transfer ownership of an application to another user
+      tags:
+      - apps
+  /apps/{app}/term:
+    get:
+      operationId: fetchTerminalByUser
+      parameters:
+      - description: The name of the application
+        explode: false
+        in: path
+        name: app
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch a browser terminal instance for an application owned by a user
+      tags:
+      - apps
+  /apps/{app}/logs:
+    get:
+      operationId: fetchLogsByUser
+      parameters:
+      - description: The name of the application
+        explode: false
+        in: path
+        name: app
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Fetch the last **n** logs (Fetches all logs if not specified)
+        explode: true
+        in: query
+        name: tail
+        required: false
+        schema:
+          example: 3
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch logs of an application
+      tags:
+      - apps
+  /apps/{app}/metrics:
+    get:
+      operationId: fetchMetricsByUser
+      parameters:
+      - description: The name of the application
+        explode: false
+        in: path
+        name: app
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Fetch metrics in the last **n** seconds
+        explode: true
+        in: query
+        name: seconds
+        required: false
+        schema:
+          example: 8
+          type: integer
+        style: form
+      - description: Fetch metrics in the last **n** minutes
+        explode: true
+        in: query
+        name: minutes
+        required: false
+        schema:
+          example: 7
+          type: integer
+        style: form
+      - description: Fetch metrics in the last **n** hours
+        explode: true
+        in: query
+        name: hours
+        required: false
+        schema:
+          example: 6
+          type: integer
+        style: form
+      - description: Fetch metrics in the last **n** days
+        explode: true
+        in: query
+        name: days
+        required: false
+        schema:
+          example: 5
+          type: integer
+        style: form
+      - description: Fetch metrics in the last **n** weeks
+        explode: true
+        in: query
+        name: weeks
+        required: false
+        schema:
+          example: 4
+          type: integer
+        style: form
+      - description: Fetch metrics in the last **n** months
+        explode: true
+        in: query
+        name: months
+        required: false
+        schema:
+          example: 3
+          type: integer
+        style: form
+      - description: Fetch metrics in the last **n** years
+        explode: true
+        in: query
+        name: years
+        required: false
+        schema:
+          example: 2
+          type: integer
+        style: form
+      - description: Fetch metrics in the last **n** decades
+        explode: true
+        in: query
+        name: decades
+        required: false
+        schema:
+          example: 1
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch metrics of an application
+      tags:
+      - apps
+  /dbs/{databaseType}:
+    post:
+      operationId: createDB
+      parameters:
+      - description: The type of database
+        explode: false
+        in: path
+        name: databaseType
+        required: true
+        schema:
+          enum:
+          - mysql
+          - mongodb
+          - postgresql
+          - redis
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Database'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Create a database
+      tags:
+      - dbs
+  /dbs:
+    get:
+      operationId: fetchDbsByUser
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch all databases owned by a user
+      tags:
+      - dbs
+  /dbs/{db}:
+    delete:
+      operationId: deleteDbByUser
+      parameters:
+      - description: Name of the database
+        explode: false
+        in: path
+        name: db
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Delete a single database owned by a user
+      tags:
+      - dbs
+    get:
+      operationId: fetchDbByUser
+      parameters:
+      - description: Name of the database
+        explode: false
+        in: path
+        name: db
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch a single database owned by a user
+      tags:
+      - dbs
+  /dbs/{db}/transfer/{userEmail}:
+    patch:
+      operationId: transferDbByUser
+      parameters:
+      - description: Name of the database
+        explode: false
+        in: path
+        name: db
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Email ID of the user
+        explode: false
+        in: path
+        name: userEmail
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Transfer ownership of a database to another user
+      tags:
+      - dbs
+  /user:
+    delete:
+      operationId: deleteUser
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_9'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Delete user
+      tags:
+      - user
+    get:
+      operationId: fetchUser
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_8'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch logged in user's info
+      tags:
+      - user
+  /user/password:
+    put:
+      operationId: updatePassword
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object'
+        content:
+          application/json:
+            schema:
+              properties:
+                old_password:
+                  description: The current password in use
+                  example: alphadose
+                  type: string
+                new_password:
+                  description: The new password meant to replace the old one
+                  example: betadose
+                  type: string
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_10'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Update the password of the logged in user
+      tags:
+      - user
+  /admin/apps:
+    get:
+      operationId: fetchAppsByAdmin
+      parameters:
+      - description: Name of the application
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Owner of the application
+        explode: true
+        in: query
+        name: owner
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Language in which the application is written
+        explode: true
+        in: query
+        name: language
+        required: false
+        schema:
+          enum:
+          - php
+          - static
+          - nodejs
+          - python2
+          - python3
+          - golang
+          - ruby
+          example: nodejs
+          type: string
+        style: form
+      - description: Docker Image used in building the application's container
+        explode: true
+        in: query
+        name: docker_image
+        required: false
+        schema:
+          example: sdsws/node:2.0
+          type: string
+        style: form
+      - description: IPv4 address of the node in which the application is deployed
+        explode: true
+        in: query
+        name: host_ip
+        required: false
+        schema:
+          example: 192.168.208.208
+          type: string
+        style: form
+      - description: Application's Git Repository URL
+        explode: true
+        in: query
+        name: git_url
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Port assigned by the node to the application's docker container
+        explode: true
+        in: query
+        name: container_port
+        required: false
+        schema:
+          example: "35000"
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch all applications with/without a filter defined by query params
+      tags:
+      - admin
+  /admin/apps/{app}:
+    delete:
+      operationId: deleteAppByAdmin
+      parameters:
+      - description: The name of the application
+        explode: false
+        in: path
+        name: app
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Delete an application
+      tags:
+      - admin
+    get:
+      operationId: fetchAppByAdmin
+      parameters:
+      - description: The name of the application
+        explode: false
+        in: path
+        name: app
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch a single application
+      tags:
+      - admin
+  /admin/dbs:
+    get:
+      operationId: fetchDbsByAdmin
+      parameters:
+      - description: Name of the database
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: User of the database
+        explode: true
+        in: query
+        name: user
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Owner of the database
+        explode: true
+        in: query
+        name: owner
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Type of the database
+        explode: true
+        in: query
+        name: language
+        required: false
+        schema:
+          enum:
+          - mysql
+          - mongodb
+          - postgresql
+          - redis
+          example: mysql
+          type: string
+        style: form
+      - description: IPv4 address of the node in which the database is deployed
+        explode: true
+        in: query
+        name: host_ip
+        required: false
+        schema:
+          example: 192.168.208.208
+          type: string
+        style: form
+      - description: Port assigned by the node to the database's docker container
+        explode: true
+        in: query
+        name: container_port
+        required: false
+        schema:
+          example: "35000"
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch all databases with/without a filter defined by query params
+      tags:
+      - admin
+  /admin/dbs/{db}:
+    delete:
+      operationId: deleteDbByAdmin
+      parameters:
+      - description: Name of the database
+        explode: false
+        in: path
+        name: db
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Delete a single database
+      tags:
+      - admin
+    get:
+      operationId: fetchDbByAdmin
+      parameters:
+      - description: Name of the database
+        explode: false
+        in: path
+        name: db
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch a single database
+      tags:
+      - admin
+  /admin/users:
+    get:
+      operationId: fetchUsersByAdmin
+      parameters:
+      - description: Name of the user
+        explode: true
+        in: query
+        name: username
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Email of the user
+        explode: true
+        in: query
+        name: email
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Field denoting superuser privileges
+        explode: true
+        in: query
+        name: admin
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_11'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch all users with/without a filter defined by query params
+      tags:
+      - admin
+  /admin/users/{userEmail}:
+    delete:
+      operationId: deleteUserByAdmin
+      parameters:
+      - description: Email ID of the user
+        explode: false
+        in: path
+        name: userEmail
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Delete a single user
+      tags:
+      - admin
+    get:
+      operationId: fetchUserByAdmin
+      parameters:
+      - description: Email ID of the user
+        explode: false
+        in: path
+        name: userEmail
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_11'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch a single user
+      tags:
+      - admin
+  /admin/users/{userEmail}/grant:
+    patch:
+      operationId: grantSuperuserPrivilege
+      parameters:
+      - description: Email ID of the user
+        explode: false
+        in: path
+        name: userEmail
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Grant superuser privileges to a single user
+      tags:
+      - admin
+  /admin/users/{userEmail}/revoke:
+    patch:
+      operationId: revokeSuperuserPrivilege
+      parameters:
+      - description: Email ID of the user
+        explode: false
+        in: path
+        name: userEmail
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Revoke superuser privileges from a single user
+      tags:
+      - admin
+  /admin/nodes:
+    get:
+      operationId: fetchNodesByAdmin
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_12'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch bind addresses(IP:Port) of all microservices on all nodes
+      tags:
+      - admin
+  /admin/nodes/{type}:
+    get:
+      operationId: fetchNodeByAdmin
+      parameters:
+      - description: Type of microservice
+        explode: false
+        in: path
+        name: type
+        required: true
+        schema:
+          enum:
+          - master
+          - workers
+          - master
+          - genproxy
+          - appmaker
+          - genssh
+          - gendns
+          - mysql
+          - mongodb
+          - postgresql
+          - redis
+          example: master
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_13'
+          description: Success
+      security:
+      - bearerAuth: []
+      summary: Fetch bind addresses(IP:Port) of a single microservice on all nodes
+      tags:
+      - admin
+components:
+  requestBodies:
+    inline_object:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object'
+      required: true
+  schemas:
+    Context:
+      example:
+        port: 3000
+        build:
+        - npm install
+        - grunt build
+        index: index.js
+        rc_file: false
+        run:
+        - node index.js
+      properties:
+        index:
+          description: Entrypoint for an application
+          example: index.js
+          type: string
+        port:
+          default: 80
+          description: Port on which the application runs
+          example: 3000
+          format: int64
+          type: integer
+        rc_file:
+          default: false
+          description: Is a Run Commands file present in the application's git repository's
+            root directory?
+          type: boolean
+        build:
+          description: Commands for installing application dependencies
+          example:
+          - npm install
+          - grunt build
+          items:
+            type: string
+          type: array
+        run:
+          description: Commands for running the application
+          example:
+          - node index.js
+          items:
+            type: string
+          type: array
+      required:
+      - index
+      type: object
+    Git:
+      example:
+        access_token: access_token
+        repo_url: https://github.com/sdslabs/gasper
+        branch: master
+      properties:
+        repo_url:
+          description: Git Repository URL of the application
+          example: https://github.com/sdslabs/gasper
+          type: string
+        access_token:
+          description: Access token for cloning the application's git repository
+          type: string
+        branch:
+          default: master
+          description: Specific branch to clone
+          example: master
+          type: string
+      required:
+      - repo_url
+      type: object
+    Application:
+      example:
+        password: password
+        git:
+          access_token: access_token
+          repo_url: https://github.com/sdslabs/gasper
+          branch: master
+        name: name
+        context:
+          port: 3000
+          build:
+          - npm install
+          - grunt build
+          index: index.js
+          rc_file: false
+          run:
+          - node index.js
+        resources:
+          memory: 0.5
+          cpu: 0.25
+        env:
+          key: env
+      properties:
+        name:
+          description: Name of the application
+          type: string
+        password:
+          description: Password required for SSH access to the application's docker
+            container
+          type: string
+        git:
+          $ref: '#/components/schemas/Git'
+        context:
+          $ref: '#/components/schemas/Context'
+        env:
+          additionalProperties:
+            type: string
+          description: Environment variables required by the application
+          type: object
+        resources:
+          $ref: '#/components/schemas/Application_resources'
+      required:
+      - context
+      - git
+      - name
+      - password
+      type: object
+    CreatedApplication:
+      example:
+        owner: anish.mukherjee1996@gmail.com
+        container_port: 35000
+        host_ip: 192.168.208.206
+        app_url: alphadose.app.sdslabs.co
+        ssh_cmd: ssh -p 2222 alphadose@192.168.208.206
+        name_servers:
+        - 8.8.8.8
+        - 8.8.4.4
+        language: nodejs
+        _id: _id
+        instance_type: app
+        container_id: container_id
+        docker_image: sdsws/node:2.0
+      properties:
+        container_id:
+          description: ID of the application's docker container
+          type: string
+        container_port:
+          description: Port assigned by the node to the application's docker container
+          example: 35000
+          format: int64
+          type: integer
+        docker_image:
+          description: Docker image used in building the application's container
+          example: sdsws/node:2.0
+          type: string
+        app_url:
+          description: The domain name of the application (DNS entry is managed by
+            GenDNS 💡)
+          example: alphadose.app.sdslabs.co
+          type: string
+        host_ip:
+          description: IPv4 address of the node
+          example: 192.168.208.206
+          type: string
+        name_servers:
+          description: The DNS NameServers used by the application's docker container
+          example:
+          - 8.8.8.8
+          - 8.8.4.4
+          items:
+            type: string
+          type: array
+        instance_type:
+          description: The kind of instance this application belongs to
+          example: app
+          type: string
+        language:
+          description: The programming language in which the application is written
+          enum:
+          - php
+          - nodejs
+          - static
+          - python2
+          - python3
+          - golang
+          - ruby
+          example: nodejs
+          type: string
+        owner:
+          description: Owner of the application
+          example: anish.mukherjee1996@gmail.com
+          type: string
+        ssh_cmd:
+          description: Command to SSH into the application's docker container
+          example: ssh -p 2222 alphadose@192.168.208.206
+          type: string
+        _id:
+          description: Application's identifier assigned by MongoDB
+          type: string
+      type: object
+    User:
+      example:
+        password: password
+        email: email
+        username: username
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+      required:
+      - email
+      - password
+      - username
+      type: object
+    CreatedUser:
+      example:
+        admin: true
+        _id: _id
+        email: email
+        username: username
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        admin:
+          description: Field denoting superuser privileges
+          example: true
+          type: boolean
+        _id:
+          description: User's identifier assigned by MongoDB
+          type: string
+      type: object
+    Login:
+      example:
+        password: password
+        email: email
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+      - email
+      - password
+      type: object
+    LoginResponse:
+      example:
+        code: 200
+        expire: 2019-10-28T00:58:11+05:30
+        token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+      properties:
+        code:
+          example: 200
+          format: int32
+          type: integer
+        expire:
+          example: 2019-10-28T00:58:11+05:30
+          format: date-time
+          type: string
+        token:
+          description: The token required for authentication via bearer scheme
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+          type: string
+      type: object
+    Database:
+      example:
+        password: password
+        name: name
+      properties:
+        name:
+          description: Name of the database
+          type: string
+        password:
+          description: Password of the database
+          type: string
+      required:
+      - name
+      - password
+      type: object
+    CreatedDatabase:
+      example:
+        owner: owner
+        host_ip: 192.168.208.208
+        port: "35000"
+        db_url: alphadose.db.sdslabs.co
+        language: mysql
+        user: user
+        instance_type: instance_type
+      properties:
+        user:
+          description: Username of the database
+          type: string
+        owner:
+          description: Owner of the database
+          type: string
+        db_url:
+          description: The domain name of the database (DNS entry is managed by GenDNS
+            💡)
+          example: alphadose.db.sdslabs.co
+          type: string
+        host_ip:
+          description: IPv4 address of the node where the database is deployed
+          example: 192.168.208.208
+          type: string
+        port:
+          description: Port on which the database server is running
+          example: "35000"
+          type: string
+        instance_type:
+          description: The kind of instance the database belongs to
+          type: string
+        language:
+          description: The type of database
+          enum:
+          - mysql
+          - mongodb
+          - postgresql
+          - redis
+          example: mysql
+          type: string
+      type: object
+    Metrics:
+      example:
+        max_memory_usage: 0.5
+        host_ip: 192.168.208.208
+        alive: true
+        online_cpus: 4
+        name: sampledose
+        memory_usage: 0.2
+        _id: _id
+        memory_limit: 1
+        cpu_usage: 0.1
+        timestamp: 1576210138
+      properties:
+        _id:
+          description: Document's identifier assigned by MongoDB
+          type: string
+        name:
+          description: Name of the application
+          example: sampledose
+          type: string
+        host_ip:
+          description: IPv4 address of the node where the application is deployed
+          example: 192.168.208.208
+          type: string
+        alive:
+          description: Is the application up and running?
+          type: boolean
+        online_cpus:
+          description: The number of available CPUs in the node
+          example: 4
+          type: integer
+        cpu_usage:
+          description: Fraction of total CPUs utilized by the application
+          example: 0.1
+          format: double
+          type: number
+        memory_usage:
+          description: Fraction of memory utilized by the application
+          example: 0.2
+          format: double
+          type: number
+        max_memory_usage:
+          description: Highest fraction of memory utilized by the application in its
+            lifetime
+          example: 0.5
+          format: double
+          type: number
+        memory_limit:
+          description: Memory (in GigaBytes) alloted to the application
+          example: 1
+          format: float
+          type: number
+        timestamp:
+          description: Unix timestamp of the metrics document
+          example: 1576210138
+          format: int64
+          type: integer
+      type: object
+    Instances:
+      example:
+        name: Facebook
+        language: nodejs
+        _id: _id
+        instance_type: app
+      properties:
+        _id:
+          description: Document's identifier assigned by MongoDB
+          type: string
+        name:
+          description: Name of the application or database
+          example: Facebook
+          type: string
+        instance_type:
+          description: The kind of instance this application belongs to
+          example: app
+          type: string
+        language:
+          description: The programming language in which the application is written
+          enum:
+          - php
+          - nodejs
+          - static
+          - python2
+          - python3
+          - golang
+          - ruby
+          example: nodejs
+          type: string
+      type: object
+    inline_response_400:
+      properties:
+        success:
+          example: false
+          type: boolean
+        error:
+          type: string
+    inline_response_500:
+      properties:
+        success:
+          example: false
+          type: boolean
+        error:
+          example: INTERNAL_SERVER_ERROR
+          type: string
+    inline_response_200:
+      example:
+        success: true
+        message: User created
+      properties:
+        success:
+          type: boolean
+        message:
+          example: User created
+          type: string
+    inline_response_401:
+      properties:
+        success:
+          example: false
+          type: boolean
+        error:
+          example: Token is expired
+          type: string
+    inline_response_200_1:
+      example:
+        data:
+        - name: Facebook
+          language: nodejs
+          _id: _id
+          instance_type: app
+        - name: Facebook
+          language: nodejs
+          _id: _id
+          instance_type: app
+        success: true
+      properties:
+        success:
+          type: boolean
+        data:
+          items:
+            $ref: '#/components/schemas/Instances'
+          type: array
+    inline_response_200_2:
+      example:
+        success: true
+      properties:
+        success:
+          type: boolean
+    inline_response_200_3:
+      example:
+        data:
+        - owner: anish.mukherjee1996@gmail.com
+          container_port: 35000
+          host_ip: 192.168.208.206
+          app_url: alphadose.app.sdslabs.co
+          ssh_cmd: ssh -p 2222 alphadose@192.168.208.206
+          name_servers:
+          - 8.8.8.8
+          - 8.8.4.4
+          language: nodejs
+          _id: _id
+          instance_type: app
+          container_id: container_id
+          docker_image: sdsws/node:2.0
+        - owner: anish.mukherjee1996@gmail.com
+          container_port: 35000
+          host_ip: 192.168.208.206
+          app_url: alphadose.app.sdslabs.co
+          ssh_cmd: ssh -p 2222 alphadose@192.168.208.206
+          name_servers:
+          - 8.8.8.8
+          - 8.8.4.4
+          language: nodejs
+          _id: _id
+          instance_type: app
+          container_id: container_id
+          docker_image: sdsws/node:2.0
+        success: true
+      properties:
+        success:
+          type: boolean
+        data:
+          items:
+            $ref: '#/components/schemas/CreatedApplication'
+          type: array
+    inline_response_200_4:
+      example:
+        success: true
+        url: master.sdslabs.co:51000
+        raw_url: 10.43.3.24:51000
+      properties:
+        success:
+          type: boolean
+        url:
+          description: The URL endpoint for accessing the browser terminal instance
+            in the form of domain_name:port
+          example: master.sdslabs.co:51000
+          type: string
+        raw_url:
+          description: The URL endpoint for accessing the browser terminal instance
+            in the form of ip_address:port
+          example: 10.43.3.24:51000
+          type: string
+    inline_response_200_5:
+      example:
+        data:
+        - 2019-10-28T05:46:19.012861400Z Server listening on port 3000
+        success: true
+      properties:
+        success:
+          type: boolean
+        data:
+          example:
+          - 2019-10-28T05:46:19.012861400Z Server listening on port 3000
+          items:
+            type: string
+          type: array
+    inline_response_200_6:
+      example:
+        data:
+        - max_memory_usage: 0.5
+          host_ip: 192.168.208.208
+          alive: true
+          online_cpus: 4
+          name: sampledose
+          memory_usage: 0.2
+          _id: _id
+          memory_limit: 1
+          cpu_usage: 0.1
+          timestamp: 1576210138
+        - max_memory_usage: 0.5
+          host_ip: 192.168.208.208
+          alive: true
+          online_cpus: 4
+          name: sampledose
+          memory_usage: 0.2
+          _id: _id
+          memory_limit: 1
+          cpu_usage: 0.1
+          timestamp: 1576210138
+        success: true
+      properties:
+        success:
+          type: boolean
+        data:
+          items:
+            $ref: '#/components/schemas/Metrics'
+          type: array
+    inline_response_200_7:
+      example:
+        data:
+        - owner: owner
+          host_ip: 192.168.208.208
+          port: "35000"
+          db_url: alphadose.db.sdslabs.co
+          language: mysql
+          user: user
+          instance_type: instance_type
+        - owner: owner
+          host_ip: 192.168.208.208
+          port: "35000"
+          db_url: alphadose.db.sdslabs.co
+          language: mysql
+          user: user
+          instance_type: instance_type
+        success: true
+      properties:
+        success:
+          type: boolean
+        data:
+          items:
+            $ref: '#/components/schemas/CreatedDatabase'
+          type: array
+    inline_response_200_8:
+      example:
+        success: true
+        admin: true
+        email: anish.mukherjee1996@gmail.com
+        username: alphadose
+      properties:
+        success:
+          type: boolean
+        username:
+          example: alphadose
+          type: string
+        email:
+          example: anish.mukherjee1996@gmail.com
+          type: string
+        admin:
+          type: boolean
+    inline_response_200_9:
+      example:
+        success: true
+        message: user deleted
+      properties:
+        success:
+          type: boolean
+        message:
+          example: user deleted
+          type: string
+    inline_object:
+      properties:
+        old_password:
+          description: The current password in use
+          example: alphadose
+          type: string
+        new_password:
+          description: The new password meant to replace the old one
+          example: betadose
+          type: string
+      type: object
+    inline_response_200_10:
+      example:
+        success: true
+        message: password updated
+      properties:
+        success:
+          type: boolean
+        message:
+          example: password updated
+          type: string
+    inline_response_200_11:
+      example:
+        data:
+        - admin: true
+          _id: _id
+          email: email
+          username: username
+        - admin: true
+          _id: _id
+          email: email
+          username: username
+        success: true
+      properties:
+        success:
+          type: boolean
+        data:
+          items:
+            $ref: '#/components/schemas/CreatedUser'
+          type: array
+    inline_response_200_12:
+      example:
+        postgresql:
+        - 192.168.208.206:9000
+        success: true
+        mysql:
+        - 192.168.208.206:9000
+        appmaker:
+        - 192.168.208.206:4000
+        gendns:
+        - 192.168.208.206:53
+        genproxy:
+        - 192.168.208.206:80
+        mongodb:
+        - 192.168.208.206:9000
+        redis:
+        - 192.168.208.206:9000
+        genssh:
+        - 192.168.208.206:2222
+        master:
+        - 192.168.208.206:3000
+      properties:
+        success:
+          type: boolean
+        master:
+          example:
+          - 192.168.208.206:3000
+          items:
+            type: string
+          type: array
+        genproxy:
+          example:
+          - 192.168.208.206:80
+          items:
+            type: string
+          type: array
+        gendns:
+          example:
+          - 192.168.208.206:53
+          items:
+            type: string
+          type: array
+        appmaker:
+          example:
+          - 192.168.208.206:4000
+          items:
+            type: string
+          type: array
+        mongodb:
+          example:
+          - 192.168.208.206:9000
+          items:
+            type: string
+          type: array
+        mysql:
+          example:
+          - 192.168.208.206:9000
+          items:
+            type: string
+          type: array
+        postgresql:
+          example:
+          - 192.168.208.206:9000
+          items:
+            type: string
+          type: array
+        redis:
+          example:
+          - 192.168.208.206:9000
+          items:
+            type: string
+          type: array
+        genssh:
+          example:
+          - 192.168.208.206:2222
+          items:
+            type: string
+          type: array
+    inline_response_200_13:
+      example:
+        success: true
+        master:
+        - 192.168.208.206:3000
+      properties:
+        success:
+          type: boolean
+        master:
+          example:
+          - 192.168.208.206:3000
+          items:
+            type: string
+          type: array
+    Application_resources:
+      description: Resources required by the application
+      example:
+        memory: 0.5
+        cpu: 0.25
+      properties:
+        cpu:
+          description: Number of virtual CPUs
+          example: 0.25
+          format: float
+          type: number
+        memory:
+          description: Memory in GigaBytes (GB)
+          example: 0.5
+          format: float
+          type: number
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http

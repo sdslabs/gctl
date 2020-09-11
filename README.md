@@ -1,1 +1,1 @@
-# gctl
+Command line interface tool for gasper
