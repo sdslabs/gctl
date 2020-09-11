@@ -9,10 +9,11 @@
  */
 
 package openapi
+
 // ApplicationResources Resources required by the application
 type ApplicationResources struct {
 	// Number of virtual CPUs
-	Cpu float32 `json:"cpu,omitempty"`
+	CPU float32 `json:"cpu,omitempty"`
 	// Memory in GigaBytes (GB)
 	Memory float32 `json:"memory,omitempty"`
 }

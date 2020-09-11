@@ -7,6 +7,7 @@ import (
 
 var cfg = openapi.NewConfiguration()
 var client = openapi.NewAPIClient(cfg)
+var gctltoken string
 
 func init() {
 	rootCmd.AddCommand(versionCmd)

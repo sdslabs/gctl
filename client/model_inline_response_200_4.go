@@ -9,11 +9,13 @@
  */
 
 package openapi
+
+import (
+	"time"
+)
+
 // InlineResponse2004 struct for InlineResponse2004
 type InlineResponse2004 struct {
-	Success bool `json:"success,omitempty"`
-	// The URL endpoint for accessing the browser terminal instance in the form of domain_name:port
-	Url string `json:"url,omitempty"`
-	// The URL endpoint for accessing the browser terminal instance in the form of ip_address:port
-	RawUrl string `json:"raw_url,omitempty"`
+	Success bool      `json:"success,omitempty"`
+	Expire  time.Time `json:"expire,omitempty"`
 }

@@ -22,15 +22,20 @@ var (
 	_ _context.Context
 )
 
-// InstancesApiService InstancesApi service
-type InstancesApiService service
+//InstancesAPI is interface for functions of type InstancesAPIService
+type InstancesAPI interface {
+	FetchIntancesByUser(ctx _context.Context) (InlineResponse2001, *_nethttp.Response, error)
+}
+
+// InstancesAPIService InstancesAPI service
+type InstancesAPIService service
 
 /*
 FetchIntancesByUser Fetch all instances owned by a user
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 @return InlineResponse2001
 */
-func (a *InstancesApiService) FetchIntancesByUser(ctx _context.Context) (InlineResponse2001, *_nethttp.Response, error) {
+func (a *InstancesAPIService) FetchIntancesByUser(ctx _context.Context) (InlineResponse2001, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -68,7 +73,7 @@ func (a *InstancesApiService) FetchIntancesByUser(ctx _context.Context) (InlineR
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -82,7 +87,7 @@ func (a *InstancesApiService) FetchIntancesByUser(ctx _context.Context) (InlineR
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}

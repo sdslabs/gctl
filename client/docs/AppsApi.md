@@ -1,19 +1,15 @@
-# \AppsApi
-
-All URIs are relative to *http://localhost:3000*
+# \AppsAPI
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CreateApp**](AppsApi.md#CreateApp) | **Post** /apps/{language} | Create an application
-[**DeleteAppByUser**](AppsApi.md#DeleteAppByUser) | **Delete** /apps/{app} | Delete an application owned by a user
-[**FetchAppByUser**](AppsApi.md#FetchAppByUser) | **Get** /apps/{app} | Fetch a single application owned by a user
-[**FetchAppsByUser**](AppsApi.md#FetchAppsByUser) | **Get** /apps | Fetch all applications owned by a user
-[**FetchLogsByUser**](AppsApi.md#FetchLogsByUser) | **Get** /apps/{app}/logs | Fetch logs of an application
-[**FetchMetricsByUser**](AppsApi.md#FetchMetricsByUser) | **Get** /apps/{app}/metrics | Fetch metrics of an application
-[**FetchTerminalByUser**](AppsApi.md#FetchTerminalByUser) | **Get** /apps/{app}/term | Fetch a browser terminal instance for an application owned by a user
-[**RebuildAppByUser**](AppsApi.md#RebuildAppByUser) | **Patch** /apps/{app}/rebuild | Rebuild an application
-[**TransferAppByUser**](AppsApi.md#TransferAppByUser) | **Patch** /apps/{app}/transfer/{userEmail} | Transfer ownership of an application to another user
-[**UpdateAppByUser**](AppsApi.md#UpdateAppByUser) | **Put** /apps/{app} | Update an application owned by a user
+[**CreateApp**](AppsAPI.md#CreateApp) | **Post** /apps/{language} | Create an application
+[**DeleteAppByUser**](AppsAPI.md#DeleteAppByUser) | **Delete** /apps/{app} | Delete an application owned by a user
+[**FetchAppByUser**](AppsAPI.md#FetchAppByUser) | **Get** /apps/{app} | Fetch a single application owned by a user
+[**FetchAppsByUser**](AppsAPI.md#FetchAppsByUser) | **Get** /apps | Fetch all applications owned by a user
+[**FetchLogsByUser**](AppsAPI.md#FetchLogsByUser) | **Get** /apps/{app}/logs | Fetch logs of an application
+[**FetchMetricsByUser**](AppsAPI.md#FetchMetricsByUser) | **Get** /apps/{app}/metrics | Fetch metrics of an application
+[**RebuildAppByUser**](AppsAPI.md#RebuildAppByUser) | **Patch** /apps/{app}/rebuild | Rebuild an application
+[**UpdateAppByUser**](AppsAPI.md#UpdateAppByUser) | **Put** /apps/{app} | Update an application owned by a user
 
 
 
@@ -235,38 +231,6 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## FetchTerminalByUser
-
-> InlineResponse2004 FetchTerminalByUser(ctx, app)
-
-Fetch a browser terminal instance for an application owned by a user
-
-### Required Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**app** | **string**| The name of the application | 
-
-### Return type
-
-[**InlineResponse2004**](inline_response_200_4.md)
-
-### Authorization
-
-[bearerAuth](../README.md#bearerAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
 ## RebuildAppByUser
 
 > InlineResponse2002 RebuildAppByUser(ctx, app)
@@ -280,39 +244,6 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
 **app** | **string**| The name of the application | 
-
-### Return type
-
-[**InlineResponse2002**](inline_response_200_2.md)
-
-### Authorization
-
-[bearerAuth](../README.md#bearerAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## TransferAppByUser
-
-> InlineResponse2002 TransferAppByUser(ctx, app, userEmail)
-
-Transfer ownership of an application to another user
-
-### Required Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**app** | **string**| The name of the application | 
-**userEmail** | **string**| Email ID of the user | 
 
 ### Return type
 

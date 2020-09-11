@@ -1,15 +1,11 @@
-# \DbsApi
-
-All URIs are relative to *http://localhost:3000*
+# \DbsAPI
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CreateDB**](DbsApi.md#CreateDB) | **Post** /dbs/{databaseType} | Create a database
-[**DeleteDbByUser**](DbsApi.md#DeleteDbByUser) | **Delete** /dbs/{db} | Delete a single database owned by a user
-[**FetchDbByUser**](DbsApi.md#FetchDbByUser) | **Get** /dbs/{db} | Fetch a single database owned by a user
-[**FetchDbsByUser**](DbsApi.md#FetchDbsByUser) | **Get** /dbs | Fetch all databases owned by a user
-[**TransferDbByUser**](DbsApi.md#TransferDbByUser) | **Patch** /dbs/{db}/transfer/{userEmail} | Transfer ownership of a database to another user
-
+[**CreateDB**](DbsAPI.md#CreateDB) | **Post** /dbs/{databaseType} | Create a database
+[**DeleteDbByUser**](DbsAPI.md#DeleteDbByUser) | **Delete** /dbs/{db} | Delete a single database owned by a user
+[**FetchDbByUser**](DbsAPI.md#FetchDbByUser) | **Get** /dbs/{db} | Fetch a single database owned by a user
+[**FetchDbsByUser**](DbsAPI.md#FetchDbsByUser) | **Get** /dbs | Fetch all databases owned by a user
 
 
 ## CreateDB
@@ -145,37 +141,3 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to README]](../README.md)
-
-
-## TransferDbByUser
-
-> InlineResponse2002 TransferDbByUser(ctx, db, userEmail)
-
-Transfer ownership of a database to another user
-
-### Required Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**db** | **string**| Name of the database | 
-**userEmail** | **string**| Email ID of the user | 
-
-### Return type
-
-[**InlineResponse2002**](inline_response_200_2.md)
-
-### Authorization
-
-[bearerAuth](../README.md#bearerAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-

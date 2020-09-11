@@ -25,8 +25,16 @@ var (
 	_ _context.Context
 )
 
-// AppsApiService AppsApi service
-type AppsApiService service
+//AppsAPI is interface for functions of type AppsAPIService
+type AppsAPI interface {
+	CreateApp(ctx _context.Context, language string, application Application) (InlineResponse2002, *_nethttp.Response, error)
+	DeleteAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error)
+	FetchAppByUser(ctx _context.Context, app string) (InlineResponse2003, *_nethttp.Response, error)
+	FetchAppsByUser(ctx _context.Context) (InlineResponse2003, *_nethttp.Response, error)
+}
+
+// AppsAPIService AppsAPI service
+type AppsAPIService service
 
 /*
 CreateApp Create an application
@@ -35,7 +43,7 @@ CreateApp Create an application
  * @param application
 @return InlineResponse2002
 */
-func (a *AppsApiService) CreateApp(ctx _context.Context, language string, application Application) (InlineResponse2002, *_nethttp.Response, error) {
+func (a *AppsAPIService) CreateApp(ctx _context.Context, language string, application Application) (InlineResponse2002, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -77,7 +85,7 @@ func (a *AppsApiService) CreateApp(ctx _context.Context, language string, applic
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -91,7 +99,7 @@ func (a *AppsApiService) CreateApp(ctx _context.Context, language string, applic
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -114,7 +122,7 @@ DeleteAppByUser Delete an application owned by a user
  * @param app The name of the application
 @return InlineResponse2002
 */
-func (a *AppsApiService) DeleteAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error) {
+func (a *AppsAPIService) DeleteAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -154,7 +162,7 @@ func (a *AppsApiService) DeleteAppByUser(ctx _context.Context, app string) (Inli
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -168,7 +176,7 @@ func (a *AppsApiService) DeleteAppByUser(ctx _context.Context, app string) (Inli
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -191,7 +199,7 @@ FetchAppByUser Fetch a single application owned by a user
  * @param app The name of the application
 @return InlineResponse2003
 */
-func (a *AppsApiService) FetchAppByUser(ctx _context.Context, app string) (InlineResponse2003, *_nethttp.Response, error) {
+func (a *AppsAPIService) FetchAppByUser(ctx _context.Context, app string) (InlineResponse2003, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -231,7 +239,7 @@ func (a *AppsApiService) FetchAppByUser(ctx _context.Context, app string) (Inlin
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -245,7 +253,7 @@ func (a *AppsApiService) FetchAppByUser(ctx _context.Context, app string) (Inlin
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -267,7 +275,7 @@ FetchAppsByUser Fetch all applications owned by a user
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 @return InlineResponse2003
 */
-func (a *AppsApiService) FetchAppsByUser(ctx _context.Context) (InlineResponse2003, *_nethttp.Response, error) {
+func (a *AppsAPIService) FetchAppsByUser(ctx _context.Context) (InlineResponse2003, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -305,7 +313,7 @@ func (a *AppsApiService) FetchAppsByUser(ctx _context.Context) (InlineResponse20
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -319,7 +327,7 @@ func (a *AppsApiService) FetchAppsByUser(ctx _context.Context) (InlineResponse20
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -349,7 +357,7 @@ FetchLogsByUser Fetch logs of an application
  * @param "Tail" (optional.Int32) -  Fetch the last **n** logs (Fetches all logs if not specified)
 @return InlineResponse2005
 */
-func (a *AppsApiService) FetchLogsByUser(ctx _context.Context, app string, localVarOptionals *FetchLogsByUserOpts) (InlineResponse2005, *_nethttp.Response, error) {
+func (a *AppsAPIService) FetchLogsByUser(ctx _context.Context, app string, localVarOptionals *FetchLogsByUserOpts) (InlineResponse2005, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -392,7 +400,7 @@ func (a *AppsApiService) FetchLogsByUser(ctx _context.Context, app string, local
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -406,7 +414,7 @@ func (a *AppsApiService) FetchLogsByUser(ctx _context.Context, app string, local
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -450,7 +458,7 @@ FetchMetricsByUser Fetch metrics of an application
  * @param "Decades" (optional.Int32) -  Fetch metrics in the last **n** decades
 @return InlineResponse2006
 */
-func (a *AppsApiService) FetchMetricsByUser(ctx _context.Context, app string, localVarOptionals *FetchMetricsByUserOpts) (InlineResponse2006, *_nethttp.Response, error) {
+func (a *AppsAPIService) FetchMetricsByUser(ctx _context.Context, app string, localVarOptionals *FetchMetricsByUserOpts) (InlineResponse2006, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -514,7 +522,7 @@ func (a *AppsApiService) FetchMetricsByUser(ctx _context.Context, app string, lo
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -528,84 +536,7 @@ func (a *AppsApiService) FetchMetricsByUser(ctx _context.Context, app string, lo
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-/*
-FetchTerminalByUser Fetch a browser terminal instance for an application owned by a user
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param app The name of the application
-@return InlineResponse2004
-*/
-func (a *AppsApiService) FetchTerminalByUser(ctx _context.Context, app string) (InlineResponse2004, *_nethttp.Response, error) {
-	var (
-		localVarHTTPMethod   = _nethttp.MethodGet
-		localVarPostBody     interface{}
-		localVarFormFileName string
-		localVarFileName     string
-		localVarFileBytes    []byte
-		localVarReturnValue  InlineResponse2004
-	)
-
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/apps/{app}/term"
-	localVarPath = strings.Replace(localVarPath, "{"+"app"+"}", _neturl.QueryEscape(parameterToString(app, "")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := _neturl.Values{}
-	localVarFormParams := _neturl.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(r)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -628,7 +559,7 @@ RebuildAppByUser Rebuild an application
  * @param app The name of the application
 @return InlineResponse2002
 */
-func (a *AppsApiService) RebuildAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error) {
+func (a *AppsAPIService) RebuildAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -668,7 +599,7 @@ func (a *AppsApiService) RebuildAppByUser(ctx _context.Context, app string) (Inl
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -682,87 +613,7 @@ func (a *AppsApiService) RebuildAppByUser(ctx _context.Context, app string) (Inl
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-/*
-TransferAppByUser Transfer ownership of an application to another user
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param app The name of the application
- * @param userEmail Email ID of the user
-@return InlineResponse2002
-*/
-func (a *AppsApiService) TransferAppByUser(ctx _context.Context, app string, userEmail string) (InlineResponse2002, *_nethttp.Response, error) {
-	var (
-		localVarHTTPMethod   = _nethttp.MethodPatch
-		localVarPostBody     interface{}
-		localVarFormFileName string
-		localVarFileName     string
-		localVarFileBytes    []byte
-		localVarReturnValue  InlineResponse2002
-	)
-
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/apps/{app}/transfer/{userEmail}"
-	localVarPath = strings.Replace(localVarPath, "{"+"app"+"}", _neturl.QueryEscape(parameterToString(app, "")), -1)
-
-	localVarPath = strings.Replace(localVarPath, "{"+"userEmail"+"}", _neturl.QueryEscape(parameterToString(userEmail, "")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := _neturl.Values{}
-	localVarFormParams := _neturl.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(r)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -786,7 +637,7 @@ UpdateAppByUser Update an application owned by a user
  * @param application
 @return InlineResponse2002
 */
-func (a *AppsApiService) UpdateAppByUser(ctx _context.Context, app string, application Application) (InlineResponse2002, *_nethttp.Response, error) {
+func (a *AppsAPIService) UpdateAppByUser(ctx _context.Context, app string, application Application) (InlineResponse2002, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -828,7 +679,7 @@ func (a *AppsApiService) UpdateAppByUser(ctx _context.Context, app string, appli
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.CallAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -842,7 +693,7 @@ func (a *AppsApiService) UpdateAppByUser(ctx _context.Context, app string, appli
 	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: fetchError(localVarBody),
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}

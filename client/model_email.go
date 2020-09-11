@@ -9,16 +9,9 @@
  */
 
 package openapi
-// InlineResponse20012 struct for InlineResponse20012
-type InlineResponse20012 struct {
-	Success bool `json:"success,omitempty"`
-	Master []string `json:"master,omitempty"`
-	Genproxy []string `json:"genproxy,omitempty"`
-	Gendns []string `json:"gendns,omitempty"`
-	Appmaker []string `json:"appmaker,omitempty"`
-	Mongodb []string `json:"mongodb,omitempty"`
-	Mysql []string `json:"mysql,omitempty"`
-	Postgresql []string `json:"postgresql,omitempty"`
-	Redis []string `json:"redis,omitempty"`
-	Genssh []string `json:"genssh,omitempty"`
+
+// Email struct for Email
+type Email struct {
+	// Email id of the user
+	Email string `json:"email"`
 }

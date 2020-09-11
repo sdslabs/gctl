@@ -36,6 +36,25 @@ import (
 	"golang.org/x/oauth2"
 )
 
+//Client is interface for functions of type APIClient
+type Client interface {
+	NewAPIClient(cfg *Configuration) *APIClient
+	CallAPI(request *http.Request) (*http.Response, error)
+	ChangeBasePath(path string)
+	GetConfig() *Configuration
+	prepareRequest(
+		ctx context.Context,
+		path string, method string,
+		postBody interface{},
+		headerParams map[string]string,
+		queryParams url.Values,
+		formParams url.Values,
+		formFileName string,
+		fileName string,
+		fileBytes []byte) (localVarRequest *http.Request, err error)
+	decode(v interface{}, b []byte, contentType string) (err error)
+}
+
 var (
 	jsonCheck = regexp.MustCompile(`(?i:(?:application|text)/(?:vnd\.[^;]+\+)?json)`)
 	xmlCheck  = regexp.MustCompile(`(?i:(?:application|text)/xml)`)
@@ -49,17 +68,13 @@ type APIClient struct {
 
 	// API Services
 
-	AdminApi *AdminApiService
+	AppsAPI *AppsAPIService
 
-	AppsApi *AppsApiService
+	AuthAPI *AuthAPIService
 
-	AuthApi *AuthApiService
+	DbsAPI *DbsAPIService
 
-	DbsApi *DbsApiService
-
-	InstancesApi *InstancesApiService
-
-	UserApi *UserApiService
+	InstancesAPI *InstancesAPIService
 }
 
 type service struct {
@@ -78,12 +93,10 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.common.client = c
 
 	// API Services
-	c.AdminApi = (*AdminApiService)(&c.common)
-	c.AppsApi = (*AppsApiService)(&c.common)
-	c.AuthApi = (*AuthApiService)(&c.common)
-	c.DbsApi = (*DbsApiService)(&c.common)
-	c.InstancesApi = (*InstancesApiService)(&c.common)
-	c.UserApi = (*UserApiService)(&c.common)
+	c.AppsAPI = (*AppsAPIService)(&c.common)
+	c.AuthAPI = (*AuthAPIService)(&c.common)
+	c.DbsAPI = (*DbsAPIService)(&c.common)
+	c.InstancesAPI = (*InstancesAPIService)(&c.common)
 
 	return c
 }
@@ -135,7 +148,7 @@ func typeCheckParameter(obj interface{}, expected string, name string) error {
 
 	// Check the type is as expected.
 	if reflect.TypeOf(obj).String() != expected {
-		return fmt.Errorf("Expected %s to be of type %s but received %s.", name, expected, reflect.TypeOf(obj).String())
+		return fmt.Errorf("expected %s to be of type %s but received %s", name, expected, reflect.TypeOf(obj).String())
 	}
 	return nil
 }
@@ -165,7 +178,7 @@ func parameterToString(obj interface{}, collectionFormat string) string {
 }
 
 // helper for converting interface{} parameters to json strings
-func parameterToJson(obj interface{}) (string, error) {
+func parameterToJSON(obj interface{}) (string, error) {
 	jsonBuf, err := json.Marshal(obj)
 	if err != nil {
 		return "", err
@@ -173,8 +186,8 @@ func parameterToJson(obj interface{}) (string, error) {
 	return string(jsonBuf), err
 }
 
-// callAPI do the request.
-func (c *APIClient) callAPI(request *http.Request) (*http.Response, error) {
+// CallAPI do the request.
+func (c *APIClient) CallAPI(request *http.Request) (*http.Response, error) {
 	if c.cfg.Debug {
 		dump, err := httputil.DumpRequestOut(request, true)
 		if err != nil {
@@ -204,7 +217,7 @@ func (c *APIClient) ChangeBasePath(path string) {
 	c.cfg.BasePath = path
 }
 
-// Allow modification of underlying config for alternate implementations and testing
+// GetConfig allow modification of underlying config for alternate implementations and testing
 // Caution: modifying the configuration while live can cause data races and potentially unwanted behavior
 func (c *APIClient) GetConfig() *Configuration {
 	return c.cfg
@@ -241,7 +254,7 @@ func (c *APIClient) prepareRequest(
 	// add form parameters and file if available.
 	if strings.HasPrefix(headerParams["Content-Type"], "multipart/form-data") && len(formParams) > 0 || (len(fileBytes) > 0 && fileName != "") {
 		if body != nil {
-			return nil, errors.New("Cannot specify postBody and multipart form at the same time.")
+			return nil, errors.New("cannot specify postBody and multipart form at the same time")
 		}
 		body = &bytes.Buffer{}
 		w := multipart.NewWriter(body)
@@ -281,7 +294,7 @@ func (c *APIClient) prepareRequest(
 
 	if strings.HasPrefix(headerParams["Content-Type"], "application/x-www-form-urlencoded") && len(formParams) > 0 {
 		if body != nil {
-			return nil, errors.New("Cannot specify postBody and x-www-form-urlencoded form at the same time.")
+			return nil, errors.New("cannot specify postBody and x-www-form-urlencoded form at the same time")
 		}
 		body = &bytes.Buffer{}
 		body.WriteString(formParams.Encode())
@@ -362,7 +375,7 @@ func (c *APIClient) prepareRequest(
 
 		// AccessToken Authentication
 		if auth, ok := ctx.Value(ContextAccessToken).(string); ok {
-			localVarRequest.Header.Add("Authorization", "Bearer "+auth)
+			localVarRequest.Header.Add("Authorization", "gctlToken "+auth)
 		}
 
 	}
@@ -453,7 +466,7 @@ func setBody(body interface{}, contentType string) (bodyBuf *bytes.Buffer, err e
 	}
 
 	if bodyBuf.Len() == 0 {
-		err = fmt.Errorf("Invalid body type %s\n", contentType)
+		err = fmt.Errorf("invalid body type %s", contentType)
 		return nil, err
 	}
 	return bodyBuf, nil

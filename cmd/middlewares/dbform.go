@@ -9,18 +9,11 @@ import (
 	openapi "github.com/sdslabs/gctl/client"
 )
 
-func DbForm() (string, string, openapi.Database) {
+//DbForm takes input for openapi.Database
+func DbForm() (string, openapi.Database) {
 	var database openapi.Database
-	var token, dbtype string
+	var dbtype string
 	scanner := bufio.NewScanner(os.Stdin)
-	for token == "" {
-		fmt.Printf("*Token:")
-		scanner.Scan()
-		token = scanner.Text()
-		if token == "" {
-			fmt.Println("Token is required!")
-		}
-	}
 	for !ValidateName(database.Name) {
 		fmt.Printf("*Database Name: ")
 		scanner.Scan()
@@ -45,5 +38,5 @@ func DbForm() (string, string, openapi.Database) {
 			fmt.Println("This is field is required. supported database types are mysql, mongodb, postgresql and redis")
 		}
 	}
-	return token, dbtype, database
+	return dbtype, database
 }

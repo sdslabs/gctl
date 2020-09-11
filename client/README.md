@@ -35,42 +35,20 @@ All URIs are relative to *http://localhost:3000*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*AdminApi* | [**DeleteAppByAdmin**](docs/AdminApi.md#deleteappbyadmin) | **Delete** /admin/apps/{app} | Delete an application
-*AdminApi* | [**DeleteDbByAdmin**](docs/AdminApi.md#deletedbbyadmin) | **Delete** /admin/dbs/{db} | Delete a single database
-*AdminApi* | [**DeleteUserByAdmin**](docs/AdminApi.md#deleteuserbyadmin) | **Delete** /admin/users/{userEmail} | Delete a single user
-*AdminApi* | [**FetchAppByAdmin**](docs/AdminApi.md#fetchappbyadmin) | **Get** /admin/apps/{app} | Fetch a single application
-*AdminApi* | [**FetchAppsByAdmin**](docs/AdminApi.md#fetchappsbyadmin) | **Get** /admin/apps | Fetch all applications with/without a filter defined by query params
-*AdminApi* | [**FetchDbByAdmin**](docs/AdminApi.md#fetchdbbyadmin) | **Get** /admin/dbs/{db} | Fetch a single database
-*AdminApi* | [**FetchDbsByAdmin**](docs/AdminApi.md#fetchdbsbyadmin) | **Get** /admin/dbs | Fetch all databases with/without a filter defined by query params
-*AdminApi* | [**FetchNodeByAdmin**](docs/AdminApi.md#fetchnodebyadmin) | **Get** /admin/nodes/{type} | Fetch bind addresses(IP:Port) of a single microservice on all nodes
-*AdminApi* | [**FetchNodesByAdmin**](docs/AdminApi.md#fetchnodesbyadmin) | **Get** /admin/nodes | Fetch bind addresses(IP:Port) of all microservices on all nodes
-*AdminApi* | [**FetchUserByAdmin**](docs/AdminApi.md#fetchuserbyadmin) | **Get** /admin/users/{userEmail} | Fetch a single user
-*AdminApi* | [**FetchUsersByAdmin**](docs/AdminApi.md#fetchusersbyadmin) | **Get** /admin/users | Fetch all users with/without a filter defined by query params
-*AdminApi* | [**GrantSuperuserPrivilege**](docs/AdminApi.md#grantsuperuserprivilege) | **Patch** /admin/users/{userEmail}/grant | Grant superuser privileges to a single user
-*AdminApi* | [**RevokeSuperuserPrivilege**](docs/AdminApi.md#revokesuperuserprivilege) | **Patch** /admin/users/{userEmail}/revoke | Revoke superuser privileges from a single user
-*AppsApi* | [**CreateApp**](docs/AppsApi.md#createapp) | **Post** /apps/{language} | Create an application
-*AppsApi* | [**DeleteAppByUser**](docs/AppsApi.md#deleteappbyuser) | **Delete** /apps/{app} | Delete an application owned by a user
-*AppsApi* | [**FetchAppByUser**](docs/AppsApi.md#fetchappbyuser) | **Get** /apps/{app} | Fetch a single application owned by a user
-*AppsApi* | [**FetchAppsByUser**](docs/AppsApi.md#fetchappsbyuser) | **Get** /apps | Fetch all applications owned by a user
-*AppsApi* | [**FetchLogsByUser**](docs/AppsApi.md#fetchlogsbyuser) | **Get** /apps/{app}/logs | Fetch logs of an application
-*AppsApi* | [**FetchMetricsByUser**](docs/AppsApi.md#fetchmetricsbyuser) | **Get** /apps/{app}/metrics | Fetch metrics of an application
-*AppsApi* | [**FetchTerminalByUser**](docs/AppsApi.md#fetchterminalbyuser) | **Get** /apps/{app}/term | Fetch a browser terminal instance for an application owned by a user
-*AppsApi* | [**RebuildAppByUser**](docs/AppsApi.md#rebuildappbyuser) | **Patch** /apps/{app}/rebuild | Rebuild an application
-*AppsApi* | [**TransferAppByUser**](docs/AppsApi.md#transferappbyuser) | **Patch** /apps/{app}/transfer/{userEmail} | Transfer ownership of an application to another user
-*AppsApi* | [**UpdateAppByUser**](docs/AppsApi.md#updateappbyuser) | **Put** /apps/{app} | Update an application owned by a user
-*AuthApi* | [**Login**](docs/AuthApi.md#login) | **Post** /auth/login | Login to get a Bearer token
-*AuthApi* | [**Refresh**](docs/AuthApi.md#refresh) | **Get** /auth/refresh | Refresh JWT token using existing token
-*AuthApi* | [**Register**](docs/AuthApi.md#register) | **Post** /auth/register | Register a user
-*DbsApi* | [**CreateDB**](docs/DbsApi.md#createdb) | **Post** /dbs/{databaseType} | Create a database
-*DbsApi* | [**DeleteDbByUser**](docs/DbsApi.md#deletedbbyuser) | **Delete** /dbs/{db} | Delete a single database owned by a user
-*DbsApi* | [**FetchDbByUser**](docs/DbsApi.md#fetchdbbyuser) | **Get** /dbs/{db} | Fetch a single database owned by a user
-*DbsApi* | [**FetchDbsByUser**](docs/DbsApi.md#fetchdbsbyuser) | **Get** /dbs | Fetch all databases owned by a user
-*DbsApi* | [**TransferDbByUser**](docs/DbsApi.md#transferdbbyuser) | **Patch** /dbs/{db}/transfer/{userEmail} | Transfer ownership of a database to another user
-*InstancesApi* | [**FetchIntancesByUser**](docs/InstancesApi.md#fetchintancesbyuser) | **Get** /instances | Fetch all instances owned by a user
-*UserApi* | [**DeleteUser**](docs/UserApi.md#deleteuser) | **Delete** /user | Delete user
-*UserApi* | [**FetchUser**](docs/UserApi.md#fetchuser) | **Get** /user | Fetch logged in user&#39;s info
-*UserApi* | [**UpdatePassword**](docs/UserApi.md#updatepassword) | **Put** /user/password | Update the password of the logged in user
-
+*AppsAPI* | [**CreateApp**](docs/AppsAPI.md#createapp) | **Post** /apps/{language} | Create an application
+*AppsAPI* | [**DeleteAppByUser**](docs/AppsAPI.md#deleteappbyuser) | **Delete** /apps/{app} | Delete an application owned by a user
+*AppsAPI* | [**FetchAppByUser**](docs/AppsAPI.md#fetchappbyuser) | **Get** /apps/{app} | Fetch a single application owned by a user
+*AppsAPI* | [**FetchAppsByUser**](docs/AppsAPI.md#fetchappsbyuser) | **Get** /apps | Fetch all applications owned by a user
+*AppsAPI* | [**FetchLogsByUser**](docs/AppsAPI.md#fetchlogsbyuser) | **Get** /apps/{app}/logs | Fetch logs of an application
+*AppsAPI* | [**FetchMetricsByUser**](docs/AppsAPI.md#fetchmetricsbyuser) | **Get** /apps/{app}/metrics | Fetch metrics of an application
+*AppsAPI* | [**RebuildAppByUser**](docs/AppsAPI.md#rebuildappbyuser) | **Patch** /apps/{app}/rebuild | Rebuild an application
+*AppsAPI* | [**UpdateAppByUser**](docs/AppsAPI.md#updateappbyuser) | **Put** /apps/{app} | Update an application owned by a user
+*AuthAPI* | [**Refresh**](docs/AuthAPI.md#refresh) | **Get** /auth/refresh | Refresh JWT token using existing token
+*DbsAPI* | [**CreateDB**](docs/DbsAPI.md#createdb) | **Post** /dbs/{databaseType} | Create a database
+*DbsAPI* | [**DeleteDbByUser**](docs/DbsAPI.md#deletedbbyuser) | **Delete** /dbs/{db} | Delete a single database owned by a user
+*DbsAPI* | [**FetchDbByUser**](docs/DbsAPI.md#fetchdbbyuser) | **Get** /dbs/{db} | Fetch a single database owned by a user
+*DbsAPI* | [**FetchDbsByUser**](docs/DbsAPI.md#fetchdbsbyuser) | **Get** /dbs | Fetch all databases owned by a user
+*InstancesAPI* | [**FetchIntancesByUser**](docs/InstancesAPI.md#fetchintancesbyuser) | **Get** /instances | Fetch all instances owned by a user
 
 ## Documentation For Models
 
@@ -79,32 +57,21 @@ Class | Method | HTTP request | Description
  - [Context](docs/Context.md)
  - [CreatedApplication](docs/CreatedApplication.md)
  - [CreatedDatabase](docs/CreatedDatabase.md)
- - [CreatedUser](docs/CreatedUser.md)
  - [Database](docs/Database.md)
  - [Git](docs/Git.md)
  - [InlineObject](docs/InlineObject.md)
- - [InlineResponse200](docs/InlineResponse200.md)
  - [InlineResponse2001](docs/InlineResponse2001.md)
- - [InlineResponse20010](docs/InlineResponse20010.md)
- - [InlineResponse20011](docs/InlineResponse20011.md)
- - [InlineResponse20012](docs/InlineResponse20012.md)
- - [InlineResponse20013](docs/InlineResponse20013.md)
  - [InlineResponse2002](docs/InlineResponse2002.md)
  - [InlineResponse2003](docs/InlineResponse2003.md)
- - [InlineResponse2004](docs/InlineResponse2004.md)
  - [InlineResponse2005](docs/InlineResponse2005.md)
  - [InlineResponse2006](docs/InlineResponse2006.md)
  - [InlineResponse2007](docs/InlineResponse2007.md)
- - [InlineResponse2008](docs/InlineResponse2008.md)
- - [InlineResponse2009](docs/InlineResponse2009.md)
  - [InlineResponse400](docs/InlineResponse400.md)
  - [InlineResponse401](docs/InlineResponse401.md)
  - [InlineResponse500](docs/InlineResponse500.md)
  - [Instances](docs/Instances.md)
- - [Login](docs/Login.md)
  - [LoginResponse](docs/LoginResponse.md)
  - [Metrics](docs/Metrics.md)
- - [User](docs/User.md)
 
 
 ## Documentation For Authorization

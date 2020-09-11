@@ -11,18 +11,11 @@ import (
 	openapi "github.com/sdslabs/gctl/client"
 )
 
-func AppForm() (string, string, openapi.Application) {
-	var token, language string
+//AppForm takes input for openapi.Application
+func AppForm() (string, openapi.Application) {
+	var language string
 	var application openapi.Application
 	scanner := bufio.NewScanner(os.Stdin)
-	for token == "" {
-		fmt.Printf("*Token:")
-		scanner.Scan()
-		token = scanner.Text()
-		if token == "" {
-			fmt.Println("Token is required!")
-		}
-	}
 	for !ValidateName(application.Name) {
 		fmt.Printf("*App Name: ")
 		scanner.Scan()
@@ -110,5 +103,5 @@ EnvVar:
 		}
 		application.Env = m
 	}
-	return token, language, application
+	return language, application
 }
