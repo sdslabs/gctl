@@ -46,3 +46,46 @@ After getting the PA token, login to gctl using command ```gctl login``` with fl
 $ gctl login -e anish.mukherjee1996@gmail.com -t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImVtYWlsIjoiZ21haGFrMUBnbWFpbC5jb20iLCJleHAiOjE2MDIzNTE4MTAsImdjdGxfdXVpZCI6IiIsIm9yaWdfaWF0IjoxNjAyMzQ4MjEwLCJ1c2VybmFtZSI6Im1haGFrIn0.bImaUw9p8K_2QMpMqCAyHQHzX2aukDaRpXTDXmAkAoc
 Logged in successfully
 ```
+
+Now that we have logged in, we are ready deploy and maintain our applications and databases through command-line.
+
+# Application Deployment
+
+To create a new application, we will use command ```gctl create app```. We can provide required details of the app either through a form in terminal or passing a json file in a flag.
+
+First we will create app by entering details in a form in the terminal.
+
+```
+$ gctl create app
+*App Name: test
+*Language: php
+*Application Password: ****
+*Git URL: https://github.com/sdslabs/gasper-sample-php
+Is this repo private? [yes/no]: no
+Branch: 
+*Index: index.php
+Port: 8000
+Does this repo contain Gasperfile.txt? [yes/no]: no
+Build Commands: 
+Run Commands: 
+Environment Variables(key:value): 
+App created successfully 
+Container Id: 32e81f3d244d09da489aec03bea932ae7d96e8e2f5bd9484fc7a21a7e0e967dd Container Port:  44437 Docker Image: docker.io/sdsws/php:3.0 App Url: test.app.sdslabs.co Host Ip: 192.168.43.137 Name Servers:  [8.8.8.8 8.8.4.4] Instance Type: application Language: php Owner: gmahak1@gmail.com Ssh Cmd: ssh -p 2222 test@192.168.43.137 Id: 5f8c8d094374798e04edf3d6
+```
+
+Fields with * are required.
+
+You can also provide app details in a config json file. Just create the json file with necessary data. Example for required json data to deploy an app can be found in example section of [Gasper Docs](https://gasper-docs.netlify.app/). Run the command ```gctl create app {filename} {language}``` in the same folder where your config file is and the app will be deployed.
+
+
+Fetch details of an app using the command ```gctl fetch app -n {name}``` where n is flag for the name of the app.
+
+Fetch details of all the apps using the command ```gctl fetch app```.
+
+Delete an app using the command ```gctl delete app {app name}```.
+
+Rebuild an app using the command ```gctl rebuild {app name}```.
+
+Fetch logs of apps using the command ```gctl fetch logs {app name} {number of logs}```. The second argument, which is for number of logs, is optional.
+
+Update an app using a json config file with command ```gctl update app {app name} {filename}```. Config file format should be like the one you provided while creating the app. You can also provide details by filling a form in terminal using the command ```gctl update app```.
