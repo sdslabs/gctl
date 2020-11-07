@@ -124,3 +124,15 @@ Delete a database using the command ```gctl delete db {db name}```.
 # Instances
 
 Fetch details of all the instances using command ```gctl fetch instances```.
+
+# Logout
+
+Logout from a system using the command ```gctl logout```. You can also revoke the token from sws or using following curl command.
+
+```
+$ curl -X PUT   http://localhost:3000/auth/revoke   -H 'Content-Type: application/json'   -d '{
+    "email": "anish.mukherjee1996@gmail.com",
+    "password": "alphadose"
+  }'
+{"message":"token revoked","success":true}
+```
