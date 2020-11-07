@@ -51,9 +51,9 @@ Now that we have logged in, we are ready deploy and maintain our applications an
 
 # Application Deployment
 
-To create a new application, we will use command ```gctl create app```. We can provide required details of the app either through a form in terminal or passing a json file in a flag.
+- To create a new application, we will use command ```gctl create app```. We can provide required details of the app either through a form in terminal or passing a json file in a flag.
 
-First we will create app by entering details in a form in the terminal.
+1. First we will create app by entering details in a form in the terminal.
 
 ```
 $ gctl create app
@@ -75,25 +75,25 @@ Container Id: 32e81f3d244d09da489aec03bea932ae7d96e8e2f5bd9484fc7a21a7e0e967dd C
 
 Fields with * are required.
 
-You can also provide app details in a config json file. Just create the json file with necessary data. Example for required json data to deploy an app can be found in example section of [Gasper Docs](https://gasper-docs.netlify.app/). Run the command ```gctl create app {filename} {language}``` in the same folder where your config file is and the app will be deployed.
+2. You can also provide app details in a config json file. Just create the json file with necessary data. Example for required json data to deploy an app can be found in example section of [Gasper Docs](https://gasper-docs.netlify.app/). Run the command ```gctl create app {filename} {language}``` in the same folder where your config file is and the app will be deployed.
 
 
-Fetch details of an app using the command ```gctl fetch app -n {name}``` where n is flag for the name of the app.
+- Fetch details of an app using the command ```gctl fetch app -n {name}``` where n is flag for the name of the app.
 
-Fetch details of all the apps using the command ```gctl fetch app```.
+- Fetch details of all the apps using the command ```gctl fetch app```.
 
-Delete an app using the command ```gctl delete app {app name}```.
+- Delete an app using the command ```gctl delete app {app name}```.
 
-Rebuild an app using the command ```gctl rebuild {app name}```.
+- Rebuild an app using the command ```gctl rebuild {app name}```.
 
-Fetch logs of apps using the command ```gctl fetch logs {app name} {number of logs}```. The second argument, which is for number of logs, is optional.
+- Fetch logs of apps using the command ```gctl fetch logs {app name} {number of logs}```. The second argument, which is for number of logs, is optional.
 
-Update an app using a json config file with command ```gctl update app {app name} {filename}```. Config file format should be like the one you provided while creating the app. You can also provide details by filling a form in terminal using the command ```gctl update app```.
+- Update an app using a json config file with command ```gctl update app {app name} {filename}```. Config file format should be like the one you provided while creating the app. You can also provide details by filling a form in terminal using the command ```gctl update app```.
 
 
 # Database Deployment
 
-A new database can be created either by providing details in flags with the command or by filling a terminal form.
+- A new database can be created either by providing details in flags with the command or by filling a terminal form.
 Following example shows how to create a mysql database via Gasper using gctl -
 
 1. Using flags -
@@ -114,12 +114,11 @@ Database Type: mysql
 Database created
 ```
 
-Fetch details of a database using the command ```gctl fetch db -n {name}``` where n is flag for the name of the db.
+- Fetch details of a database using the command ```gctl fetch db -n {name}``` where n is flag for the name of the db.
 
-Fetch details of all the databases using the command ```gctl fetch db```.
+- Fetch details of all the databases using the command ```gctl fetch db```.
 
-Delete a database using the command ```gctl delete db {db name}```.
-
+- Delete a database using the command ```gctl delete db {db name}```.
 
 # Instances
 
@@ -136,3 +135,16 @@ $ curl -X PUT   http://localhost:3000/auth/revoke   -H 'Content-Type: applicatio
   }'
 {"message":"token revoked","success":true}
 ```
+
+# Contributing
+
+We are always open for contributions. If you find any feature missing, or just want to report a bug, feel free to open an issue and/or submit a pull request regarding the same.
+
+For more information on contribution, refer to the [contributing documentation](https://github.com/sdslabs/gctl/blob/development/CONTRIBUTING.md).
+
+# Contact
+
+If you have a query regarding the product or just want to say hello then feel free to visit
+[chat.sdslabs.co](http://chat.sdslabs.co/) or drop a mail at [contact@sdslabs.co.in](mailto:contact@sdslabs.co.in).
+
+Made with :heart: by [SDSLabs](https://github.com/sdslabs)
