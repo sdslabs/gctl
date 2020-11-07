@@ -91,7 +91,7 @@ Fetch logs of apps using the command ```gctl fetch logs {app name} {number of lo
 Update an app using a json config file with command ```gctl update app {app name} {filename}```. Config file format should be like the one you provided while creating the app. You can also provide details by filling a form in terminal using the command ```gctl update app```.
 
 
-# Creating Database
+# Database Deployment
 
 A new database can be created either by providing details in flags with the command or by filling a terminal form.
 Following example shows how to create a mysql database via Gasper using gctl -
@@ -119,3 +119,8 @@ Fetch details of a database using the command ```gctl fetch db -n {name}``` wher
 Fetch details of all the databases using the command ```gctl fetch db```.
 
 Delete a database using the command ```gctl delete db {db name}```.
+
+
+# Instances
+
+Fetch details of all the instances using command ```gctl fetch instances```.
