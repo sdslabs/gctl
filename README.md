@@ -8,7 +8,9 @@
 
 **gctl** can be installed using following command.
 
-` $ go get github.com/sdslabs/gctl `
+``` 
+$ go get github.com/sdslabs/gctl 
+```
 
 If you get following output, that means gctl is successfully installed.
 ```
