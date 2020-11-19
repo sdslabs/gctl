@@ -139,7 +139,7 @@ $ curl -X PUT   http://localhost:3000/auth/revoke   -H 'Content-Type: applicatio
 
 We are always open for contributions. If you find any feature missing, or just want to report a bug, feel free to open an issue and/or submit a pull request regarding the same.
 
-For more information on contribution, refer to the [contributing documentation](https://github.com/sdslabs/gctl/blob/development/CONTRIBUTING.md).
+For more information on contribution, refer to the [contributing documentation](./CONTRIBUTING.md).
 
 ## Contact
 
