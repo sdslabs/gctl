@@ -1,8 +1,8 @@
-# Overview
+## Overview
 
 ```gctl``` is [Gasper](https://gasper-docs.netlify.app/) on the command line. It allows user to deploy and manage applications and databases from terminal.
 
-# Installation
+## Installation
 
 > Using this package requires a working Go environment. [See the install instructions for Go](https://golang.org/doc/install).
 
@@ -18,7 +18,7 @@ Gasper is an intelligent Platform as a Service (PaaS) used for deploying and man
 
 To execute commands of gctl, run [Gasper](https://gasper-docs.netlify.app/) on your local environment.
 
-# Login
+## Login
 
 After Gasper is up and successfully running, we need to generate PA Token first to login in command-line.
 
@@ -49,7 +49,7 @@ Logged in successfully
 
 Now that we have logged in, we are ready deploy and maintain our applications and databases through command-line.
 
-# Application Deployment
+## Application Deployment
 
 * To create a new application, we will use command ```gctl create app```. We can provide required details of the app either through a form in terminal or passing a json file in a flag.
 
@@ -90,7 +90,7 @@ Now that we have logged in, we are ready deploy and maintain our applications an
 - Update an app using a json config file with command ```gctl update app {app name} {filename}```. Config file format should be like the one you provided while creating the app. You can also provide details by filling a form in terminal using the command ```gctl update app```.
 
 
-# Database Deployment
+## Database Deployment
 
 - A new database can be created either by providing details in flags with the command or by filling a terminal form.
 Following example shows how to create a mysql database via Gasper using gctl -
@@ -119,11 +119,11 @@ Following example shows how to create a mysql database via Gasper using gctl -
 
 - Delete a database using the command ```gctl delete db {db name}```.
 
-# Instances
+## Instances
 
 Fetch details of all the instances using command ```gctl fetch instances```.
 
-# Logout
+## Logout
 
 Logout from a system using the command ```gctl logout```. You can also revoke the token from sws or using following curl command.
 
@@ -135,13 +135,13 @@ $ curl -X PUT   http://localhost:3000/auth/revoke   -H 'Content-Type: applicatio
 {"message":"token revoked","success":true}
 ```
 
-# Contributing
+## Contributing
 
 We are always open for contributions. If you find any feature missing, or just want to report a bug, feel free to open an issue and/or submit a pull request regarding the same.
 
 For more information on contribution, refer to the [contributing documentation](https://github.com/sdslabs/gctl/blob/development/CONTRIBUTING.md).
 
-# Contact
+## Contact
 
 If you have a query regarding the product or just want to say hello then feel free to visit
 [chat.sdslabs.co](http://chat.sdslabs.co/) or drop a mail at [contact@sdslabs.co.in](mailto:contact@sdslabs.co.in).
