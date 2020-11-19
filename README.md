@@ -20,7 +20,7 @@ To execute commands of gctl, run [Gasper](https://gasper-docs.netlify.app/) on y
 
 ## Login
 
-After Gasper is up and successfully running, we need to generate PA Token first to login in command-line.
+After Gasper is up and successfully running, generate PA Token to login in command-line.
 
 Login to gasper using following command to generate the PA token
 
@@ -51,9 +51,9 @@ Now that we have logged in, we are ready deploy and maintain our applications an
 
 ## Application Deployment
 
-* To create a new application, we will use command `gctl create app`. We can provide required details of the app either through a form in terminal or passing a json file in a flag.
+* Create a new application using command `gctl create app`. You can provide required details of the app either through a form in terminal or passing a json file in a flag.
 
-  1. First we will create app by entering details in a form in the terminal.
+  1. Create an app by entering details in a form in the terminal.
       ```
       $ gctl create app
       *App Name: test
@@ -74,7 +74,7 @@ Now that we have logged in, we are ready deploy and maintain our applications an
 
       Fields with * are required.
 
-  2. You can also provide app details in a config json file. Just create the json file with necessary data. Example for required json data to deploy an app can be found in example section of [Gasper Docs](https://gasper-docs.netlify.app/). Run the command `gctl create app {filename} {language}` in the same folder where your config file is and the app will be deployed.
+  2. Provide app details in a config json file. Just create the json file with necessary data. Example for required json data to deploy an app can be found in example section of [Gasper Docs](https://gasper-docs.netlify.app/). Run the command `gctl create app {filename} {language}` in the same folder where your config file is and the app will be deployed.
 
 
 - Fetch details of an app using the command `gctl fetch app -n {name}` where n is flag for the name of the app.
