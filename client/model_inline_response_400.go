@@ -14,3 +14,15 @@ type InlineResponse400 struct {
 	Success bool `json:"success,omitempty"`
 	Error string `json:"error,omitempty"`
 }
+
+// InlineResponse401 struct for InlineResponse401
+type InlineResponse401 struct {
+	Success bool `json:"success,omitempty"`
+	Error string `json:"error,omitempty"`
+}
+
+// InlineResponse500 struct for InlineResponse500
+type InlineResponse500 struct {
+	Success bool `json:"success,omitempty"`
+	Error string `json:"error,omitempty"`
+}
