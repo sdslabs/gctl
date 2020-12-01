@@ -1,4 +1,4 @@
-## Overview
+# Overview
 
 `gctl` is [Gasper](https://gasper-docs.netlify.app/) on the command line. It allows user to deploy and manage applications and databases from terminal.
 
