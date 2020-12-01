@@ -40,5 +40,7 @@ var updateCmd = &cobra.Command{
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version number of Gasper",
-	//TODO RUN
+	Run: func(cmd *cobra.Command, args []string) {
+		cmd.Println("1.0.0")
+	},
 }
