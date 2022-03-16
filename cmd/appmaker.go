@@ -29,6 +29,7 @@ var appsAPIService AppsAPIService = client.AppsAPI
 
 func init() {
 	createCmd.AddCommand(CreateAppCmd(appsAPIService))
+	createCmd.AddCommand(LocalAppCmd(appsAPIService))
 	fetchCmd.AddCommand(FetchAppCmd(appsAPIService))
 	deleteCmd.AddCommand(DeleteAppCmd(appsAPIService))
 	rootCmd.AddCommand(RebuildAppCmd(appsAPIService))
@@ -66,7 +67,7 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 					return
 				}
 			} else {
-				language, application = middlewares.AppForm()
+				language, application = middlewares.AppForm(false)
 			}
 
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
@@ -91,6 +92,51 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 		},
 	}
 	return appmakerCmd
+}
+
+func LocalAppCmd(appsAPIService AppsAPIService) *cobra.Command {
+	var localAppCmd = &cobra.Command{
+		Use:   "local [DIRECTORY PATH]",
+		Short: "Create an application from your local system",
+		Args:  cobra.NoArgs,
+		Run: func(cmd *cobra.Command, args []string) {
+			cmd.Println("Hellu")
+			var (
+				err         error
+				language    string
+				application openapi.Application
+			)
+
+			if gctltoken == "" {
+				gctltoken, err = middlewares.SetToken(client)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
+			}
+			language, application = middlewares.AppForm(true)
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
+			res, _, err := appsAPIService.CreateApp(auth, language, application)
+			if res.Success {
+				res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)
+				if res.Success {
+					for i := 0; i < len(res.Data); i++ {
+						cmd.Println("App created successfully "+"\n"+"Container Id: "+res.Data[i].ContainerId,
+							"Container Port: ", res.Data[i].ContainerPort, "Docker Image: "+res.Data[i].DockerImage,
+							"App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
+							"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType,
+							"Language: "+res.Data[i].Language, "Owner: "+res.Data[i].Owner,
+							"Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
+					}
+				} else {
+					cmd.Println(err)
+				}
+			} else {
+				cmd.Println(err)
+			}
+		},
+	}
+	return localAppCmd
 }
 
 //FetchAppCmd returns command to fetch apps of a user
@@ -248,7 +294,7 @@ func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 					return
 				}
 			} else {
-				_, application = middlewares.AppForm()
+				_, application = middlewares.AppForm(false)
 				appName = application.Name
 			}
 
