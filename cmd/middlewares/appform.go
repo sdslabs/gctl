@@ -12,7 +12,7 @@ import (
 )
 
 //AppForm takes input for openapi.Application
-func AppForm() (string, openapi.Application) {
+func AppForm(isLocal bool) (string, openapi.Application) {
 	var language string
 	var application openapi.Application
 	scanner := bufio.NewScanner(os.Stdin)
@@ -40,52 +40,56 @@ func AppForm() (string, openapi.Application) {
 			fmt.Println("This field is required. Please enter a valid password.")
 		}
 	}
-	for !ValidateURL(application.Git.RepoUrl) {
-		fmt.Printf("*Git URL: ")
+
+	if !isLocal {
+		for !ValidateURL(application.Git.RepoUrl) {
+			fmt.Printf("*Git URL: ")
+			scanner.Scan()
+			application.Git.RepoUrl = scanner.Text()
+			if !ValidateURL(application.Git.RepoUrl) {
+				fmt.Println("Please enter a valid URL.")
+			}
+		}
+		fmt.Printf("Is this repo private? [yes/no]: ")
 		scanner.Scan()
-		application.Git.RepoUrl = scanner.Text()
-		if !ValidateURL(application.Git.RepoUrl) {
-			fmt.Println("Please enter a valid URL.")
+		if scanner.Text() == "yes" {
+			fmt.Printf("*Git Access Token: ")
+			scanner.Scan()
+			application.Git.AccessToken = scanner.Text()
+		}
+		fmt.Printf("Branch: ")
+		scanner.Scan()
+		application.Git.Branch = scanner.Text()
+		for application.Context.Index == "" {
+			fmt.Printf("*Index: ")
+			scanner.Scan()
+			application.Context.Index = scanner.Text()
+			if application.Context.Index == "" {
+				fmt.Println("Index cannot be empty.")
+			}
+		}
+		for !ValidatePort(application.Context.Port) {
+			fmt.Printf("Port: ")
+			scanner.Scan()
+			application.Context.Port, _ = strconv.ParseInt(scanner.Text(), 10, 64)
+			if !ValidatePort(application.Context.Port) {
+				fmt.Println("Please enter valid port number.")
+			}
+		}
+		fmt.Printf("Does this repo contain Gasperfile.txt? [yes/no]: ")
+		scanner.Scan()
+		if scanner.Text() == "no" {
+			fmt.Printf("Build Commands: ")
+			scanner.Scan()
+			application.Context.Build = strings.Split(scanner.Text(), ",")
+			fmt.Printf("Run Commands: ")
+			scanner.Scan()
+			application.Context.Run = strings.Split(scanner.Text(), ",")
+		} else if scanner.Text() == "yes" {
+			application.Context.RcFile = true
 		}
 	}
-	fmt.Printf("Is this repo private? [yes/no]: ")
-	scanner.Scan()
-	if scanner.Text() == "yes" {
-		fmt.Printf("*Git Access Token: ")
-		scanner.Scan()
-		application.Git.AccessToken = scanner.Text()
-	}
-	fmt.Printf("Branch: ")
-	scanner.Scan()
-	application.Git.Branch = scanner.Text()
-	for application.Context.Index == "" {
-		fmt.Printf("*Index: ")
-		scanner.Scan()
-		application.Context.Index = scanner.Text()
-		if application.Context.Index == "" {
-			fmt.Println("Index cannot be empty.")
-		}
-	}
-	for !ValidatePort(application.Context.Port) {
-		fmt.Printf("Port: ")
-		scanner.Scan()
-		application.Context.Port, _ = strconv.ParseInt(scanner.Text(), 10, 64)
-		if !ValidatePort(application.Context.Port) {
-			fmt.Println("Please enter valid port number.")
-		}
-	}
-	fmt.Printf("Does this repo contain Gasperfile.txt? [yes/no]: ")
-	scanner.Scan()
-	if scanner.Text() == "no" {
-		fmt.Printf("Build Commands: ")
-		scanner.Scan()
-		application.Context.Build = strings.Split(scanner.Text(), ",")
-		fmt.Printf("Run Commands: ")
-		scanner.Scan()
-		application.Context.Run = strings.Split(scanner.Text(), ",")
-	} else if scanner.Text() == "yes" {
-		application.Context.RcFile = true
-	}
+
 EnvVar:
 	fmt.Printf("Environment Variables(key:value): ")
 	scanner.Scan()
