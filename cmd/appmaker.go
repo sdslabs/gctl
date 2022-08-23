@@ -103,9 +103,16 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 		Short: "Deploy an application from local",
 		Args:  cobra.MaximumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			var (
+				err error
+			)
+			if len(args) != 1 {
+				cmd.Println("error: invalid path argument")
+				return
+			}
 			path := args[0]
 			cmd.Println("Path to directory: " + path)
-			_, err := os.Stat(path)
+			_, err = os.Stat(path)
 			if err != nil {
 				cmd.Println(err)
 			} else {
