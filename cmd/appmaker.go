@@ -4,10 +4,12 @@ import (
 	"context"
 	_context "context"
 	_nethttp "net/http"
+	"os"
 	"strconv"
 	"strings"
 
 	"github.com/antihax/optional"
+	"github.com/go-git/go-git/v5"
 	openapi "github.com/sdslabs/gctl/client"
 	"github.com/sdslabs/gctl/cmd/middlewares"
 	"github.com/spf13/cobra"
@@ -29,6 +31,7 @@ var appsAPIService AppsAPIService = client.AppsAPI
 
 func init() {
 	createCmd.AddCommand(CreateAppCmd(appsAPIService))
+	createCmd.AddCommand(LocalAppCmd(appsAPIService))
 	fetchCmd.AddCommand(FetchAppCmd(appsAPIService))
 	deleteCmd.AddCommand(DeleteAppCmd(appsAPIService))
 	rootCmd.AddCommand(RebuildAppCmd(appsAPIService))
@@ -91,6 +94,31 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 		},
 	}
 	return appmakerCmd
+}
+
+//LocalAppCmd returns command to deploy application from local
+func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
+	var localAppCmd = &cobra.Command{
+		Use:   "local [PATH]",
+		Short: "Deploy an application from local",
+		Args:  cobra.MaximumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			path := args[0]
+			cmd.Println("Path to directory: " + path)
+			_, err := os.Stat(path)
+			if err != nil {
+				cmd.Println(err)
+			} else {
+				_, err := git.PlainInit(path, false)
+				if err == nil {
+					cmd.Println("repository successfully initialised with git")
+				} else {
+					cmd.Println(err)
+				}
+			}
+		},
+	}
+	return localAppCmd
 }
 
 //FetchAppCmd returns command to fetch apps of a user
