@@ -4,12 +4,10 @@ import (
 	"context"
 	_context "context"
 	_nethttp "net/http"
-	"os"
 	"strconv"
 	"strings"
 
 	"github.com/antihax/optional"
-	"github.com/go-git/go-git/v5"
 	openapi "github.com/sdslabs/gctl/client"
 	"github.com/sdslabs/gctl/cmd/middlewares"
 	"github.com/spf13/cobra"
@@ -104,24 +102,48 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 		Args:  cobra.MaximumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			var (
-				err error
+				err         error
+				language    string
+				application openapi.Application
 			)
+			if gctltoken == "" {
+				gctltoken, err = middlewares.SetToken(client)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
+			}
 			if len(args) != 1 {
 				cmd.Println("error: invalid path argument")
 				return
 			}
 			path := args[0]
 			cmd.Println("Path to directory: " + path)
-			_, err = os.Stat(path)
+
+			_, err = middlewares.Commit(path)
 			if err != nil {
 				cmd.Println(err)
-			} else {
-				_, err := git.PlainInit(path, false)
-				if err == nil {
-					cmd.Println("repository successfully initialised with git")
+			}
+
+			language, application = middlewares.AppForm()
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
+			res, _, err := appsAPIService.CreateApp(auth, language, application)
+			if res.Success {
+				res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)
+				if res.Success {
+					for i := 0; i < len(res.Data); i++ {
+						cmd.Println("App created successfully "+"\n"+"Container Id: "+res.Data[i].ContainerId,
+							"Container Port: ", res.Data[i].ContainerPort, "Docker Image: "+res.Data[i].DockerImage,
+							"App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
+							"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType,
+							"Language: "+res.Data[i].Language, "Owner: "+res.Data[i].Owner,
+							"Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
+					}
 				} else {
 					cmd.Println(err)
 				}
+			} else {
+				cmd.Println(err)
 			}
 		},
 	}
