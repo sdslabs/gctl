@@ -3,16 +3,30 @@ package middlewares
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/howeyc/gopass"
+	"github.com/joho/godotenv"
 	openapi "github.com/sdslabs/gctl/client"
 )
 
+func goDotEnvVariable(key string) string {
+
+	// load .env file
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	return os.Getenv(key)
+}
+
 //AppForm takes input for openapi.Application
-func AppForm() (string, openapi.Application) {
+func AppForm(isLocal bool, githubRepo string) (string, openapi.Application) {
 	var language string
 	var application openapi.Application
 	scanner := bufio.NewScanner(os.Stdin)
@@ -40,24 +54,32 @@ func AppForm() (string, openapi.Application) {
 			fmt.Println("This field is required. Please enter a valid password.")
 		}
 	}
-	for !ValidateURL(application.Git.RepoUrl) {
-		fmt.Printf("*Git URL: ")
-		scanner.Scan()
-		application.Git.RepoUrl = scanner.Text()
-		if !ValidateURL(application.Git.RepoUrl) {
-			fmt.Println("Please enter a valid URL.")
+	if !isLocal {
+		for !ValidateURL(application.Git.RepoUrl) {
+			fmt.Printf("*Git URL: ")
+			scanner.Scan()
+			application.Git.RepoUrl = scanner.Text()
+			if !ValidateURL(application.Git.RepoUrl) {
+				fmt.Println("Please enter a valid URL.")
+			}
 		}
-	}
-	fmt.Printf("Is this repo private? [yes/no]: ")
-	scanner.Scan()
-	if scanner.Text() == "yes" {
-		fmt.Printf("*Git Access Token: ")
+		fmt.Printf("Is this repo private? [yes/no]: ")
 		scanner.Scan()
-		application.Git.AccessToken = scanner.Text()
+		if scanner.Text() == "yes" {
+			fmt.Printf("*Git Access Token: ")
+			scanner.Scan()
+			application.Git.AccessToken = scanner.Text()
+		}
+		fmt.Printf("Branch: ")
+		scanner.Scan()
+		application.Git.Branch = scanner.Text()
+
+	} else {
+		application.Git.RepoUrl = githubRepo
+		application.Git.AccessToken = goDotEnvVariable("PAT")
+		application.Git.Branch = "master"
 	}
-	fmt.Printf("Branch: ")
-	scanner.Scan()
-	application.Git.Branch = scanner.Text()
+
 	for application.Context.Index == "" {
 		fmt.Printf("*Index: ")
 		scanner.Scan()

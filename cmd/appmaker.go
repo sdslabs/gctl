@@ -4,10 +4,14 @@ import (
 	"context"
 	_context "context"
 	_nethttp "net/http"
+	"os"
+	"os/exec"
+	"os/user"
 	"strconv"
 	"strings"
 
 	"github.com/antihax/optional"
+	"github.com/apex/log"
 	openapi "github.com/sdslabs/gctl/client"
 	"github.com/sdslabs/gctl/cmd/middlewares"
 	"github.com/spf13/cobra"
@@ -67,7 +71,7 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 					return
 				}
 			} else {
-				language, application = middlewares.AppForm()
+				language, application = middlewares.AppForm(false, "")
 			}
 
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
@@ -97,9 +101,9 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 //LocalAppCmd returns command to deploy application from local
 func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 	var localAppCmd = &cobra.Command{
-		Use:   "local [PATH]",
+		Use:   "local [NAME] [PATH]",
 		Short: "Deploy an application from local",
-		Args:  cobra.MaximumNArgs(1),
+		Args:  cobra.MaximumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			var (
 				err         error
@@ -113,19 +117,50 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 					return
 				}
 			}
-			if len(args) != 1 {
-				cmd.Println("error: invalid path argument")
+			if len(args) != 2 {
+				cmd.Println("error: wrong number of arguments")
 				return
 			}
-			path := args[0]
-			cmd.Println("Path to directory: " + path)
 
-			_, err = middlewares.Commit(path)
+			appName := args[0]
+			pathToApplication := args[1]
+			cmd.Println("Path to directory: " + pathToApplication)
+
+			currentUser, err := user.Current()
+			if err != nil {
+				log.Error(err.Error())
+			}
+			sshPath := currentUser.HomeDir + "/.ssh/" + appName
+
+			currentDir, err := os.Getwd()
+			repo, _, err := middlewares.CreateRepository(appName)
+
+			//generate ssh keys
+			out := exec.Command("/bin/sh", currentDir+"/cmd/middlewares/generateDeployKey.sh", sshPath)
+			err = out.Run()
+			if err != nil {
+				cmd.Println("ERROR", err)
+				// return
+			}
+			cmd.Println("OUTPUT", out)
+
+			//get public keys
+			sshGenerated, err := os.ReadFile(currentUser.HomeDir + "/.ssh/" + appName + ".pub")
+			err = middlewares.AddDeployKeyToRepo(appName, sshGenerated)
 			if err != nil {
 				cmd.Println(err)
+				return
 			}
 
-			language, application = middlewares.AppForm()
+			outputGitPush := exec.Command("/bin/sh", currentDir+"/cmd/middlewares/git_push.sh", pathToApplication, *repo.SSHURL, "true")
+			err = outputGitPush.Run()
+			if err != nil {
+				cmd.Println("ERROR", err)
+				// return
+			}
+			cmd.Println("OUTPUT", out)
+
+			language, application = middlewares.AppForm(true, *repo.HTMLURL)
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.CreateApp(auth, language, application)
 			if res.Success {
@@ -305,7 +340,7 @@ func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 					return
 				}
 			} else {
-				_, application = middlewares.AppForm()
+				_, application = middlewares.AppForm(false, "")
 				appName = application.Name
 			}
 
