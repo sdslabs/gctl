@@ -124,7 +124,7 @@ func AddDeployKeyToRepo(repoName string, deployKey string) error {
 // 	// sshAuth, err := ssh.NewPublicKeysFromFile("git", currentUser.HomeDir+"/.ssh/id_rsa_deploy", "")
 // 	auth := &http.BasicAuth{
 // 		Username: "yashe-bh",
-// 		Password: "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",
+// 		Password: "",
 // 	}
 
 // 	if err != nil {
