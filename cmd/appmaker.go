@@ -6,7 +6,6 @@ import (
 	_nethttp "net/http"
 	"os"
 	"os/exec"
-	"os/user"
 	"strconv"
 	"strings"
 
@@ -104,69 +103,66 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 		Short: "Deploy an application from local",
 		Args:  cobra.MaximumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			var (
-			// err error
-			// language    string
-			// application openapi.Application
-			)
-			// if gctltoken == "" {
-			// 	gctltoken, err = middlewares.SetToken(client)
-			// 	if err != nil {
-			// 		cmd.Print(err)
-			// 		return
-			// 	}
+			// var (
+			// // err error
+			// // language    string
+			// // application openapi.Application
+			// )
+			// // if gctltoken == "" {
+			// // 	gctltoken, err = middlewares.SetToken(client)
+			// // 	if err != nil {
+			// // 		cmd.Print(err)
+			// // 		return
+			// // 	}
+			// // }
+
+			// if len(args) != 2 {
+			// 	cmd.Println("error: wrong number of arguments")
+			// 	return
 			// }
 
-			if len(args) != 2 {
-				cmd.Println("error: wrong number of arguments")
-				return
-			}
-
-			appName := args[0]
+			// appName := args[0]
 			pathToApplication := args[1]
-			cmd.Println("Application Name: " + appName)
-			cmd.Println("Path to Application: " + pathToApplication)
+			// cmd.Println("Application Name: " + appName)
+			// cmd.Println("Path to Application: " + pathToApplication)
 
-			repo, _, err := middlewares.CreateRepository(appName)
-			if err != nil {
-				cmd.PrintErr(err)
-			}
-			cmd.Println("\n\n\n\n\n\n\n")
-			cmd.Println(repo)
-			cmd.Println("\n\n\n\n\n\n\n")
+			// repo, _, err := middlewares.CreateRepository(appName)
+			// if err != nil {
+			// 	cmd.PrintErr(err)
+			// }
 
-			currentUser, err := user.Current()
-			if err != nil {
-				cmd.PrintErr(err)
-			}
+			// currentUser, err := user.Current()
+			// if err != nil {
+			// 	cmd.PrintErr(err)
+			// }
 
 			currentDir, err := os.Getwd()
-			if err != nil {
-				cmd.PrintErr(err)
-			}
-			// cmd.Println(currentDir)
-			// cmd.Println("APP: " + appName)
-			_, err = exec.Command("/bin/sh", currentDir+"/cmd/middlewares/generateDeployKey.sh", appName).Output()
-			if err != nil {
-				panic(err)
-			}
+			// if err != nil {
+			// 	cmd.PrintErr(err)
+			// }
+			// // cmd.Println(currentDir)
+			// // cmd.Println("APP: " + appName)
+			// _, err = exec.Command("/bin/sh", currentDir+"/cmd/middlewares/generateDeployKey.sh", appName).Output()
+			// if err != nil {
+			// 	panic(err)
+			// }
 
-			sshPath := currentUser.HomeDir + "/.ssh/" + appName
-			cmd.Println("Path to ssh key: ", sshPath)
+			// sshPath := currentUser.HomeDir + "/.ssh/" + appName
+			// cmd.Println("Path to ssh key: ", sshPath)
 
-			// //get public keys
-			sshGenerated, err := os.ReadFile(currentUser.HomeDir + "/.ssh/" + appName + ".pub")
-			cmd.Println(string(sshGenerated))
-			if err != nil {
-				cmd.Println(err)
-				return
-			}
-			err = middlewares.AddDeployKeyToRepo(appName, string(sshGenerated))
-			if err != nil {
-				cmd.PrintErr(err)
-			}
+			// // //get public keys
+			// sshGenerated, err := os.ReadFile(currentUser.HomeDir + "/.ssh/" + appName + ".pub")
+			// cmd.Println(string(sshGenerated))
+			// if err != nil {
+			// 	cmd.Println(err)
+			// 	return
+			// }
+			// err = middlewares.AddDeployKeyToRepo(appName, string(sshGenerated))
+			// if err != nil {
+			// 	cmd.PrintErr(err)
+			// }
 
-			_, err = exec.Command("/bin/sh", currentDir+"/cmd/middlewares/git_push.sh", pathToApplication, *repo.SSHURL, "yes").Output()
+			_, err = exec.Command("/bin/sh", currentDir+"/cmd/middlewares/git_push.sh", pathToApplication, "git@github.com:yashre-bh/shreya3.git", "yes").Output()
 			if err != nil {
 				panic(err)
 			}
