@@ -162,7 +162,7 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 			// 	cmd.PrintErr(err)
 			// }
 
-			_, err = exec.Command("/bin/sh", currentDir+"/cmd/middlewares/git_push.sh", pathToApplication, "git@github.com:yashre-bh/shreya3.git", "yes").Output()
+			_, err = exec.Command("/bin/sh", currentDir+"/cmd/middlewares/git_push.sh", "/Users/shreya/Desktop/ss1", "git@github.com:yashre-bh/shreya2.git").Output()
 			if err != nil {
 				panic(err)
 			}

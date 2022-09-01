@@ -1,10 +1,9 @@
 #! /bin/sh
 
 gitPush(){
-    directory="$1" 
+    directory="$1"
     repo_url="$2"
-    first_init="$3"
-
+    
     shopt -s cdable_vars
     export directory="$directory"
 
