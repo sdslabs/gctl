@@ -3,27 +3,14 @@ package middlewares
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/howeyc/gopass"
-	"github.com/joho/godotenv"
+
 	openapi "github.com/sdslabs/gctl/client"
 )
-
-func goDotEnvVariable(key string) string {
-
-	// load .env file
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-
-	return os.Getenv(key)
-}
 
 //AppForm takes input for openapi.Application
 func AppForm(isLocal bool, githubRepo string) (string, openapi.Application) {

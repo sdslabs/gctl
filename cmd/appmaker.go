@@ -11,7 +11,6 @@ import (
 	"strings"
 
 	"github.com/antihax/optional"
-	"github.com/apex/log"
 	openapi "github.com/sdslabs/gctl/client"
 	"github.com/sdslabs/gctl/cmd/middlewares"
 	"github.com/spf13/cobra"
@@ -106,17 +105,18 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 		Args:  cobra.MaximumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			var (
-				err         error
-				language    string
-				application openapi.Application
+			// err error
+			// language    string
+			// application openapi.Application
 			)
-			if gctltoken == "" {
-				gctltoken, err = middlewares.SetToken(client)
-				if err != nil {
-					cmd.Print(err)
-					return
-				}
-			}
+			// if gctltoken == "" {
+			// 	gctltoken, err = middlewares.SetToken(client)
+			// 	if err != nil {
+			// 		cmd.Print(err)
+			// 		return
+			// 	}
+			// }
+
 			if len(args) != 2 {
 				cmd.Println("error: wrong number of arguments")
 				return
@@ -124,62 +124,73 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 
 			appName := args[0]
 			pathToApplication := args[1]
-			cmd.Println("Path to directory: " + pathToApplication)
+			cmd.Println("Application Name: " + appName)
+			cmd.Println("Path to Application: " + pathToApplication)
+
+			repo, _, err := middlewares.CreateRepository(appName)
+			if err != nil {
+				cmd.PrintErr(err)
+			}
+			cmd.Println("\n\n\n\n\n\n\n")
+			cmd.Println(repo)
+			cmd.Println("\n\n\n\n\n\n\n")
 
 			currentUser, err := user.Current()
 			if err != nil {
-				log.Error(err.Error())
+				cmd.PrintErr(err)
 			}
-			sshPath := currentUser.HomeDir + "/.ssh/" + appName
 
 			currentDir, err := os.Getwd()
-			repo, _, err := middlewares.CreateRepository(appName)
-
-			//generate ssh keys
-			out := exec.Command("/bin/sh", currentDir+"/cmd/middlewares/generateDeployKey.sh", sshPath)
-			err = out.Run()
 			if err != nil {
-				cmd.Println("ERROR", err)
-				// return
+				cmd.PrintErr(err)
 			}
-			cmd.Println("OUTPUT", out)
+			// cmd.Println(currentDir)
+			// cmd.Println("APP: " + appName)
+			_, err = exec.Command("/bin/sh", currentDir+"/cmd/middlewares/generateDeployKey.sh", appName).Output()
+			if err != nil {
+				panic(err)
+			}
 
-			//get public keys
+			sshPath := currentUser.HomeDir + "/.ssh/" + appName
+			cmd.Println("Path to ssh key: ", sshPath)
+
+			// //get public keys
 			sshGenerated, err := os.ReadFile(currentUser.HomeDir + "/.ssh/" + appName + ".pub")
-			err = middlewares.AddDeployKeyToRepo(appName, sshGenerated)
+			cmd.Println(string(sshGenerated))
 			if err != nil {
 				cmd.Println(err)
 				return
 			}
-
-			outputGitPush := exec.Command("/bin/sh", currentDir+"/cmd/middlewares/git_push.sh", pathToApplication, *repo.SSHURL, "true")
-			err = outputGitPush.Run()
+			err = middlewares.AddDeployKeyToRepo(appName, string(sshGenerated))
 			if err != nil {
-				cmd.Println("ERROR", err)
-				// return
+				cmd.PrintErr(err)
 			}
-			cmd.Println("OUTPUT", out)
 
-			language, application = middlewares.AppForm(true, *repo.HTMLURL)
-			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
-			res, _, err := appsAPIService.CreateApp(auth, language, application)
-			if res.Success {
-				res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)
-				if res.Success {
-					for i := 0; i < len(res.Data); i++ {
-						cmd.Println("App created successfully "+"\n"+"Container Id: "+res.Data[i].ContainerId,
-							"Container Port: ", res.Data[i].ContainerPort, "Docker Image: "+res.Data[i].DockerImage,
-							"App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
-							"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType,
-							"Language: "+res.Data[i].Language, "Owner: "+res.Data[i].Owner,
-							"Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
-					}
-				} else {
-					cmd.Println(err)
-				}
-			} else {
-				cmd.Println(err)
+			_, err = exec.Command("/bin/sh", currentDir+"/cmd/middlewares/git_push.sh", pathToApplication, *repo.SSHURL, "yes").Output()
+			if err != nil {
+				panic(err)
 			}
+
+			// language, application = middlewares.AppForm(true, *repo.HTMLURL)
+			// auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
+			// res, _, err := appsAPIService.CreateApp(auth, language, application)
+			// if res.Success {
+			// 	res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)
+			// 	if res.Success {
+			// 		for i := 0; i < len(res.Data); i++ {
+			// 			cmd.Println("App created successfully "+"\n"+"Container Id: "+res.Data[i].ContainerId,
+			// 				"Container Port: ", res.Data[i].ContainerPort, "Docker Image: "+res.Data[i].DockerImage,
+			// 				"App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
+			// 				"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType,
+			// 				"Language: "+res.Data[i].Language, "Owner: "+res.Data[i].Owner,
+			// 				"Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
+			// 		}
+			// 	} else {
+			// 		cmd.Println(err)
+			// 	}
+			// } else {
+			// 	cmd.Println(err)
+			// }
 		},
 	}
 	return localAppCmd

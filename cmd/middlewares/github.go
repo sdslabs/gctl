@@ -3,18 +3,35 @@ package middlewares
 import (
 	// "fmt"
 	"context"
-	"fmt"
 	_ "io/ioutil"
 
 	// "net/http"
 	"os"
-	_ "path/filepath"
+	"path/filepath"
 
+	"github.com/apex/log"
 	"github.com/go-git/go-git/v5"
 	"github.com/google/go-github/v41/github"
+	"github.com/joho/godotenv"
 	"golang.org/x/oauth2"
 	// "github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
+
+func goDotEnvVariable(key string) string {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		panic(err)
+	}
+	environmentPath := filepath.Join(dir, ".env")
+	// load .env file
+	err = godotenv.Load(environmentPath)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return os.Getenv(key)
+}
 
 func GitInit(directoryPath string) (*git.Repository, error) {
 	var (
@@ -30,6 +47,7 @@ func GitInit(directoryPath string) (*git.Repository, error) {
 
 func CreateRepository(repoName string) (*github.Repository, *github.Response, error) {
 	// create a new private repository named "foo"
+	log.Info(goDotEnvVariable("PAT"))
 	tc := oauth2.NewClient(
 		context.Background(),
 		oauth2.StaticTokenSource(
@@ -42,7 +60,6 @@ func CreateRepository(repoName string) (*github.Repository, *github.Response, er
 		Private: github.Bool(true),
 	}
 	repo, res, err := client.Repositories.Create(context.Background(), "", repo)
-	fmt.Printf("hello %v", (&res))
 	return repo, res, err
 }
 
@@ -58,7 +75,7 @@ func AddDeployKeyToRepo(repoName string, deployKey string) error {
 		Key: &deployKey,
 	}
 
-	_, _, err := client.Repositories.CreateKey(context.Background(), "username", repoName, deployCred)
+	_, _, err := client.Repositories.CreateKey(context.Background(), "yashre-bh", repoName, deployCred)
 	if err != nil {
 		return err
 	} else {
