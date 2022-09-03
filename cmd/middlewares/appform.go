@@ -63,7 +63,7 @@ func AppForm(isLocal bool, githubRepo string) (string, openapi.Application) {
 
 	} else {
 		application.Git.RepoUrl = githubRepo
-		application.Git.AccessToken = goDotEnvVariable("PAT")
+		application.Git.AccessToken = GoDotEnvVariable("PAT")
 		application.Git.Branch = "master"
 	}
 
