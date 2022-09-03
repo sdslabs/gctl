@@ -1,16 +1,17 @@
 #! /bin/sh
+directory="$1"
+repo_url="$2"
 
 gitPush(){
     directory="$1"
     repo_url="$2"
     
     shopt -s cdable_vars
-    export directory="$directory"
+    export dir="$directory"
 
-    cd directory
+    cd dir
     git init
 
-    # Display unstaged files
     git status
 
     git remote add origin $repo_url
@@ -19,4 +20,4 @@ gitPush(){
     git push --set-upstream origin master
 }
 
-gitPush
+gitPush $directory $repo_url

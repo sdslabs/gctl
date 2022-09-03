@@ -9,7 +9,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/apex/log"
 	"github.com/go-git/go-git/v5"
 	"github.com/google/go-github/v41/github"
 	"github.com/joho/godotenv"
@@ -46,8 +45,6 @@ func GitInit(directoryPath string) (*git.Repository, error) {
 }
 
 func CreateRepository(repoName string) (*github.Repository, *github.Response, error) {
-	// create a new private repository named "foo"
-	log.Info(goDotEnvVariable("PAT"))
 	tc := oauth2.NewClient(
 		context.Background(),
 		oauth2.StaticTokenSource(
