@@ -1,11 +1,9 @@
 package middlewares
 
 import (
-	// "fmt"
 	"context"
 	_ "io/ioutil"
 
-	// "net/http"
 	"os"
 	"path/filepath"
 
@@ -13,7 +11,6 @@ import (
 	"github.com/google/go-github/v41/github"
 	"github.com/joho/godotenv"
 	"golang.org/x/oauth2"
-	// "github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
 
 func GoDotEnvVariable(key string) string {
@@ -22,7 +19,6 @@ func GoDotEnvVariable(key string) string {
 		panic(err)
 	}
 	environmentPath := filepath.Join(dir, ".env")
-	// load .env file
 	err = godotenv.Load(environmentPath)
 
 	if err != nil {
