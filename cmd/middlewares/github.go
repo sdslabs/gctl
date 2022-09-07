@@ -2,12 +2,17 @@ package middlewares
 
 import (
 	"context"
+	"fmt"
 	_ "io/ioutil"
+	"time"
 
 	"os"
 	"path/filepath"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/config"
+	"github.com/go-git/go-git/v5/plumbing/object"
+	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/google/go-github/v41/github"
 	"github.com/joho/godotenv"
 	"golang.org/x/oauth2"
@@ -29,6 +34,7 @@ func GoDotEnvVariable(key string) string {
 }
 
 func GitInit(directoryPath string) (*git.Repository, error) {
+	fmt.Println("GITINIT DONE")
 	var (
 		err error
 	)
@@ -74,4 +80,66 @@ func AddDeployKeyToRepo(repoName string, deployKey string) error {
 	} else {
 		return nil
 	}
+}
+
+func GitPush(pathToApplication string, repoURL string) (*git.Repository, error) {
+	var firstInit bool
+	repo, err := git.PlainOpen(pathToApplication)
+	if err != nil {
+		firstInit = true
+		repo, err = GitInit(pathToApplication)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		firstInit = false
+	}
+	_, err = repo.Remote("origin")
+	if err != nil {
+		_, err = repo.CreateRemote(&config.RemoteConfig{
+			Name: "origin",
+			URLs: []string{repoURL},
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
+	w, _ := repo.Worktree()
+	if firstInit {
+		err = w.AddGlob(".")
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		_, err = w.Add(".")
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	_, _ = w.Commit("latest commit", &git.CommitOptions{
+		Author: &object.Signature{
+			Name:  GoDotEnvVariable("USERNAME"),
+			Email: GoDotEnvVariable("EMAIL"),
+			When:  time.Now(),
+		},
+	})
+
+	auth := &http.BasicAuth{
+		Username: GoDotEnvVariable("USERNAME"),
+		Password: GoDotEnvVariable("PAT"),
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	err = repo.Push(&git.PushOptions{
+		RemoteName: "origin",
+		Auth:       auth,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return repo, err
 }

@@ -166,8 +166,7 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 			if err != nil {
 				cmd.PrintErr(err)
 			}
-
-			_, err = exec.Command("/bin/sh", currentDir+"/cmd/middlewares/git_push.sh", pathToApplication, *repo.SSHURL).Output()
+			_, err = middlewares.GitPush(pathToApplication, *repo.CloneURL)
 			if err != nil {
 				panic(err)
 			}
@@ -182,11 +181,11 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 				if res.Success {
 					for i := 0; i < len(res.Data); i++ {
 						cmd.Println("App created successfully "+"\n"+"Container Id: "+res.Data[i].ContainerId,
-							"Container Port: ", res.Data[i].ContainerPort, "Docker Image: "+res.Data[i].DockerImage,
-							"App Url: "+res.Data[i].AppUrl, "Host Ip: "+res.Data[i].HostIp,
-							"Name Servers: ", res.Data[i].NameServers, "Instance Type: "+res.Data[i].InstanceType,
-							"Language: "+res.Data[i].Language, "Owner: "+res.Data[i].Owner,
-							"Ssh Cmd: "+res.Data[i].SshCmd, "Id: "+res.Data[i].Id)
+							"\nContainer Port: ", res.Data[i].ContainerPort, "\nDocker Image: "+res.Data[i].DockerImage,
+							"\nApp Url: "+res.Data[i].AppUrl, "\nHost Ip: "+res.Data[i].HostIp,
+							"\nName Servers: ", res.Data[i].NameServers, "\nInstance Type: "+res.Data[i].InstanceType,
+							"\nLanguage: "+res.Data[i].Language, "\nOwner: "+res.Data[i].Owner,
+							"\nSsh Cmd: "+res.Data[i].SshCmd, "\nId: "+res.Data[i].Id)
 					}
 				} else {
 					cmd.Println(err)
