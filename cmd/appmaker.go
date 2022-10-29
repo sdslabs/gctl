@@ -180,7 +180,7 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 				res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)
 				if res.Success {
 					for i := 0; i < len(res.Data); i++ {
-						cmd.Println("App created successfully "+"\n"+"Container Id: "+res.Data[i].ContainerId,
+						cmd.Println("\n\nApp created successfully "+"\n"+"Container Id: "+res.Data[i].ContainerId,
 							"\nContainer Port: ", res.Data[i].ContainerPort, "\nDocker Image: "+res.Data[i].DockerImage,
 							"\nApp Url: "+res.Data[i].AppUrl, "\nHost Ip: "+res.Data[i].HostIp,
 							"\nName Servers: ", res.Data[i].NameServers, "\nInstance Type: "+res.Data[i].InstanceType,

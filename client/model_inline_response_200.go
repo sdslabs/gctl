@@ -9,13 +9,15 @@
  */
 
 package openapi
+
 import (
 	"time"
 )
+
 // InlineResponse2001 struct for InlineResponse2001
 type InlineResponse2001 struct {
-	Success bool `json:"success,omitempty"`
-	Data []Instances `json:"data,omitempty"`
+	Success bool        `json:"success,omitempty"`
+	Data    []Instances `json:"data,omitempty"`
 }
 
 // InlineResponse2002 struct for InlineResponse2002
@@ -25,8 +27,8 @@ type InlineResponse2002 struct {
 
 // InlineResponse2003 struct for InlineResponse2003
 type InlineResponse2003 struct {
-	Success bool `json:"success,omitempty"`
-	Data []CreatedApplication `json:"data,omitempty"`
+	Success bool                 `json:"success,omitempty"`
+	Data    []CreatedApplication `json:"data,omitempty"`
 }
 
 // InlineResponse2004 struct for InlineResponse2004
@@ -37,18 +39,24 @@ type InlineResponse2004 struct {
 
 // InlineResponse2005 struct for InlineResponse2005
 type InlineResponse2005 struct {
-	Success bool `json:"success,omitempty"`
-	Data []string `json:"data,omitempty"`
+	Success bool     `json:"success,omitempty"`
+	Data    []string `json:"data,omitempty"`
 }
 
 // InlineResponse2006 struct for InlineResponse2006
 type InlineResponse2006 struct {
-	Success bool `json:"success,omitempty"`
-	Data []Metrics `json:"data,omitempty"`
+	Success bool      `json:"success,omitempty"`
+	Data    []Metrics `json:"data,omitempty"`
 }
 
 // InlineResponse2007 struct for InlineResponse2007
 type InlineResponse2007 struct {
-	Success bool `json:"success,omitempty"`
-	Data []CreatedDatabase `json:"data,omitempty"`
+	Success bool              `json:"success,omitempty"`
+	Data    []CreatedDatabase `json:"data,omitempty"`
+}
+
+// InlineResponse2008 struct for InlineResponse2008
+type InlineResponse2008 struct {
+	Success bool   `json:"success,omitempty"`
+	Data    string `json:"data,omitempty"`
 }
