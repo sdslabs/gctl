@@ -4,9 +4,6 @@ import (
 	"context"
 	_context "context"
 	_nethttp "net/http"
-	"os"
-	"os/exec"
-	"os/user"
 	"strconv"
 	"strings"
 
@@ -19,6 +16,7 @@ import (
 //AppsAPIService is interface for all client functions of apps
 type AppsAPIService interface {
 	CreateApp(ctx _context.Context, language string, application openapi.Application) (openapi.InlineResponse2002, *_nethttp.Response, error)
+	CreateRepository(ctx _context.Context, repositoryDetails openapi.CreateRepository) (openapi.InlineResponse2008, *_nethttp.Response, error)
 	DeleteAppByUser(ctx _context.Context, app string) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	FetchAppByUser(ctx _context.Context, app string) (openapi.InlineResponse2003, *_nethttp.Response, error)
 	FetchAppsByUser(ctx _context.Context) (openapi.InlineResponse2003, *_nethttp.Response, error)
@@ -72,16 +70,11 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 			} else {
 				language, application = middlewares.AppForm(false, "")
 			}
-			cmd.Println("This done")
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
-			cmd.Println("This done2")
 			res, _, err := appsAPIService.CreateApp(auth, language, application)
 			if res.Success {
-				cmd.Println("This done3")
 				res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)
-				cmd.Println("This done4")
 				if res.Success {
-					cmd.Println("This done5")
 					for i := 0; i < len(res.Data); i++ {
 						cmd.Println("App created successfully "+"\n"+"Container Id: "+res.Data[i].ContainerId,
 							"Container Port: ", res.Data[i].ContainerPort, "Docker Image: "+res.Data[i].DockerImage,
@@ -131,50 +124,26 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 			cmd.Println("Application Name: " + appName)
 			cmd.Println("Path to Application: " + pathToApplication)
 
-			repo, _, err := middlewares.CreateRepository(appName)
-			if err != nil {
-				cmd.PrintErr(err)
+			repositoryDetails := openapi.CreateRepository{
+				Name: appName,
+				Path: pathToApplication,
 			}
+			cmd.Println(repositoryDetails)
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 
-			currentUser, err := user.Current()
-			if err != nil {
-				cmd.PrintErr(err)
-			}
-
-			currentDir, err := os.Getwd()
-			if err != nil {
-				cmd.PrintErr(err)
-			}
-
-			// generate ssh keys
-			_, err = exec.Command("/bin/sh", currentDir+"/cmd/middlewares/generateDeployKey.sh", appName).Output()
-			if err != nil {
-				panic(err)
-			}
-
-			sshPath := currentUser.HomeDir + "/.ssh/" + appName
-			cmd.Println("Path to ssh key: ", sshPath)
-
-			//get public keys
-			sshGenerated, err := os.ReadFile(currentUser.HomeDir + "/.ssh/" + appName + ".pub")
+			//TODO: ERROR thrown here
+			repo, _, err := appsAPIservice.CreateRepository(auth, repositoryDetails)
+			//The request is prepared as expected, but is not received at Gasper's /github endpoint
 			if err != nil {
 				cmd.Println(err)
-				return
 			}
 
-			err = middlewares.AddDeployKeyToRepo(appName, string(sshGenerated))
-			if err != nil {
-				cmd.PrintErr(err)
-			}
-			_, err = middlewares.GitPush(pathToApplication, *repo.CloneURL)
-			if err != nil {
-				panic(err)
-			}
+			cmd.Println(repo.Data) // to check whether create repo api service is working or not
 
 			privateRepoCloneURL := "https://" + middlewares.GoDotEnvVariable("PAT") + "@github.com/" + middlewares.GoDotEnvVariable("USERNAME") + "/" + appName + ".git"
 
 			language, application = middlewares.AppForm(true, privateRepoCloneURL)
-			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
+			auth = context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.CreateApp(auth, language, application)
 			if res.Success {
 				res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)

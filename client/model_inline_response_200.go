@@ -57,6 +57,6 @@ type InlineResponse2007 struct {
 
 // InlineResponse2008 struct for InlineResponse2008
 type InlineResponse2008 struct {
-	Success bool   `json:"success,omitempty"`
-	Data    string `json:"data,omitempty"`
+	Success bool                `json:"success,omitempty"`
+	Data    []CreatedRepository `json:"data,omitempty"`
 }
