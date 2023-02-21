@@ -162,7 +162,6 @@ func (a *AppsAPIService) CreateRepository(ctx _context.Context, repositoryDetail
 	localVarPostBody = &repositoryDetails
 
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
-
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}

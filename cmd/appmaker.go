@@ -127,40 +127,39 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 
 			repositoryDetails := openapi.CreateRepository{
 				Name: appName,
-				Path: pathToApplication,
 			}
 
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			repo, _, err := appsAPIservice.CreateRepository(auth, repositoryDetails)
 			if err != nil {
-				cmd.Println(err)
+				cmd.PrintErr("Error creating Github Repository")
 			}
 
 			err = middlewares.GitPush(pathToApplication, repo.CloneURL, repo.PAT, repo.Email, repo.Username)
 			if err != nil {
 				cmd.PrintErr("Error pushing local files to GitHub repository")
-			}
-
-			privateRepoCloneURL := "https://" + repo.PAT + "@github.com/" + repo.Username + "/" + repo.Repository + ".git"
-			language, application = middlewares.AppForm(true, privateRepoCloneURL, repo.PAT, appName)
-			auth = context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
-			res, _, err := appsAPIService.CreateApp(auth, language, application)
-			if res.Success {
-				res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)
+			} else {
+				privateRepoCloneURL := "https://" + repo.PAT + "@github.com/" + repo.Username + "/" + repo.Repository + ".git"
+				language, application = middlewares.AppForm(true, privateRepoCloneURL, repo.PAT, appName)
+				auth = context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
+				res, _, err := appsAPIService.CreateApp(auth, language, application)
 				if res.Success {
-					for i := 0; i < len(res.Data); i++ {
-						cmd.Println("\n\nApp created successfully "+"\n"+"Container Id: "+res.Data[i].ContainerId,
-							"\nContainer Port: ", res.Data[i].ContainerPort, "\nDocker Image: "+res.Data[i].DockerImage,
-							"\nApp Url: "+res.Data[i].AppUrl, "\nHost Ip: "+res.Data[i].HostIp,
-							"\nName Servers: ", res.Data[i].NameServers, "\nInstance Type: "+res.Data[i].InstanceType,
-							"\nLanguage: "+res.Data[i].Language, "\nOwner: "+res.Data[i].Owner,
-							"\nSsh Cmd: "+res.Data[i].SshCmd, "\nId: "+res.Data[i].Id)
+					res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)
+					if res.Success {
+						for i := 0; i < len(res.Data); i++ {
+							cmd.Println("\n\nApp created successfully "+"\n"+"Container Id: "+res.Data[i].ContainerId,
+								"\nContainer Port: ", res.Data[i].ContainerPort, "\nDocker Image: "+res.Data[i].DockerImage,
+								"\nApp Url: "+res.Data[i].AppUrl, "\nHost Ip: "+res.Data[i].HostIp,
+								"\nName Servers: ", res.Data[i].NameServers, "\nInstance Type: "+res.Data[i].InstanceType,
+								"\nLanguage: "+res.Data[i].Language, "\nOwner: "+res.Data[i].Owner,
+								"\nSsh Cmd: "+res.Data[i].SshCmd, "\nId: "+res.Data[i].Id)
+						}
+					} else {
+						cmd.Println(err)
 					}
 				} else {
 					cmd.Println(err)
 				}
-			} else {
-				cmd.Println(err)
 			}
 		},
 	}

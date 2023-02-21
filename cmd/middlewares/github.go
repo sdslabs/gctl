@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"errors"
-	"fmt"
 	_ "io/ioutil"
 	"time"
 
@@ -15,7 +14,6 @@ import (
 )
 
 func GitInit(directoryPath string) (*git.Repository, error) {
-	fmt.Println("GITINIT DONE")
 	var (
 		err error
 	)
