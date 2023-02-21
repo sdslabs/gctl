@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//AppsAPIService is interface for all client functions of apps
+// AppsAPIService is interface for all client functions of apps
 type AppsAPIService interface {
 	CreateApp(ctx _context.Context, language string, application openapi.Application) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	CreateRepository(ctx _context.Context, repositoryDetails openapi.CreateRepository) (openapi.InlineResponse2008, *_nethttp.Response, error)
@@ -38,7 +38,7 @@ func init() {
 	fetchCmd.AddCommand(FetchLogsCmd(appsAPIService))
 }
 
-//CreateAppCmd is command to create an app
+// CreateAppCmd is command to create an app
 func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var appmakerCmd = &cobra.Command{
 		Use:   "app [FILENAME] [LANGUAGE]",
@@ -68,7 +68,7 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 					return
 				}
 			} else {
-				language, application = middlewares.AppForm(false, "")
+				language, application = middlewares.AppForm(false, "", "", "")
 			}
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.CreateApp(auth, language, application)
@@ -94,7 +94,7 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	return appmakerCmd
 }
 
-//LocalAppCmd returns command to deploy application from local
+// LocalAppCmd returns command to deploy application from local
 func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 	var localAppCmd = &cobra.Command{
 		Use:   "local [NAME] [PATH]",
@@ -106,6 +106,7 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 				language    string
 				application openapi.Application
 			)
+
 			if gctltoken == "" {
 				gctltoken, err = middlewares.SetToken(client)
 				if err != nil {
@@ -115,34 +116,33 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 			}
 
 			if len(args) != 2 {
-				cmd.Println("error: wrong number of arguments")
+				cmd.Println("error: incorrect number of arguments, usage: gctl create local [NAME] [PATH]")
 				return
 			}
+			appName, pathToApplication := args[0], args[1]
 
-			appName := args[0]
-			pathToApplication := args[1]
-			cmd.Println("Application Name: " + appName)
-			cmd.Println("Path to Application: " + pathToApplication)
+			if !middlewares.ValidateName(appName) {
+				cmd.PrintErr("App Name should have only alphanumeric characters, lowercase alphabets and should be of length 3-40.")
+			}
 
 			repositoryDetails := openapi.CreateRepository{
 				Name: appName,
 				Path: pathToApplication,
 			}
-			cmd.Println(repositoryDetails)
-			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 
-			//TODO: ERROR thrown here
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			repo, _, err := appsAPIservice.CreateRepository(auth, repositoryDetails)
-			//The request is prepared as expected, but is not received at Gasper's /github endpoint
 			if err != nil {
 				cmd.Println(err)
 			}
 
-			cmd.Println(repo.Data) // to check whether create repo api service is working or not
+			err = middlewares.GitPush(pathToApplication, repo.CloneURL, repo.PAT, repo.Email, repo.Username)
+			if err != nil {
+				cmd.PrintErr("Error pushing local files to GitHub repository")
+			}
 
-			privateRepoCloneURL := "https://" + middlewares.GoDotEnvVariable("PAT") + "@github.com/" + middlewares.GoDotEnvVariable("USERNAME") + "/" + appName + ".git"
-
-			language, application = middlewares.AppForm(true, privateRepoCloneURL)
+			privateRepoCloneURL := "https://" + repo.PAT + "@github.com/" + repo.Username + "/" + repo.Repository + ".git"
+			language, application = middlewares.AppForm(true, privateRepoCloneURL, repo.PAT, appName)
 			auth = context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.CreateApp(auth, language, application)
 			if res.Success {
@@ -167,7 +167,7 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 	return localAppCmd
 }
 
-//FetchAppCmd returns command to fetch apps of a user
+// FetchAppCmd returns command to fetch apps of a user
 func FetchAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var fetchAppCmd = &cobra.Command{
 		Use:   "app",
@@ -231,7 +231,7 @@ func FetchAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	return fetchAppCmd
 }
 
-//DeleteAppCmd returns command to delete app owned by a user
+// DeleteAppCmd returns command to delete app owned by a user
 func DeleteAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var deleteAppCmd = &cobra.Command{
 		Use:   "app [APP_NAME]",
@@ -262,7 +262,7 @@ func DeleteAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	return deleteAppCmd
 }
 
-//RebuildAppCmd returns a command to rebuild an app
+// RebuildAppCmd returns a command to rebuild an app
 func RebuildAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var rebuildAppCmd = &cobra.Command{
 		Use:   "rebuild [APP_NAME]",
@@ -293,7 +293,7 @@ func RebuildAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	return rebuildAppCmd
 }
 
-//UpdateAppCmd returns a command to update an app
+// UpdateAppCmd returns a command to update an app
 func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var updateAppCmd = &cobra.Command{
 		Use:   "app [APP_NAME] [FILE_NAME]",
@@ -322,7 +322,7 @@ func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 					return
 				}
 			} else {
-				_, application = middlewares.AppForm(false, "")
+				_, application = middlewares.AppForm(false, "", "", "")
 				appName = application.Name
 			}
 
@@ -350,7 +350,7 @@ func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	return updateAppCmd
 }
 
-//FetchLogsCmd returns a command to fetch logs of an app
+// FetchLogsCmd returns a command to fetch logs of an app
 func FetchLogsCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var fetchLogsCmd = &cobra.Command{
 		Use:   "logs [APP_NAME][NUMBER_OF_LOGS] ",

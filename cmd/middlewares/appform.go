@@ -12,17 +12,22 @@ import (
 	openapi "github.com/sdslabs/gctl/client"
 )
 
-//AppForm takes input for openapi.Application
-func AppForm(isLocal bool, githubRepo string) (string, openapi.Application) {
+// AppForm takes input for openapi.Application
+func AppForm(isLocal bool, githubRepo string, pat string, appName string) (string, openapi.Application) {
 	var language string
 	var application openapi.Application
 	scanner := bufio.NewScanner(os.Stdin)
-	for !ValidateName(application.Name) {
-		fmt.Printf("*App Name: ")
-		scanner.Scan()
-		application.Name = scanner.Text()
-		if !ValidateName(application.Name) {
-			fmt.Println("App Name should have only alphanumeric characters, lowercase alphabets and should be of length 3-40.")
+
+	if isLocal {
+		application.Name = appName
+	} else {
+		for !ValidateName(application.Name) {
+			fmt.Printf("*App Name: ")
+			scanner.Scan()
+			application.Name = scanner.Text()
+			if !ValidateName(application.Name) {
+				fmt.Println("App Name should have only alphanumeric characters, lowercase alphabets and should be of length 3-40.")
+			}
 		}
 	}
 	for !ValidateLanguageApp(language) {
@@ -63,7 +68,7 @@ func AppForm(isLocal bool, githubRepo string) (string, openapi.Application) {
 
 	} else {
 		application.Git.RepoUrl = githubRepo
-		application.Git.AccessToken = GoDotEnvVariable("PAT")
+		application.Git.AccessToken = pat
 		application.Git.Branch = "master"
 	}
 

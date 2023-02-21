@@ -27,7 +27,7 @@ var (
 
 const CREATE_REPO_PATH = "/github"
 
-//AppsAPI is interface for functions of type AppsAPIService
+// AppsAPI is interface for functions of type AppsAPIService
 type AppsAPI interface {
 	CreateApp(ctx _context.Context, language string, application Application) (InlineResponse2002, *_nethttp.Response, error)
 	CreateRepository(ctx _context.Context, repositoryDetails CreateRepository) (InlineResponse2008, *_nethttp.Response, error)
@@ -41,9 +41,10 @@ type AppsAPIService service
 
 /*
 CreateApp Create an application
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param language The programming language in which the application is written
- * @param application
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param language The programming language in which the application is written
+  - @param application
+
 @return InlineResponse2002
 */
 func (a *AppsAPIService) CreateApp(ctx _context.Context, language string, application Application) (InlineResponse2002, *_nethttp.Response, error) {
@@ -161,21 +162,17 @@ func (a *AppsAPIService) CreateRepository(ctx _context.Context, repositoryDetail
 	localVarPostBody = &repositoryDetails
 
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
-	// Request is prepared as expected
-	// fmt.Println("Request Prepared \n", r)
-	// fmt.Println("__________________________________________________________________________________________")
+
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 	localVarHTTPResponse, err := a.client.CallAPI(r)
+
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
-	// HTTP Response receives an error, interface{} is nil, i.e the request is not received at gasper's end
-	// fmt.Println("HTTP Response\n", *localVarHTTPResponse)
-	// fmt.Println("__________________________________________________________________________________________")
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
+	err = localVarHTTPResponse.Body.Close()
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -203,8 +200,9 @@ func (a *AppsAPIService) CreateRepository(ctx _context.Context, repositoryDetail
 
 /*
 DeleteAppByUser Delete an application owned by a user
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param app The name of the application
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param app The name of the application
+
 @return InlineResponse2002
 */
 func (a *AppsAPIService) DeleteAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error) {
@@ -280,8 +278,9 @@ func (a *AppsAPIService) DeleteAppByUser(ctx _context.Context, app string) (Inli
 
 /*
 FetchAppByUser Fetch a single application owned by a user
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param app The name of the application
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param app The name of the application
+
 @return InlineResponse2003
 */
 func (a *AppsAPIService) FetchAppByUser(ctx _context.Context, app string) (InlineResponse2003, *_nethttp.Response, error) {
@@ -357,7 +356,8 @@ func (a *AppsAPIService) FetchAppByUser(ctx _context.Context, app string) (Inlin
 
 /*
 FetchAppsByUser Fetch all applications owned by a user
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+
 @return InlineResponse2003
 */
 func (a *AppsAPIService) FetchAppsByUser(ctx _context.Context) (InlineResponse2003, *_nethttp.Response, error) {
@@ -436,10 +436,11 @@ type FetchLogsByUserOpts struct {
 
 /*
 FetchLogsByUser Fetch logs of an application
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param app The name of the application
- * @param optional nil or *FetchLogsByUserOpts - Optional Parameters:
- * @param "Tail" (optional.Int32) -  Fetch the last **n** logs (Fetches all logs if not specified)
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param app The name of the application
+  - @param optional nil or *FetchLogsByUserOpts - Optional Parameters:
+  - @param "Tail" (optional.Int32) -  Fetch the last **n** logs (Fetches all logs if not specified)
+
 @return InlineResponse2005
 */
 func (a *AppsAPIService) FetchLogsByUser(ctx _context.Context, app string, localVarOptionals *FetchLogsByUserOpts) (InlineResponse2005, *_nethttp.Response, error) {
@@ -530,17 +531,18 @@ type FetchMetricsByUserOpts struct {
 
 /*
 FetchMetricsByUser Fetch metrics of an application
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param app The name of the application
- * @param optional nil or *FetchMetricsByUserOpts - Optional Parameters:
- * @param "Seconds" (optional.Int32) -  Fetch metrics in the last **n** seconds
- * @param "Minutes" (optional.Int32) -  Fetch metrics in the last **n** minutes
- * @param "Hours" (optional.Int32) -  Fetch metrics in the last **n** hours
- * @param "Days" (optional.Int32) -  Fetch metrics in the last **n** days
- * @param "Weeks" (optional.Int32) -  Fetch metrics in the last **n** weeks
- * @param "Months" (optional.Int32) -  Fetch metrics in the last **n** months
- * @param "Years" (optional.Int32) -  Fetch metrics in the last **n** years
- * @param "Decades" (optional.Int32) -  Fetch metrics in the last **n** decades
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param app The name of the application
+  - @param optional nil or *FetchMetricsByUserOpts - Optional Parameters:
+  - @param "Seconds" (optional.Int32) -  Fetch metrics in the last **n** seconds
+  - @param "Minutes" (optional.Int32) -  Fetch metrics in the last **n** minutes
+  - @param "Hours" (optional.Int32) -  Fetch metrics in the last **n** hours
+  - @param "Days" (optional.Int32) -  Fetch metrics in the last **n** days
+  - @param "Weeks" (optional.Int32) -  Fetch metrics in the last **n** weeks
+  - @param "Months" (optional.Int32) -  Fetch metrics in the last **n** months
+  - @param "Years" (optional.Int32) -  Fetch metrics in the last **n** years
+  - @param "Decades" (optional.Int32) -  Fetch metrics in the last **n** decades
+
 @return InlineResponse2006
 */
 func (a *AppsAPIService) FetchMetricsByUser(ctx _context.Context, app string, localVarOptionals *FetchMetricsByUserOpts) (InlineResponse2006, *_nethttp.Response, error) {
@@ -640,8 +642,9 @@ func (a *AppsAPIService) FetchMetricsByUser(ctx _context.Context, app string, lo
 
 /*
 RebuildAppByUser Rebuild an application
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param app The name of the application
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param app The name of the application
+
 @return InlineResponse2002
 */
 func (a *AppsAPIService) RebuildAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error) {
@@ -717,9 +720,10 @@ func (a *AppsAPIService) RebuildAppByUser(ctx _context.Context, app string) (Inl
 
 /*
 UpdateAppByUser Update an application owned by a user
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param app The name of the application
- * @param application
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param app The name of the application
+  - @param application
+
 @return InlineResponse2002
 */
 func (a *AppsAPIService) UpdateAppByUser(ctx _context.Context, app string, application Application) (InlineResponse2002, *_nethttp.Response, error) {
