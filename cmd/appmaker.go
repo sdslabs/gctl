@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// AppsAPIService is interface for all client functions of apps
+//AppsAPIService is interface for all client functions of apps
 type AppsAPIService interface {
 	CreateApp(ctx _context.Context, language string, application openapi.Application) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	CreateRepository(ctx _context.Context, repositoryDetails openapi.CreateRepository) (openapi.InlineResponse2008, *_nethttp.Response, error)
@@ -38,7 +38,7 @@ func init() {
 	fetchCmd.AddCommand(FetchLogsCmd(appsAPIService))
 }
 
-// CreateAppCmd is command to create an app
+//CreateAppCmd is command to create an app
 func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var appmakerCmd = &cobra.Command{
 		Use:   "app [FILENAME] [LANGUAGE]",
@@ -94,11 +94,11 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	return appmakerCmd
 }
 
-// LocalAppCmd returns command to deploy application from local
+//LocalAppCmd returns command to deploy application from local
 func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 	var localAppCmd = &cobra.Command{
 		Use:   "local [NAME] [PATH]",
-		Short: "Deploy an application from local",
+		Short: "Deploy an application from local source code",
 		Args:  cobra.MaximumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			var (
@@ -166,7 +166,7 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 	return localAppCmd
 }
 
-// FetchAppCmd returns command to fetch apps of a user
+//FetchAppCmd returns command to fetch apps of a user
 func FetchAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var fetchAppCmd = &cobra.Command{
 		Use:   "app",
@@ -230,7 +230,7 @@ func FetchAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	return fetchAppCmd
 }
 
-// DeleteAppCmd returns command to delete app owned by a user
+//DeleteAppCmd returns command to delete app owned by a user
 func DeleteAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var deleteAppCmd = &cobra.Command{
 		Use:   "app [APP_NAME]",
@@ -261,7 +261,7 @@ func DeleteAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	return deleteAppCmd
 }
 
-// RebuildAppCmd returns a command to rebuild an app
+//RebuildAppCmd returns a command to rebuild an app
 func RebuildAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var rebuildAppCmd = &cobra.Command{
 		Use:   "rebuild [APP_NAME]",
@@ -292,7 +292,7 @@ func RebuildAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	return rebuildAppCmd
 }
 
-// UpdateAppCmd returns a command to update an app
+//UpdateAppCmd returns a command to update an app
 func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var updateAppCmd = &cobra.Command{
 		Use:   "app [APP_NAME] [FILE_NAME]",
@@ -349,7 +349,7 @@ func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	return updateAppCmd
 }
 
-// FetchLogsCmd returns a command to fetch logs of an app
+//FetchLogsCmd returns a command to fetch logs of an app
 func FetchLogsCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var fetchLogsCmd = &cobra.Command{
 		Use:   "logs [APP_NAME][NUMBER_OF_LOGS] ",

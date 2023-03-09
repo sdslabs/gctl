@@ -41,10 +41,9 @@ type AppsAPIService service
 
 /*
 CreateApp Create an application
-  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-  - @param language The programming language in which the application is written
-  - @param application
-
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param language The programming language in which the application is written
+ * @param application
 @return InlineResponse2002
 */
 func (a *AppsAPIService) CreateApp(ctx _context.Context, language string, application Application) (InlineResponse2002, *_nethttp.Response, error) {
@@ -199,9 +198,8 @@ func (a *AppsAPIService) CreateRepository(ctx _context.Context, repositoryDetail
 
 /*
 DeleteAppByUser Delete an application owned by a user
-  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-  - @param app The name of the application
-
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param app The name of the application
 @return InlineResponse2002
 */
 func (a *AppsAPIService) DeleteAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error) {
@@ -277,9 +275,8 @@ func (a *AppsAPIService) DeleteAppByUser(ctx _context.Context, app string) (Inli
 
 /*
 FetchAppByUser Fetch a single application owned by a user
-  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-  - @param app The name of the application
-
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param app The name of the application
 @return InlineResponse2003
 */
 func (a *AppsAPIService) FetchAppByUser(ctx _context.Context, app string) (InlineResponse2003, *_nethttp.Response, error) {
@@ -355,8 +352,7 @@ func (a *AppsAPIService) FetchAppByUser(ctx _context.Context, app string) (Inlin
 
 /*
 FetchAppsByUser Fetch all applications owned by a user
-  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 @return InlineResponse2003
 */
 func (a *AppsAPIService) FetchAppsByUser(ctx _context.Context) (InlineResponse2003, *_nethttp.Response, error) {
@@ -435,11 +431,10 @@ type FetchLogsByUserOpts struct {
 
 /*
 FetchLogsByUser Fetch logs of an application
-  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-  - @param app The name of the application
-  - @param optional nil or *FetchLogsByUserOpts - Optional Parameters:
-  - @param "Tail" (optional.Int32) -  Fetch the last **n** logs (Fetches all logs if not specified)
-
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param app The name of the application
+ * @param optional nil or *FetchLogsByUserOpts - Optional Parameters:
+ * @param "Tail" (optional.Int32) -  Fetch the last **n** logs (Fetches all logs if not specified)
 @return InlineResponse2005
 */
 func (a *AppsAPIService) FetchLogsByUser(ctx _context.Context, app string, localVarOptionals *FetchLogsByUserOpts) (InlineResponse2005, *_nethttp.Response, error) {
@@ -530,18 +525,17 @@ type FetchMetricsByUserOpts struct {
 
 /*
 FetchMetricsByUser Fetch metrics of an application
-  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-  - @param app The name of the application
-  - @param optional nil or *FetchMetricsByUserOpts - Optional Parameters:
-  - @param "Seconds" (optional.Int32) -  Fetch metrics in the last **n** seconds
-  - @param "Minutes" (optional.Int32) -  Fetch metrics in the last **n** minutes
-  - @param "Hours" (optional.Int32) -  Fetch metrics in the last **n** hours
-  - @param "Days" (optional.Int32) -  Fetch metrics in the last **n** days
-  - @param "Weeks" (optional.Int32) -  Fetch metrics in the last **n** weeks
-  - @param "Months" (optional.Int32) -  Fetch metrics in the last **n** months
-  - @param "Years" (optional.Int32) -  Fetch metrics in the last **n** years
-  - @param "Decades" (optional.Int32) -  Fetch metrics in the last **n** decades
-
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param app The name of the application
+ * @param optional nil or *FetchMetricsByUserOpts - Optional Parameters:
+ * @param "Seconds" (optional.Int32) -  Fetch metrics in the last **n** seconds
+ * @param "Minutes" (optional.Int32) -  Fetch metrics in the last **n** minutes
+ * @param "Hours" (optional.Int32) -  Fetch metrics in the last **n** hours
+ * @param "Days" (optional.Int32) -  Fetch metrics in the last **n** days
+ * @param "Weeks" (optional.Int32) -  Fetch metrics in the last **n** weeks
+ * @param "Months" (optional.Int32) -  Fetch metrics in the last **n** months
+ * @param "Years" (optional.Int32) -  Fetch metrics in the last **n** years
+ * @param "Decades" (optional.Int32) -  Fetch metrics in the last **n** decades
 @return InlineResponse2006
 */
 func (a *AppsAPIService) FetchMetricsByUser(ctx _context.Context, app string, localVarOptionals *FetchMetricsByUserOpts) (InlineResponse2006, *_nethttp.Response, error) {
@@ -641,9 +635,8 @@ func (a *AppsAPIService) FetchMetricsByUser(ctx _context.Context, app string, lo
 
 /*
 RebuildAppByUser Rebuild an application
-  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-  - @param app The name of the application
-
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param app The name of the application
 @return InlineResponse2002
 */
 func (a *AppsAPIService) RebuildAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error) {
@@ -719,10 +712,9 @@ func (a *AppsAPIService) RebuildAppByUser(ctx _context.Context, app string) (Inl
 
 /*
 UpdateAppByUser Update an application owned by a user
-  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-  - @param app The name of the application
-  - @param application
-
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param app The name of the application
+ * @param application
 @return InlineResponse2002
 */
 func (a *AppsAPIService) UpdateAppByUser(ctx _context.Context, app string, application Application) (InlineResponse2002, *_nethttp.Response, error) {
