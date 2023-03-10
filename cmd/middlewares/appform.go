@@ -13,25 +13,21 @@ import (
 )
 
 // AppForm takes input for openapi.Application
-func AppForm(isLocal bool, githubRepo string, pat string, appName string) (string, openapi.Application) {
+func AppForm(isLocal bool) (string, openapi.Application) {
 	var language string
 	var application openapi.Application
 	scanner := bufio.NewScanner(os.Stdin)
 
-	if isLocal {
-		application.Name = appName
-	} else {
-		for !ValidateName(application.Name) {
-			fmt.Printf("*App Name: ")
-			scanner.Scan()
-			application.Name = scanner.Text()
-			if !ValidateName(application.Name) {
-				fmt.Println("App Name should have only alphanumeric characters, lowercase alphabets and should be of length 3-40.")
-			}
+	for !ValidateName(application.Name) {
+		fmt.Printf("App Name* : ")
+		scanner.Scan()
+		application.Name = scanner.Text()
+		if !ValidateName(application.Name) {
+			fmt.Println("App Name should have only alphanumeric characters, lowercase alphabets and should be of length 3-40.")
 		}
 	}
 	for !ValidateLanguageApp(language) {
-		fmt.Printf("*Language: ")
+		fmt.Printf("Language* : ")
 		scanner.Scan()
 		language = scanner.Text()
 		if !ValidateLanguageApp(language) {
@@ -39,7 +35,7 @@ func AppForm(isLocal bool, githubRepo string, pat string, appName string) (strin
 		}
 	}
 	for application.Password == "" {
-		fmt.Printf("*Application Password: ")
+		fmt.Printf("Application Password* : ")
 		maskedPasswd, _ := gopass.GetPasswdMasked()
 		application.Password = string(maskedPasswd)
 		if application.Password == "" {
@@ -48,7 +44,7 @@ func AppForm(isLocal bool, githubRepo string, pat string, appName string) (strin
 	}
 	if !isLocal {
 		for !ValidateURL(application.Git.RepoUrl) {
-			fmt.Printf("*Git URL: ")
+			fmt.Printf("Git URL *: ")
 			scanner.Scan()
 			application.Git.RepoUrl = scanner.Text()
 			if !ValidateURL(application.Git.RepoUrl) {
@@ -58,22 +54,16 @@ func AppForm(isLocal bool, githubRepo string, pat string, appName string) (strin
 		fmt.Printf("Is this repo private? [yes/no]: ")
 		scanner.Scan()
 		if scanner.Text() == "yes" {
-			fmt.Printf("*Git Access Token: ")
+			fmt.Printf("Git Access Token* : ")
 			scanner.Scan()
 			application.Git.AccessToken = scanner.Text()
 		}
-		fmt.Printf("Branch: ")
+		fmt.Printf("Branch* : ")
 		scanner.Scan()
 		application.Git.Branch = scanner.Text()
-
-	} else {
-		application.Git.RepoUrl = githubRepo
-		application.Git.AccessToken = pat
-		application.Git.Branch = "master"
 	}
-
 	for application.Context.Index == "" {
-		fmt.Printf("*Index: ")
+		fmt.Printf("Index* : ")
 		scanner.Scan()
 		application.Context.Index = scanner.Text()
 		if application.Context.Index == "" {
@@ -81,7 +71,7 @@ func AppForm(isLocal bool, githubRepo string, pat string, appName string) (strin
 		}
 	}
 	for !ValidatePort(application.Context.Port) {
-		fmt.Printf("Port: ")
+		fmt.Printf("Port* : ")
 		scanner.Scan()
 		application.Context.Port, _ = strconv.ParseInt(scanner.Text(), 10, 64)
 		if !ValidatePort(application.Context.Port) {

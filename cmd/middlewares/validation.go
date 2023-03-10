@@ -77,3 +77,12 @@ func ValidateEnvVars(vars []string) bool {
 	}
 	return true
 }
+
+//ValidateLocalPath validates path to local source code
+func ValidateLocalPath (path string) bool {
+	if path == "" {
+		return false
+	}
+	re := regexp.MustCompile("^(\\/[\\w-]+)+(.[a-zA-Z]+?)$")
+	return re.MatchString(path)
+}

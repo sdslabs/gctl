@@ -68,8 +68,9 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 					return
 				}
 			} else {
-				language, application = middlewares.AppForm(false, "", "", "")
+				language, application = middlewares.AppForm(false)
 			}
+
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.CreateApp(auth, language, application)
 			if res.Success {
@@ -97,9 +98,9 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 //LocalAppCmd returns command to deploy application from local
 func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 	var localAppCmd = &cobra.Command{
-		Use:   "local [NAME] [PATH]",
+		Use:   "local [PATH]",
 		Short: "Deploy an application from local source code",
-		Args:  cobra.MaximumNArgs(2),
+		Args:  cobra.MaximumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			var (
 				err         error
@@ -115,18 +116,20 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 				}
 			}
 
-			if len(args) != 2 {
-				cmd.Println("error: incorrect number of arguments, usage: gctl create local [NAME] [PATH]")
+			if len(args) != 1 {
+				cmd.Println("error: incorrect number of arguments, usage: gctl create local [PATH]")
 				return
 			}
-			appName, pathToApplication := args[0], args[1]
-
-			if !middlewares.ValidateName(appName) {
-				cmd.PrintErr("App Name should have only alphanumeric characters, lowercase alphabets and should be of length 3-40.")
+			pathToApplication := args[0]
+			if !middlewares.ValidateLocalPath(pathToApplication) {
+				cmd.PrintErr("You must pass the absolute path to the local source code")
+				return
 			}
 
+			language, application = middlewares.AppForm(true)
+
 			repositoryDetails := openapi.CreateRepository{
-				Name: appName,
+				Name: application.Name,
 			}
 
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
@@ -140,7 +143,9 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 				cmd.PrintErr("Error pushing local files to GitHub repository")
 			} else {
 				privateRepoCloneURL := "https://" + repo.PAT + "@github.com/" + repo.Username + "/" + repo.Repository + ".git"
-				language, application = middlewares.AppForm(true, privateRepoCloneURL, repo.PAT, appName)
+				application.Git.RepoUrl = privateRepoCloneURL
+				application.Git.AccessToken = repo.PAT
+				application.Git.Branch = "master"
 				auth = context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 				res, _, err := appsAPIService.CreateApp(auth, language, application)
 				if res.Success {
@@ -321,7 +326,7 @@ func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 					return
 				}
 			} else {
-				_, application = middlewares.AppForm(false, "", "", "")
+				_, application = middlewares.AppForm(false)
 				appName = application.Name
 			}
 
