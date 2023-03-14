@@ -39,7 +39,7 @@ func GitPush(pathToApplication string, repoURL string, pat string, email string,
 	}
 	remote, err := repo.Remote("origin")
 	if remote != nil {
-		return errors.New("remote of the local directory already exists")
+		return errors.New("Remote of the local directory already exists, use the git remote URL")
 	} else if err != nil {
 		_, err = repo.CreateRemote(&config.RemoteConfig{
 			Name: "origin",
