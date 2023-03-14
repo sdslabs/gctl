@@ -36,7 +36,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-//Client is interface for functions of type APIClient
+// Client is interface for functions of type APIClient
 type Client interface {
 	NewAPIClient(cfg *Configuration) *APIClient
 	CallAPI(request *http.Request) (*http.Response, error)

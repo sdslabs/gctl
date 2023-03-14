@@ -41,6 +41,7 @@ if [ -n "$VERBOSE" ]; then
 fi
 
 GOBIN=$PWD go "${GO_CMD}" -o "$(go env GOPATH)/bin/gctl" -ldflags "${ldflags}" "${repo_path}"
+go build
 
 echo "[*] Build Complete."
 exit 0

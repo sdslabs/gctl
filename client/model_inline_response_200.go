@@ -9,9 +9,11 @@
  */
 
 package openapi
+
 import (
 	"time"
 )
+
 // InlineResponse2001 struct for InlineResponse2001
 type InlineResponse2001 struct {
 	Success bool `json:"success,omitempty"`
@@ -51,4 +53,18 @@ type InlineResponse2006 struct {
 type InlineResponse2007 struct {
 	Success bool `json:"success,omitempty"`
 	Data []CreatedDatabase `json:"data,omitempty"`
+}
+
+// InlineResponse2008 struct for InlineResponse2008
+type InlineResponse2008 struct {
+	// Git clone URL of the application
+	CloneURL string `json:"cloneurl" bson:"cloneurl"`
+	// PAT for pushing code to repository
+	PAT string `json:"pat" bson:"pat"`
+	// Username of Gasper Github user
+	Username string `json:"username" bson:"username"`
+	// Repository contains the name of the Github repository
+	Repository string `json:"repository" bson:"repository"`
+	// Email id of Gasper Github user
+	Email string `json:"email" bson:"email"`
 }

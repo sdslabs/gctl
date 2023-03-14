@@ -8,16 +8,18 @@ import (
 	"strings"
 
 	"github.com/howeyc/gopass"
+
 	openapi "github.com/sdslabs/gctl/client"
 )
 
-//AppForm takes input for openapi.Application
-func AppForm() (string, openapi.Application) {
+// AppForm takes input for openapi.Application
+func AppForm(isLocal bool) (string, openapi.Application) {
 	var language string
 	var application openapi.Application
 	scanner := bufio.NewScanner(os.Stdin)
+
 	for !ValidateName(application.Name) {
-		fmt.Printf("*App Name: ")
+		fmt.Printf("App Name* : ")
 		scanner.Scan()
 		application.Name = scanner.Text()
 		if !ValidateName(application.Name) {
@@ -25,7 +27,7 @@ func AppForm() (string, openapi.Application) {
 		}
 	}
 	for !ValidateLanguageApp(language) {
-		fmt.Printf("*Language: ")
+		fmt.Printf("Language* : ")
 		scanner.Scan()
 		language = scanner.Text()
 		if !ValidateLanguageApp(language) {
@@ -33,33 +35,35 @@ func AppForm() (string, openapi.Application) {
 		}
 	}
 	for application.Password == "" {
-		fmt.Printf("*Application Password: ")
+		fmt.Printf("Application Password* : ")
 		maskedPasswd, _ := gopass.GetPasswdMasked()
 		application.Password = string(maskedPasswd)
 		if application.Password == "" {
 			fmt.Println("This field is required. Please enter a valid password.")
 		}
 	}
-	for !ValidateURL(application.Git.RepoUrl) {
-		fmt.Printf("*Git URL: ")
-		scanner.Scan()
-		application.Git.RepoUrl = scanner.Text()
-		if !ValidateURL(application.Git.RepoUrl) {
-			fmt.Println("Please enter a valid URL.")
+	if !isLocal {
+		for !ValidateURL(application.Git.RepoUrl) {
+			fmt.Printf("Git URL *: ")
+			scanner.Scan()
+			application.Git.RepoUrl = scanner.Text()
+			if !ValidateURL(application.Git.RepoUrl) {
+				fmt.Println("Please enter a valid URL.")
+			}
 		}
-	}
-	fmt.Printf("Is this repo private? [yes/no]: ")
-	scanner.Scan()
-	if scanner.Text() == "yes" {
-		fmt.Printf("*Git Access Token: ")
+		fmt.Printf("Is this repo private? [yes/no]: ")
 		scanner.Scan()
-		application.Git.AccessToken = scanner.Text()
+		if scanner.Text() == "yes" {
+			fmt.Printf("Git Access Token* : ")
+			scanner.Scan()
+			application.Git.AccessToken = scanner.Text()
+		}
+		fmt.Printf("Branch* : ")
+		scanner.Scan()
+		application.Git.Branch = scanner.Text()
 	}
-	fmt.Printf("Branch: ")
-	scanner.Scan()
-	application.Git.Branch = scanner.Text()
 	for application.Context.Index == "" {
-		fmt.Printf("*Index: ")
+		fmt.Printf("Index* : ")
 		scanner.Scan()
 		application.Context.Index = scanner.Text()
 		if application.Context.Index == "" {
@@ -67,7 +71,7 @@ func AppForm() (string, openapi.Application) {
 		}
 	}
 	for !ValidatePort(application.Context.Port) {
-		fmt.Printf("Port: ")
+		fmt.Printf("Port* : ")
 		scanner.Scan()
 		application.Context.Port, _ = strconv.ParseInt(scanner.Text(), 10, 64)
 		if !ValidatePort(application.Context.Port) {

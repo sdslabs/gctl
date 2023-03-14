@@ -16,6 +16,7 @@ import (
 //AppsAPIService is interface for all client functions of apps
 type AppsAPIService interface {
 	CreateApp(ctx _context.Context, language string, application openapi.Application) (openapi.InlineResponse2002, *_nethttp.Response, error)
+	CreateRepository(ctx _context.Context, repositoryDetails openapi.CreateRepository) (openapi.InlineResponse2008, *_nethttp.Response, error)
 	DeleteAppByUser(ctx _context.Context, app string) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	FetchAppByUser(ctx _context.Context, app string) (openapi.InlineResponse2003, *_nethttp.Response, error)
 	FetchAppsByUser(ctx _context.Context) (openapi.InlineResponse2003, *_nethttp.Response, error)
@@ -29,6 +30,7 @@ var appsAPIService AppsAPIService = client.AppsAPI
 
 func init() {
 	createCmd.AddCommand(CreateAppCmd(appsAPIService))
+	createCmd.AddCommand(LocalAppCmd(appsAPIService))
 	fetchCmd.AddCommand(FetchAppCmd(appsAPIService))
 	deleteCmd.AddCommand(DeleteAppCmd(appsAPIService))
 	rootCmd.AddCommand(RebuildAppCmd(appsAPIService))
@@ -66,7 +68,7 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 					return
 				}
 			} else {
-				language, application = middlewares.AppForm()
+				language, application = middlewares.AppForm(false)
 			}
 
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
@@ -91,6 +93,82 @@ func CreateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 		},
 	}
 	return appmakerCmd
+}
+
+//LocalAppCmd returns command to deploy application from local
+func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
+	var localAppCmd = &cobra.Command{
+		Use:   "local [PATH]",
+		Short: "Deploy an application from local source code",
+		Args:  cobra.MaximumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			var (
+				err         error
+				language    string
+				application openapi.Application
+			)
+
+			if gctltoken == "" {
+				gctltoken, err = middlewares.SetToken(client)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
+			}
+
+			if len(args) != 1 {
+				cmd.Println("error: incorrect number of arguments, usage: gctl create local [PATH]")
+				return
+			}
+			pathToApplication := args[0]
+			if !middlewares.ValidateLocalPath(pathToApplication) {
+				cmd.PrintErr("You must pass the absolute path to the local source code")
+				return
+			}
+
+			language, application = middlewares.AppForm(true)
+
+			repositoryDetails := openapi.CreateRepository{
+				Name: application.Name,
+			}
+
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
+			repo, _, err := appsAPIservice.CreateRepository(auth, repositoryDetails)
+			if err != nil {
+				cmd.PrintErr("Error creating Github Repository")
+			}
+
+			err = middlewares.GitPush(pathToApplication, repo.CloneURL, repo.PAT, repo.Email, repo.Username)
+			if err != nil {
+				cmd.PrintErr("Error pushing local files to GitHub repository")
+			} else {
+				privateRepoCloneURL := "https://" + repo.PAT + "@github.com/" + repo.Username + "/" + repo.Repository + ".git"
+				application.Git.RepoUrl = privateRepoCloneURL
+				application.Git.AccessToken = repo.PAT
+				application.Git.Branch = "master"
+				auth = context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
+				res, _, err := appsAPIService.CreateApp(auth, language, application)
+				if res.Success {
+					res, _, err := appsAPIService.FetchAppByUser(auth, application.Name)
+					if res.Success {
+						for i := 0; i < len(res.Data); i++ {
+							cmd.Println("\n\nApp created successfully "+"\n"+"Container Id: "+res.Data[i].ContainerId,
+								"\nContainer Port: ", res.Data[i].ContainerPort, "\nDocker Image: "+res.Data[i].DockerImage,
+								"\nApp Url: "+res.Data[i].AppUrl, "\nHost Ip: "+res.Data[i].HostIp,
+								"\nName Servers: ", res.Data[i].NameServers, "\nInstance Type: "+res.Data[i].InstanceType,
+								"\nLanguage: "+res.Data[i].Language, "\nOwner: "+res.Data[i].Owner,
+								"\nSsh Cmd: "+res.Data[i].SshCmd, "\nId: "+res.Data[i].Id)
+						}
+					} else {
+						cmd.Println(err)
+					}
+				} else {
+					cmd.Println(err)
+				}
+			}
+		},
+	}
+	return localAppCmd
 }
 
 //FetchAppCmd returns command to fetch apps of a user
@@ -248,7 +326,7 @@ func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 					return
 				}
 			} else {
-				_, application = middlewares.AppForm()
+				_, application = middlewares.AppForm(false)
 				appName = application.Name
 			}
 
