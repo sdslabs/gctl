@@ -27,4 +27,4 @@ _testmain.go
 gctl
 
 # Vendor files
-vendor
+vendor/
