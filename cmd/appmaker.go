@@ -33,7 +33,8 @@ func init() {
 	createCmd.AddCommand(LocalAppCmd(appsAPIService))
 	fetchCmd.AddCommand(FetchAppCmd(appsAPIService))
 	deleteCmd.AddCommand(DeleteAppCmd(appsAPIService))
-	rootCmd.AddCommand(RebuildAppCmd(appsAPIService))
+	rebuildCmd.AddCommand(RebuildAppCmd(appsAPIService))
+	rebuildCmd.AddCommand(RebuildLocalCmd(appsAPIService))
 	updateCmd.AddCommand(UpdateAppCmd(appsAPIService))
 	fetchCmd.AddCommand(FetchLogsCmd(appsAPIService))
 }
@@ -269,7 +270,7 @@ func DeleteAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 //RebuildAppCmd returns a command to rebuild an app
 func RebuildAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	var rebuildAppCmd = &cobra.Command{
-		Use:   "rebuild [APP_NAME]",
+		Use:   "app [APP_NAME]",
 		Short: "rebuild an app",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
@@ -296,6 +297,31 @@ func RebuildAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 	}
 	return rebuildAppCmd
 }
+
+//RebuildLocalCmd returns a command to rebuild an application deployed from local source code
+func RebuildLocalCmd(appsAPIService AppsAPIService) *cobra.Command {
+	var rebuildLocalCmd = &cobra.Command{
+		Use: "local [APP_NAME] [FILE_PATH]",
+		Short: "rebuild an app deployed from local source code",
+		Args: cobra.ExactArgs(2),
+		Run: func(cmd *cobra.Command, args []string) {
+			var (
+				err error
+				// application openapi.Application
+			)
+			cmd.Println("rebuild ok")
+			if gctltoken == "" {
+				gctltoken, err = middlewares.SetToken(client)
+				if err != nil {
+					cmd.Print(err)
+					return
+				}
+			}
+		},
+	}
+	return rebuildLocalCmd
+}
+
 
 //UpdateAppCmd returns a command to update an app
 func UpdateAppCmd(appsAPIService AppsAPIService) *cobra.Command {
