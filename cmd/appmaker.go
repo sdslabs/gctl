@@ -23,6 +23,7 @@ type AppsAPIService interface {
 	FetchLogsByUser(ctx _context.Context, app string, localVarOptionals *openapi.FetchLogsByUserOpts) (openapi.InlineResponse2005, *_nethttp.Response, error)
 	RebuildAppByUser(ctx _context.Context, app string) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	UpdateAppByUser(ctx _context.Context, app string, application openapi.Application) (openapi.InlineResponse2002, *_nethttp.Response, error)
+	FetchAppRemote(ctx _context.Context, app string) (openapi.InlineResponse2009, *_nethttp.Response, error)
 }
 
 var appName string
@@ -141,10 +142,9 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 
 			err = middlewares.GitPush(pathToApplication, repo.CloneURL, repo.PAT, repo.Email, repo.Username)
 			if err != nil {
-				cmd.PrintErr("Error pushing local files to GitHub repository")
+				cmd.PrintErr(err, "\nError pushing local files to GitHub repository")
 			} else {
-				privateRepoCloneURL := "https://" + repo.PAT + "@github.com/" + repo.Username + "/" + repo.Repository + ".git"
-				application.Git.RepoUrl = privateRepoCloneURL
+				application.Git.RepoUrl = repo.CloneURL
 				application.Git.AccessToken = repo.PAT
 				application.Git.Branch = "master"
 				auth = context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
