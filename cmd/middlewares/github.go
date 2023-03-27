@@ -88,3 +88,16 @@ func GitPush(pathToApplication string, repoURL string, pat string, email string,
 
 	return err
 }
+
+func GitRemote (pathToApplication string) (string, error){
+	repo, err := git.PlainOpen(pathToApplication)
+	if err != nil {
+		return "", err
+	}
+	remote, err := repo.Remote("origin")
+	if err != nil {
+		return "", err
+	} else {
+		return remote.Config().URLs[0], nil
+	}
+}

@@ -320,10 +320,20 @@ func RebuildLocalCmd(appsAPIService AppsAPIService) *cobra.Command {
 
 			if appName != "" {
 				res, _, err := appsAPIService.FetchAppRemote(auth, appName)
-				if err == nil {
-					cmd.Println(res)
-				} else {
+				if err != nil {
 					cmd.Println(err)
+					return
+				} else {
+					cmd.Println("gasper remote", res)
+					localRepoRemote, err := middlewares.GitRemote(pathToApplication)
+					if err != nil {
+						cmd.Println(err)
+					} else {
+						cmd.Println("local remote", localRepoRemote)
+						if res.GitURL == localRepoRemote {
+							cmd.Println("remote matched")
+						}
+					}
 				}
 			}
 
