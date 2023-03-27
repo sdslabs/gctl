@@ -68,3 +68,8 @@ type InlineResponse2008 struct {
 	// Email id of Gasper Github user
 	Email string `json:"email" bson:"email"`
 }
+
+// InlineResponse2009 struct for InlineResponse2009
+type InlineResponse2009 struct {
+	GitURL string `json:"giturl" bson:"giturl"`
+}

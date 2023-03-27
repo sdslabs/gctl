@@ -305,11 +305,7 @@ func RebuildLocalCmd(appsAPIService AppsAPIService) *cobra.Command {
 		Short: "rebuild an app deployed from local source code",
 		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			var (
-				err error
-				// application openapi.Application
-			)
-			cmd.Println("rebuild ok")
+			var err error
 			if gctltoken == "" {
 				gctltoken, err = middlewares.SetToken(client)
 				if err != nil {
@@ -317,6 +313,22 @@ func RebuildLocalCmd(appsAPIService AppsAPIService) *cobra.Command {
 					return
 				}
 			}
+			appName, pathToApplication := args[0], args[1]
+			cmd.Println("App Name: ", appName, "Path to application: ", pathToApplication)
+
+			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
+
+			if appName != "" {
+				res, _, err := appsAPIService.FetchAppRemote(auth, appName)
+				if err == nil {
+					cmd.Println(res)
+				} else {
+					cmd.Println(err)
+				}
+			}
+
+
+
 		},
 	}
 	return rebuildLocalCmd
