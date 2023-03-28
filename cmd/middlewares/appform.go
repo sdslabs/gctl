@@ -58,7 +58,7 @@ func AppForm(isLocal bool) (string, openapi.Application) {
 			scanner.Scan()
 			application.Git.AccessToken = scanner.Text()
 		}
-		fmt.Printf("Branch* : ")
+		fmt.Printf("Branch : ")
 		scanner.Scan()
 		application.Git.Branch = scanner.Text()
 	}

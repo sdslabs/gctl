@@ -32,10 +32,13 @@ $ curl -X POST \
   -H 'Content-Type: application/json' \
   -H 'Authorization-Type: gctlToken' \
   -d '{
-    "email": "anish.mukherjee1996@gmail.com",
-    "password": "alphadose"
+    "email": "<your-email@email.com>",
+    "password": "<password>"
   }'
+```
 
+Response generated:
+```
 {
     "code":200,
     "expire":"2020-10-10T21:27:30+05:30","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImVtYWlsIjoiZ21haGFrMUBnbWFpbC5jb20iLCJleHAiOjE2MDIzNTE4MTAsImdjdGxfdXVpZCI6IiIsIm9yaWdfaWF0IjoxNjAyMzQ4MjEwLCJ1c2VybmFtZSI6Im1haGFrIn0.bImaUw9p8K_2QMpMqCAyHQHzX2aukDaRpXTDXmAkAoc"
@@ -45,11 +48,14 @@ $ curl -X POST \
 After getting the PA token, login to gctl using command `gctl login` with flag e for email and t for token. Both of the flags are required.
 
 ```
-$ gctl login -e anish.mukherjee1996@gmail.com -t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImVtYWlsIjoiZ21haGFrMUBnbWFpbC5jb20iLCJleHAiOjE2MDIzNTE4MTAsImdjdGxfdXVpZCI6IiIsIm9yaWdfaWF0IjoxNjAyMzQ4MjEwLCJ1c2VybmFtZSI6Im1haGFrIn0.bImaUw9p8K_2QMpMqCAyHQHzX2aukDaRpXTDXmAkAoc
+$ gctl login -e <your-email@email.com> -t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImVtYWlsIjoiZ21haGFrMUBnbWFpbC5jb20iLCJleHAiOjE2MDIzNTE4MTAsImdjdGxfdXVpZCI6IiIsIm9yaWdfaWF0IjoxNjAyMzQ4MjEwLCJ1c2VybmFtZSI6Im1haGFrIn0.bImaUw9p8K_2QMpMqCAyHQHzX2aukDaRpXTDXmAkAoc
+```
+Response generated:
+```
 Logged in successfully
 ```
 
-Now that we have logged in, we are ready deploy and maintain our applications and databases through command-line.
+Now that we have logged in, we are ready deploy and maintain our applications and databases through the command-line.
 
 ## Application Deployment
 
@@ -58,18 +64,22 @@ Now that we have logged in, we are ready deploy and maintain our applications an
   1. Create an app by entering details in a form in the terminal.
       ```
       $ gctl create app
-      *App Name: test
-      *Language: php
-      *Application Password: ****
-      *Git URL: https://github.com/sdslabs/gasper-sample-php
+
+      App Name*: test
+      Language*: php
+      Application Password*: ****
+      Git URL *: https://github.com/sdslabs/gasper-sample-php
       Is this repo private? [yes/no]: no
       Branch: 
-      *Index: index.php
-      Port: 8000
+      Index*: index.php
+      Port*: 8000
       Does this repo contain Gasperfile.txt? [yes/no]: no
       Build Commands: 
       Run Commands: 
       Environment Variables(key:value): 
+      ```
+      Response generated:
+      ```
       App created successfully 
       Container Id: 32e81f3d244d09da489aec03bea932ae7d96e8e2f5bd9484fc7a21a7e0e967dd Container Port:  44437 Docker Image: docker.io/sdsws/php:3.0 App Url: test.app.sdslabs.co Host Ip: 192.168.43.137 Name Servers:  [8.8.8.8 8.8.4.4] Instance Type: application Language: php Owner: gmahak1@gmail.com Ssh Cmd: ssh -p 2222 test@192.168.43.137 Id: 5f8c8d094374798e04edf3d6
       ```
@@ -78,6 +88,33 @@ Now that we have logged in, we are ready deploy and maintain our applications an
 
   2. Provide app details in a config json file. Just create the json file with necessary data. Example for required json data to deploy an app can be found in example section of [Gasper Docs](https://gasper-docs.netlify.app/). Run the command `gctl create app {filename} {language}` in the same folder where your config file is and the app will be deployed.
 
+  3. An application can also be deployed directly from its local source code by using `gctl create local <absolute-path-to-local-directory>`
+      ```
+      $ gctl create local /home/username/directory-path
+
+      App Name* : staticapp
+      Language* : static
+      Application Password* : ********
+      Index* : index.html
+      Port* : 8000 
+      Does this repo contain Gasperfile.txt? [yes/no]: 
+      Environment Variables(key:value): 
+      ```
+      Response generated:
+      ```
+      App created successfully 
+      Container Id: b4312e52219768b69c441f0cde85dbe1e9808e40cfc3578e1d29b8fee0b1b207 
+      Container Port:  36327 
+      Docker Image: docker.io/sdsws/static:latest 
+      App Url: staticapp.app.sdslabs.co 
+      Host Ip: 10.61.42.181 
+      Name Servers:  [8.8.8.8 8.8.4.4] 
+      Instance Type: application 
+      Language: static 
+      Owner: anish.mukherjee1996@gmail.com 
+      Ssh Cmd: ssh -p 2222 staticapp@10.61.42.181 
+      Id: 6422dbfac656c9c3fae129bf
+      ```
 
 - Fetch details of an app using the command `gctl fetch app -n {name}` where n is flag for the name of the app.
 
@@ -85,7 +122,10 @@ Now that we have logged in, we are ready deploy and maintain our applications an
 
 - Delete an app using the command `gctl delete app {app name}`.
 
-- Rebuild an app using the command `gctl rebuild {app name}`.
+- Rebuild an application:
+
+  1. Use `gctl rebuild app {appName}`
+  2. For an application deployed directly from local source code, use `gctl rebuild local {appName} {absolute-path-to-local-directory}` 
 
 - Fetch logs of apps using the command `gctl fetch logs {app name} {number of logs}`. The second argument, which is for number of logs, is optional.
 
