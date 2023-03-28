@@ -24,6 +24,7 @@ type AppsAPIService interface {
 	RebuildAppByUser(ctx _context.Context, app string) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	UpdateAppByUser(ctx _context.Context, app string, application openapi.Application) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	FetchAppRemote(ctx _context.Context, app string) (openapi.InlineResponse2009, *_nethttp.Response, error)
+    FetchPAT(ctx _context.Context) (openapi.InlineResponse2010, *_nethttp.Response, error)
 }
 
 var appName string
@@ -140,7 +141,7 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 				cmd.PrintErr("Error creating Github Repository")
 			}
 
-			err = middlewares.GitPush(pathToApplication, repo.CloneURL, repo.PAT, repo.Email, repo.Username)
+			err = middlewares.GitPush(pathToApplication, repo.CloneURL, repo.PAT, repo.Email, repo.Username, false)
 			if err != nil {
 				cmd.PrintErr(err, "\nError pushing local files to GitHub repository")
 			} else {
@@ -283,7 +284,6 @@ func RebuildAppCmd(appsAPIService AppsAPIService) *cobra.Command {
 					return
 				}
 			}
-
 			appName := args[0]
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 			res, _, err := appsAPIService.RebuildAppByUser(auth, appName)
@@ -314,7 +314,6 @@ func RebuildLocalCmd(appsAPIService AppsAPIService) *cobra.Command {
 				}
 			}
 			appName, pathToApplication := args[0], args[1]
-			cmd.Println("App Name: ", appName, "Path to application: ", pathToApplication)
 
 			auth := context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 
@@ -323,22 +322,29 @@ func RebuildLocalCmd(appsAPIService AppsAPIService) *cobra.Command {
 				if err != nil {
 					cmd.Println(err)
 					return
-				} else {
-					cmd.Println("gasper remote", res)
-					localRepoRemote, err := middlewares.GitRemote(pathToApplication)
+				}
+				localRepoRemote, err := middlewares.GitRemote(pathToApplication)
+				if err != nil {
+					cmd.Println(err)
+					return
+				} 
+				if res.GitURL == localRepoRemote {
+					git, _, err := appsAPIService.FetchPAT(auth)
 					if err != nil {
 						cmd.Println(err)
+						return
+					} 
+					middlewares.GitPush(pathToApplication, localRepoRemote, git.PAT, git.Email, git.Username, true)
+					rebuild, _, err := appsAPIService.RebuildAppByUser(auth, appName)
+					if rebuild.Success {
+						cmd.Println("App rebuilt successfully")
+						return
 					} else {
-						cmd.Println("local remote", localRepoRemote)
-						if res.GitURL == localRepoRemote {
-							cmd.Println("remote matched")
-						}
+						cmd.Println(err)
+						return
 					}
 				}
 			}
-
-
-
 		},
 	}
 	return rebuildLocalCmd

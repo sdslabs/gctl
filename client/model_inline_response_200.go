@@ -71,5 +71,15 @@ type InlineResponse2008 struct {
 
 // InlineResponse2009 struct for InlineResponse2009
 type InlineResponse2009 struct {
+	// Email id of Gasper Github user
 	GitURL string `json:"giturl" bson:"giturl"`
+}
+
+type InlineResponse2010 struct {
+	// PAT for pushing code to repository
+	PAT string `json:"pat" bson:"pat"`
+	// Username of Gasper Github user
+	Username string `json:"username" bson:"username"`
+	// Email id of Gasper Github user
+	Email string `json:"email" bson:"email"`
 }
