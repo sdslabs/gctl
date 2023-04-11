@@ -57,25 +57,12 @@ type InlineResponse2007 struct {
 
 // InlineResponse2008 struct for InlineResponse2008
 type InlineResponse2008 struct {
-	// Git clone URL of the application
-	CloneURL string `json:"cloneurl" bson:"cloneurl"`
-	// PAT for pushing code to repository
-	PAT string `json:"pat" bson:"pat"`
-	// Username of Gasper Github user
-	Username string `json:"username" bson:"username"`
-	// Repository contains the name of the Github repository
-	Repository string `json:"repository" bson:"repository"`
-	// Email id of Gasper Github user
-	Email string `json:"email" bson:"email"`
-}
-
-// InlineResponse2009 struct for InlineResponse2009
-type InlineResponse2009 struct {
 	// Email id of Gasper Github user
 	GitURL string `json:"giturl" bson:"giturl"`
 }
 
-type InlineResponse2010 struct {
+// InlineResponse2009 struct for InlineResponse2009
+type InlineResponse2009 struct {
 	// PAT for pushing code to repository
 	PAT string `json:"pat" bson:"pat"`
 	// Username of Gasper Github user

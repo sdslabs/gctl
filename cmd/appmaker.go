@@ -23,8 +23,8 @@ type AppsAPIService interface {
 	FetchLogsByUser(ctx _context.Context, app string, localVarOptionals *openapi.FetchLogsByUserOpts) (openapi.InlineResponse2005, *_nethttp.Response, error)
 	RebuildAppByUser(ctx _context.Context, app string) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	UpdateAppByUser(ctx _context.Context, app string, application openapi.Application) (openapi.InlineResponse2002, *_nethttp.Response, error)
-	FetchAppRemote(ctx _context.Context, app string) (openapi.InlineResponse2009, *_nethttp.Response, error)
-    FetchPAT(ctx _context.Context) (openapi.InlineResponse2010, *_nethttp.Response, error)
+	FetchAppRemote(ctx _context.Context, app string) (openapi.InlineResponse2008, *_nethttp.Response, error)
+    FetchPAT(ctx _context.Context) (openapi.InlineResponse2009, *_nethttp.Response, error)
 }
 
 var appName string
@@ -141,12 +141,14 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 				cmd.PrintErr("Error creating Github Repository")
 			}
 
-			err = middlewares.GitPush(pathToApplication, repo.CloneURL, repo.PAT, repo.Email, repo.Username, false)
+			creds, _, err := appsAPIservice.FetchPAT(auth)
+
+			err = middlewares.GitPush(pathToApplication, repo.GitURL, creds.PAT, creds.Email, creds.Username, false)
 			if err != nil {
 				cmd.PrintErr(err, "\nError pushing local files to GitHub repository")
 			} else {
-				application.Git.RepoUrl = repo.CloneURL
-				application.Git.AccessToken = repo.PAT
+				application.Git.RepoUrl = repo.GitURL
+				application.Git.AccessToken = creds.PAT
 				application.Git.Branch = "master"
 				auth = context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 				res, _, err := appsAPIService.CreateApp(auth, language, application)

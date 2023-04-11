@@ -34,8 +34,8 @@ type AppsAPI interface {
 	DeleteAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error)
 	FetchAppByUser(ctx _context.Context, app string) (InlineResponse2003, *_nethttp.Response, error)
 	FetchAppsByUser(ctx _context.Context) (InlineResponse2003, *_nethttp.Response, error)
-	FetchAppRemote(ctx _context.Context, app string) (InlineResponse2009, *_nethttp.Response, error)
-    FetchPAT(ctx _context.Context) (InlineResponse2010, *_nethttp.Response, error)
+	FetchAppRemote(ctx _context.Context, app string) (InlineResponse2008, *_nethttp.Response, error)
+    FetchPAT(ctx _context.Context) (InlineResponse2009, *_nethttp.Response, error)
 }
 
 // AppsAPIService AppsAPI service
@@ -172,6 +172,10 @@ func (a *AppsAPIService) CreateRepository(ctx _context.Context, repositoryDetail
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
 	err = localVarHTTPResponse.Body.Close()
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
@@ -204,14 +208,14 @@ FetchAppRemote Fetch an application's remote
  * @param app The name of the application
 @return InlineResponse2009
 */
-func (a *AppsAPIService) FetchAppRemote(ctx _context.Context, app string) (InlineResponse2009, *_nethttp.Response, error) {
+func (a *AppsAPIService) FetchAppRemote(ctx _context.Context, app string) (InlineResponse2008, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  InlineResponse2009
+		localVarReturnValue  InlineResponse2008
 	)
 	localVarPath := a.client.cfg.BasePath + "/apps/{app}/remote"
 	localVarPath = strings.Replace(localVarPath, "{"+"app"+"}", _neturl.QueryEscape(parameterToString(app, "")), -1)
@@ -279,14 +283,14 @@ FetchPAT Fetches PAT for the user to push local source code
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 @return InlineResponse2010
 */
-func (a *AppsAPIService) FetchPAT(ctx _context.Context) (InlineResponse2010, *_nethttp.Response, error) {
+func (a *AppsAPIService) FetchPAT(ctx _context.Context) (InlineResponse2009, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  InlineResponse2010
+		localVarReturnValue  InlineResponse2009
 	)
 	localVarPath := a.client.cfg.BasePath + "/github/token"
 
