@@ -206,7 +206,7 @@ func (a *AppsAPIService) CreateRepository(ctx _context.Context, repositoryDetail
 FetchAppRemote Fetch an application's remote
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param app The name of the application
-@return InlineResponse2009
+@return InlineResponse2008
 */
 func (a *AppsAPIService) FetchAppRemote(ctx _context.Context, app string) (InlineResponse2008, *_nethttp.Response, error) {
 	var (
@@ -281,7 +281,8 @@ func (a *AppsAPIService) FetchAppRemote(ctx _context.Context, app string) (Inlin
 /*
 FetchPAT Fetches PAT for the user to push local source code
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return InlineResponse2010
+ * @param publickey RSA Public key for encrypting the PAT
+@return InlineResponse2009
 */
 func (a *AppsAPIService) FetchPAT(ctx _context.Context, publickey EncryptKey) (InlineResponse2009, *_nethttp.Response, error) {
 	var (

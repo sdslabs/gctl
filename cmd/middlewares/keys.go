@@ -7,7 +7,7 @@ import (
 	"encoding/base64"
 )
 
-func GenerateKeyPair() (*rsa.PrivateKey, error) {
+func GenerateKeyPair()(*rsa.PrivateKey, error) {
 	privatekey, err := rsa.GenerateKey(rand.Reader, 2048)
     if err != nil {
         return nil, err
