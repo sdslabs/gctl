@@ -24,7 +24,7 @@ type AppsAPIService interface {
 	RebuildAppByUser(ctx _context.Context, app string) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	UpdateAppByUser(ctx _context.Context, app string, application openapi.Application) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	FetchAppRemote(ctx _context.Context, app string) (openapi.InlineResponse2008, *_nethttp.Response, error)
-    FetchPAT(ctx _context.Context) (openapi.InlineResponse2009, *_nethttp.Response, error)
+    FetchPAT(ctx _context.Context, publickey openapi.EncryptKey) (openapi.InlineResponse2009, *_nethttp.Response, error)
 }
 
 var appName string
@@ -139,16 +139,37 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 			repo, _, err := appsAPIservice.CreateRepository(auth, repositoryDetails)
 			if err != nil {
 				cmd.PrintErr("Error creating Github Repository")
+				return
 			}
 
-			creds, _, err := appsAPIservice.FetchPAT(auth)
+			privateKey, err := middlewares.GenerateKeyPair()
+			if err != nil {
+				cmd.PrintErr(err, "\nError generating key pair")
+				return
+			}
 
-			err = middlewares.GitPush(pathToApplication, repo.GitURL, creds.PAT, creds.Email, creds.Username, false)
+			publicKey := openapi.EncryptKey{
+				PublicKey: privateKey.PublicKey,
+			}
+
+			creds, _, err := appsAPIservice.FetchPAT(auth, publicKey)
+			if err != nil {
+				cmd.PrintErr(err, "\nError fetching pushing credentials")
+				return
+			}
+		
+			token, err := middlewares.Decrypt(creds.PAT, *privateKey)
+			if err != nil {
+				cmd.PrintErr(err, "\nError decrypting PAT")
+				return
+			}
+			err = middlewares.GitPush(pathToApplication, repo.GitURL, token, creds.Email, creds.Username, false)
 			if err != nil {
 				cmd.PrintErr(err, "\nError pushing local files to GitHub repository")
+				return
 			} else {
 				application.Git.RepoUrl = repo.GitURL
-				application.Git.AccessToken = creds.PAT
+				application.Git.AccessToken = token
 				application.Git.Branch = "master"
 				auth = context.WithValue(context.Background(), openapi.ContextAccessToken, gctltoken)
 				res, _, err := appsAPIService.CreateApp(auth, language, application)
@@ -331,12 +352,29 @@ func RebuildLocalCmd(appsAPIService AppsAPIService) *cobra.Command {
 					return
 				} 
 				if res.GitURL == localRepoRemote {
-					git, _, err := appsAPIService.FetchPAT(auth)
+					privateKey, err := middlewares.GenerateKeyPair()
 					if err != nil {
-						cmd.Println(err)
+						cmd.PrintErr(err, "\nError generating key pair")
 						return
-					} 
-					middlewares.GitPush(pathToApplication, localRepoRemote, git.PAT, git.Email, git.Username, true)
+					}
+
+					publicKey := openapi.EncryptKey{
+						PublicKey: privateKey.PublicKey,
+					}
+
+					creds, _, err := appsAPIService.FetchPAT(auth, publicKey)
+					if err != nil {
+						cmd.PrintErr(err, "\nError fetching pushing credentials")
+						return
+					}
+
+					token, err := middlewares.Decrypt(creds.PAT, *privateKey)
+					if err != nil {
+						cmd.PrintErr(err, "\nError decrypting PAT")
+						return
+					}
+		 
+					middlewares.GitPush(pathToApplication, localRepoRemote, token, creds.Email, creds.Username, true)
 					rebuild, _, err := appsAPIService.RebuildAppByUser(auth, appName)
 					if rebuild.Success {
 						cmd.Println("App rebuilt successfully")

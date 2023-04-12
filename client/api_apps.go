@@ -35,7 +35,7 @@ type AppsAPI interface {
 	FetchAppByUser(ctx _context.Context, app string) (InlineResponse2003, *_nethttp.Response, error)
 	FetchAppsByUser(ctx _context.Context) (InlineResponse2003, *_nethttp.Response, error)
 	FetchAppRemote(ctx _context.Context, app string) (InlineResponse2008, *_nethttp.Response, error)
-    FetchPAT(ctx _context.Context) (InlineResponse2009, *_nethttp.Response, error)
+    FetchPAT(ctx _context.Context, publickey EncryptKey) (InlineResponse2009, *_nethttp.Response, error)
 }
 
 // AppsAPIService AppsAPI service
@@ -283,9 +283,9 @@ FetchPAT Fetches PAT for the user to push local source code
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 @return InlineResponse2010
 */
-func (a *AppsAPIService) FetchPAT(ctx _context.Context) (InlineResponse2009, *_nethttp.Response, error) {
+func (a *AppsAPIService) FetchPAT(ctx _context.Context, publickey EncryptKey) (InlineResponse2009, *_nethttp.Response, error) {
 	var (
-		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -315,6 +315,9 @@ func (a *AppsAPIService) FetchPAT(ctx _context.Context) (InlineResponse2009, *_n
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	// body params
+	localVarPostBody = &publickey
+	
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 
 	if err != nil {
