@@ -374,9 +374,13 @@ func RebuildLocalCmd(appsAPIService AppsAPIService) *cobra.Command {
 						return
 					}
 		 
-					middlewares.GitPush(pathToApplication, localRepoRemote, token, creds.Email, creds.Username, true)
-					rebuild, _, err := appsAPIService.RebuildAppByUser(auth, appName)
-					if rebuild.Success {
+					err = middlewares.GitPush(pathToApplication, localRepoRemote, token, creds.Email, creds.Username, true)
+					if err != nil {
+						cmd.PrintErr(err)
+						return
+					}
+					_ , _, err = appsAPIService.RebuildAppByUser(auth, appName)
+					if err == nil {
 						cmd.Println("App rebuilt successfully")
 						return
 					} else {

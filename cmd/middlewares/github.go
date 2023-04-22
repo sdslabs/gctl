@@ -54,6 +54,14 @@ func GitPush(pathToApplication string, repoURL string, pat string, email string,
 	}
 	
 	w, _ := repo.Worktree()
+	status, err := w.Status()
+	
+	if err != nil {
+		return err
+	}
+	if status.IsClean() {
+		return errors.New("No new changes to commit")
+	}
 	if firstInit {
 		err = w.AddGlob(".")
 		if err != nil {
