@@ -17,6 +17,7 @@ import (
 type AppsAPIService interface {
 	CreateApp(ctx _context.Context, language string, application openapi.Application) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	CreateRepository(ctx _context.Context, repositoryDetails openapi.CreateRepository) (openapi.InlineResponse2008, *_nethttp.Response, error)
+	DeleteRepository(ctx _context.Context, repositoryURL openapi.DeleteRepository) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	DeleteAppByUser(ctx _context.Context, app string) (openapi.InlineResponse2002, *_nethttp.Response, error)
 	FetchAppByUser(ctx _context.Context, app string) (openapi.InlineResponse2003, *_nethttp.Response, error)
 	FetchAppsByUser(ctx _context.Context) (openapi.InlineResponse2003, *_nethttp.Response, error)
@@ -145,6 +146,10 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 			privateKey, err := middlewares.GenerateKeyPair()
 			if err != nil {
 				cmd.PrintErr(err, "\nError generating key pair")
+				deleteRepo := openapi.DeleteRepository{
+					GitURL: repo.GitURL,
+				}
+				appsAPIservice.DeleteRepository(auth, deleteRepo)
 				return
 			}
 
@@ -155,17 +160,29 @@ func LocalAppCmd(appsAPIservice AppsAPIService) *cobra.Command {
 			creds, _, err := appsAPIservice.FetchPAT(auth, publicKey)
 			if err != nil {
 				cmd.PrintErr(err, "\nError fetching pushing credentials")
+				deleteRepo := openapi.DeleteRepository{
+					GitURL: repo.GitURL,
+				}
+				appsAPIservice.DeleteRepository(auth, deleteRepo)
 				return
 			}
 		
 			token, err := middlewares.Decrypt(creds.PAT, *privateKey)
 			if err != nil {
 				cmd.PrintErr(err, "\nError decrypting PAT")
+				deleteRepo := openapi.DeleteRepository{
+					GitURL: repo.GitURL,
+				}
+				appsAPIservice.DeleteRepository(auth, deleteRepo)
 				return
 			}
 			err = middlewares.GitPush(pathToApplication, repo.GitURL, token, creds.Email, creds.Username, false)
 			if err != nil {
 				cmd.PrintErr(err, "\nError pushing local files to GitHub repository")
+				deleteRepo := openapi.DeleteRepository{
+					GitURL: repo.GitURL,
+				}
+				appsAPIservice.DeleteRepository(auth, deleteRepo)
 				return
 			} else {
 				application.Git.RepoUrl = repo.GitURL

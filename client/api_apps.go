@@ -31,6 +31,7 @@ const CREATE_REPO_PATH = "/github"
 type AppsAPI interface {
 	CreateApp(ctx _context.Context, language string, application Application) (InlineResponse2002, *_nethttp.Response, error)
 	CreateRepository(ctx _context.Context, repositoryDetails CreateRepository) (InlineResponse2008, *_nethttp.Response, error)
+	DeleteRepository(ctx _context.Context, repositoryURL DeleteRepository) (InlineResponse2002, *_nethttp.Response, error)
 	DeleteAppByUser(ctx _context.Context, app string) (InlineResponse2002, *_nethttp.Response, error)
 	FetchAppByUser(ctx _context.Context, app string) (InlineResponse2003, *_nethttp.Response, error)
 	FetchAppsByUser(ctx _context.Context) (InlineResponse2003, *_nethttp.Response, error)
@@ -200,6 +201,80 @@ func (a *AppsAPIService) CreateRepository(ctx _context.Context, repositoryDetail
 
 	return localVarReturnValue, localVarHTTPResponse, nil
 
+}
+
+func (a *AppsAPIService) DeleteRepository(ctx _context.Context, repositoryURL DeleteRepository) (InlineResponse2002, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  InlineResponse2002
+	)
+	localVarPath := a.client.cfg.BasePath + "/github/delete"
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+
+	// body params
+	localVarPostBody = &repositoryURL
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	localVarHTTPResponse, err := a.client.CallAPI(r)
+
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	err = localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: fetchError(localVarBody),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 /*
