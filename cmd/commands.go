@@ -15,6 +15,7 @@ func init() {
 	rootCmd.AddCommand(deleteCmd)
 	rootCmd.AddCommand(fetchCmd)
 	rootCmd.AddCommand(updateCmd)
+	rootCmd.AddCommand(rebuildCmd)
 }
 
 var createCmd = &cobra.Command{
@@ -41,4 +42,9 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version number of Gasper",
 	//TODO RUN
+}
+
+var rebuildCmd = &cobra.Command{
+	Use: "rebuild",
+	Short: "Rebuild an application",
 }

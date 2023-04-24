@@ -25,7 +25,7 @@ func GitInit(directoryPath string) (*git.Repository, error) {
 	return repository, err
 }
 
-func GitPush(pathToApplication string, repoURL string, pat string, email string, username string) error {
+func GitPush(pathToApplication string, repoURL string, pat string, email string, username string, rebuild bool) error {
 	var firstInit bool
 	repo, err := git.PlainOpen(pathToApplication)
 	if err != nil {
@@ -37,19 +37,31 @@ func GitPush(pathToApplication string, repoURL string, pat string, email string,
 	} else {
 		firstInit = false
 	}
-	remote, err := repo.Remote("origin")
-	if remote != nil {
-		return errors.New("Remote of the local directory already exists, use the git remote URL")
-	} else if err != nil {
-		_, err = repo.CreateRemote(&config.RemoteConfig{
-			Name: "origin",
-			URLs: []string{repoURL},
-		})
-		if err != nil {
-			return err
+
+	if !rebuild {
+		remote, err := repo.Remote("origin")
+		if remote != nil {
+			return errors.New("Remote of the local directory already exists, use the git remote URL")
+		} else if err != nil {
+			_, err = repo.CreateRemote(&config.RemoteConfig{
+				Name: "origin",
+				URLs: []string{repoURL},
+			})
+			if err != nil {
+				return err
+			}
 		}
 	}
+	
 	w, _ := repo.Worktree()
+	status, err := w.Status()
+	
+	if err != nil {
+		return err
+	}
+	if status.IsClean() {
+		return errors.New("No new changes to commit")
+	}
 	if firstInit {
 		err = w.AddGlob(".")
 		if err != nil {
@@ -87,4 +99,17 @@ func GitPush(pathToApplication string, repoURL string, pat string, email string,
 	}
 
 	return err
+}
+
+func GitRemote(pathToApplication string) (string, error){
+	repo, err := git.PlainOpen(pathToApplication)
+	if err != nil {
+		return "", err
+	}
+	remote, err := repo.Remote("origin")
+	if err != nil {
+		return "", err
+	} else {
+		return remote.Config().URLs[0], nil
+	}
 }
